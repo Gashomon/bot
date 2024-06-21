@@ -24,7 +24,7 @@ def generate_launch_description():
                     get_package_share_directory(package_name),'launch','rsp.launch.py'
                 )]), launch_arguments={'use_sim_time': 'true'}.items()
     )
-
+    
     # Include the Gazebo launch file, provided by the gazebo_ros package
     gazebo = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([os.path.join(
@@ -37,11 +37,13 @@ def generate_launch_description():
                                    '-entity', 'my_bot'],
                         output='screen')
 
-
+    # added state publisher
+    state_publisher = Node(package='joint_state_publisher', executable='joint_state_publisher')
 
     # Launch them all!
     return LaunchDescription([
         rsp,
         gazebo,
         spawn_entity,
+        state_publisher
     ])
