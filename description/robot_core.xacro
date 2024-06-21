@@ -171,4 +171,25 @@
         <origin xyz="${frontwheel_offset} ${rightwheel_offset} 0" rpy="${right_roll} 0 0"/>
         <axis xyz="0 0 -1"/>
     </joint>
+
+    <!-- Gazebo References-->
+    <gazebo reference="chassis">
+        <material>Gazebo/White</material>
+    </gazebo>
+
+    <gazebo reference="left_back_wheel">
+        <material>Gazebo/Blue</material>
+     </gazebo>
+
+     <gazebo reference="right_back_wheel">
+        <material>Gazebo/Blue</material>
+     </gazebo>
+
+     <gazebo reference="left_front_wheel">
+        <material>Gazebo/Blue</material>
+     </gazebo>
+
+     <gazebo reference="right_front_wheel">
+        <material>Gazebo/Blue</material>
+     </gazebo>
 </robot>
