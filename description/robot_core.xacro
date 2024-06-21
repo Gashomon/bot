@@ -158,14 +158,14 @@
         <axis xyz="0 0 -1"/>
     </joint>
 
-    <joint name="left_front_wheel-base" type="continuous">
+    <joint name="left_front_wheel-base" type="fixed">
         <parent link="base"/>
         <child link="left_front_wheel"/>
         <origin xyz="${frontwheel_offset} ${leftwheel_offset} 0" rpy="${left_roll} 0 0"/>
         <axis xyz="0 0 1"/>
     </joint>
     
-    <joint name="right_front_wheel-base" type="continuous">
+    <joint name="right_front_wheel-base" type="fixed">
         <parent link="base"/>
         <child link="right_front_wheel"/>
         <origin xyz="${frontwheel_offset} ${rightwheel_offset} 0" rpy="${right_roll} 0 0"/>
@@ -187,9 +187,13 @@
 
      <gazebo reference="left_front_wheel">
         <material>Gazebo/Blue</material>
+        <mu1 value="0.001"/>
+        <mu2 value="0.001"/>
      </gazebo>
 
      <gazebo reference="right_front_wheel">
         <material>Gazebo/Blue</material>
+        <mu1 value="0.001"/>
+        <mu2 value="0.001"/>
      </gazebo>
 </robot>
