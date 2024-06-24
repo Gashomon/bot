@@ -28,7 +28,8 @@ def generate_launch_description():
     # Include the Gazebo launch file, provided by the gazebo_ros package
     gazebo = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([os.path.join(
-                    get_package_share_directory('gazebo_ros'), 'launch', 'gazebo.launch.py')]), launch_arguments={'world': './src/bot/worlds/test_world.world'}.items()
+                    get_package_share_directory('gazebo_ros'), 'launch', 'gazebo.launch.py')]), 
+                    launch_arguments={'world': './src/bot/worlds/obstacles.world'}.items()
              )
 
     # Run the spawner node from the gazebo_ros package. The entity name doesn't really matter if you only have a single robot.
@@ -40,9 +41,25 @@ def generate_launch_description():
     # added state publisher
     state_publisher = Node(package='joint_state_publisher', executable='joint_state_publisher')
 
+    #added ROS2 control spawners 
+    diff_drive_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["diff_cont"],
+    )
+
+    #added ROS2 control spawners 
+    joint_broad_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["joint_broad"],
+    )
+
     # Launch them all!
     return LaunchDescription([
         rsp,
         gazebo,
-        spawn_entity
+        spawn_entity,
+        diff_drive_spawner,
+        joint_broad_spawner
     ])
