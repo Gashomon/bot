@@ -2,9 +2,17 @@
 <!-- loaded urdf file for robot-->
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro"  name="robot">
 
+    <xacro:property name="use_ros2_control" value="true"/>
+
+    <xacro:if value="${use_ros2_control}">
+        <xacro:include filename="ros2_control.xacro"/> 
+    </xacro:if>
+
+    <xacro:unless value="${use_ros2_control}">
+        <xacro:include filename="gazebo_control.xacro"/>
+    </xacro:unless>
+
     <xacro:include filename="robot_core.xacro"/>
-    <!-- <xacro:include filename="gazebo_control.xacro"/> -->
-    <xacro:include filename="ros2_control.xacro"/>
     <xacro:include filename="lidar.xacro"/>
 
 </robot>
