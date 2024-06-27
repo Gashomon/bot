@@ -54,6 +54,9 @@
     <link name="base">
     </link>
 
+    <link name="footprint">
+    </link>
+
     <link name="chassis">
         <visual>
             <origin xyz="${chassis_link_offset} 0 ${chassis_height_offset}"/>
@@ -142,6 +145,12 @@
     </link> 
 
     <!-- Joints -->
+    <joint name="footprint-base" type="fixed">
+        <parent link="base"/>
+        <child link="footprint"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
     <joint name="chassis-base" type="fixed">
         <parent link="base"/>
         <child link="chassis"/>
