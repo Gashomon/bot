@@ -4,10 +4,7 @@ controller_manager:
     use_sim_time: true
 
     diff_cont:
-      type: diff_drive_controller/DiffDriveController
-      parameter_list:
-        use_twist_stamped: false
-
+      type: diff_drive_controller/DiffDriveController 
 
     joint_broad:
       type: joint_state_broadcaster/JointStateBroadcaster
@@ -24,6 +21,7 @@ diff_cont:
     wheel_separation: 0.35
     wheel_radius: 0.1
 
+    use_twist_stamped: false
     # open_loop: false    
 
     # wheels_per_side: 2
