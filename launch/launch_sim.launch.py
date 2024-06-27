@@ -39,7 +39,7 @@ def generate_launch_description():
                         output='screen')
 
     # added state publisher
-    state_publisher = Node(package='joint_state_publisher', executable='joint_state_publisher')
+    state_publisher = Node(package='joint_state_publisher_gui', executable='joint_state_publisher_gui')
 
     #added ROS2 control spawners 
     diff_drive_spawner = Node(
@@ -55,11 +55,24 @@ def generate_launch_description():
         arguments=["joint_broad"],
     )
 
+    #added keyboard tele operation
+    key_teleop = Node(package="teleop_twist_keyboard", executable="teleop_twist_keyboard",
+                      arguments=['cmd_vel:=diff_cont/cmd_vel'])
+    
+    twist_stamper = Node(
+        package='twist_stamper',
+        executable='twist_stamper',
+        remappings=[('/cmd_vel_in','/diff_cont/cmd_vel_unstamped'),
+                    ('/cmd_vel_out','/diff_cont/cmd_vel')]
+      )
+
     # Launch them all!
     return LaunchDescription([
         rsp,
         gazebo,
         spawn_entity,
         diff_drive_spawner,
-        joint_broad_spawner
+        joint_broad_spawner,
+        twist_stamper
+        # key_teleop
     ])
