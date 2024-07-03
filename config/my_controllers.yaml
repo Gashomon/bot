@@ -16,12 +16,13 @@ diff_cont:
 
     base_frame_id: base
 
-    left_wheel_names: ['left_back_wheel-base', 'left_front_wheel-base']
-    right_wheel_names: ['right_back_wheel-base', 'right_front_wheel-base']
+    left_wheel_names: ['left_back_wheel-base']
+    right_wheel_names: ['right_back_wheel-base']
     wheel_separation: 0.35
     wheel_radius: 0.1
 
     use_twist_stamped: false
+    use_stamped_vel: false
     # open_loop: false    
 
     # wheels_per_side: 2
