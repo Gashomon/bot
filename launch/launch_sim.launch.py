@@ -73,6 +73,6 @@ def generate_launch_description():
         spawn_entity,
         diff_drive_spawner,
         joint_broad_spawner,
-        twist_stamper
+        # twist_stamper
         # key_teleop
     ])
