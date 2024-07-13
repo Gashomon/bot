@@ -19,6 +19,8 @@ def generate_launch_description():
 
     package_name='bot' #<--- CHANGE ME
 
+    gazebo_params_file = os.path.join(get_package_share_directory(package_name), 'config', 'gazebo_params.yaml')
+
     rsp = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([os.path.join(
                     get_package_share_directory(package_name),'launch','rsp.launch.py'
@@ -29,7 +31,7 @@ def generate_launch_description():
     gazebo = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([os.path.join(
                     get_package_share_directory('gazebo_ros'), 'launch', 'gazebo.launch.py')]), 
-                    launch_arguments={'world': './src/bot/worlds/obstacles.world'}.items()
+                    launch_arguments={'extra_gazebo_args': '--ros-args --params-file' + gazebo_params_file, 'world': './src/bot/worlds/obstacles.world'}.items()
              )
 
     # Run the spawner node from the gazebo_ros package. The entity name doesn't really matter if you only have a single robot.
@@ -57,7 +59,7 @@ def generate_launch_description():
 
     #added keyboard tele operation
     key_teleop = Node(package="teleop_twist_keyboard", executable="teleop_twist_keyboard",
-                      arguments=['cmd_vel:=diff_cont/cmd_vel'])
+                      arguments=['/cmd_vel:=/diff_cont/cmd_vel'])
     
     twist_stamper = Node(
         package='twist_stamper',
@@ -74,5 +76,5 @@ def generate_launch_description():
         diff_drive_spawner,
         joint_broad_spawner,
         # twist_stamper
-        # key_teleop
+        key_teleop
     ])
