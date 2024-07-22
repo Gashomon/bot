@@ -21,10 +21,6 @@ find_package(ament_cmake REQUIRED)
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(std_msgs REQUIRED)
-
-add_executable(talker control/path_topic_pub.cpp)
-ament_target_dependencies(talker rclcpp std_msgs)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -38,12 +34,8 @@ if(BUILD_TESTING)
 endif()
 
 install(
-  DIRECTORY config control description launch worlds 
+  DIRECTORY config description launch worlds 
   DESTINATION share/${PROJECT_NAME}
-)
-install(TARGETS
-talker
-DESTINATION lib/${PROJECT_NAME}
 )
 
 ament_package()
