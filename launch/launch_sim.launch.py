@@ -76,5 +76,5 @@ def generate_launch_description():
         diff_drive_spawner,
         joint_broad_spawner,
         # twist_stamper
-        key_teleop
+        # key_teleop
     ])
