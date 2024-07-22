@@ -6,6 +6,6 @@ twist_mux:
         timeout: 0.5
         priority: 10
       keyboard:
-        topic: cmd_key
+        topic: cmd_vel
         timeout: 0.5
         priority: 100
