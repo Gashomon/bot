@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<!-- 
+ROBOT PROPERTIES 
+
+Lengths are in meters, Mass are in kilograms, Angles are in radians, Values are type double.
+-->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+    <!-- Constant Variables -->
+    <xacro:property name="left_roll" value="${-pi/2}"/>
+    <xacro:property name="right_roll" value="${pi/2}"/>
+
+    <!-- Independent Variables -->
+    <xacro:property name="scale" value="1.0"/>
+
+    <xacro:property name="bot_width" value="0.45"/>
+    <xacro:property name="bot_length" value="0.45"/>
+
+    <xacro:property name="chassis_height" value="0.15"/>
+    <xacro:property name="chassis_mass" value="0.36"/>
+
+    <xacro:property name="storage_height" value=""/>
+    <xacro:property name="storage_mass" value="12.0"/>
+
+    <xacro:property name="top_height" value=""/>
+    <xacro:property name="top_mass" value=""/>
+
+    <xacro:property name="wheel_radius" value="0.05"/>
+    <xacro:property name="wheel_length" value="0.05"/>
+    <xacro:property name="wheel_mass" value="0.1"/>
+
+    <!-- Dependent Variables-->
+    <xacro:property name="chassis_joint_offset" value="${-chassis_base/3}"/>
+    <xacro:property name="chassis_link_offset" value="${chassis_base/2}"/>
+    <xacro:property name="chassis_height_offset" value="${chassis_height/2}"/>
+    
+    <xacro:property name="frontwheel_offset" value="${((chassis_base) - (chassis_joint_offset))}"/>
+    <xacro:property name="backwheel_offset" value="${-((chassis_base) - (chassis_joint_offset))}"/>
+    <xacro:property name="leftwheel_offset" value="${(chassis_base/2) + (wheel_length/2)}"/>
+    <xacro:property name="rightwheel_offset" value="${-(chassis_base/2) + (wheel_length/2)}"/>
+
+    <!-- Materials -->
+    <material name="white">
+        <color rgba="1 1 1 1" />
+    </material>
+    
+    <material name="orange">
+        <color rgba="1 0.3 1 1" />
+    </material>
+
+    <material name="blue">
+        <color rgba="0.2 0.2 1 1"/>
+    </material>
+
+    <material name="black">
+        <color rgba="0 0 0 1"/>
+    </material>
+
+    <material name="red">
+        <color rgba="1 0 0 1"/>
+    </material>
+
+    <!-- Inertial Variables -->
+    <!-- Specify some standard inertial calculations https://en.wikipedia.org/wiki/List_of_moments_of_inertia -->
+    <!-- These make use of xacro's mathematical functionality -->
+    <xacro:macro name="inertial_sphere" params="mass radius *origin">
+        <inertial>
+            <xacro:insert_block name="origin"/>
+            <mass value="${mass}" />
+            <inertia ixx="${(2/5) * mass * (radius*radius)}" ixy="0.0" ixz="0.0"
+                    iyy="${(2/5) * mass * (radius*radius)}" iyz="0.0"
+                    izz="${(2/5) * mass * (radius*radius)}" />
+        </inertial>
+    </xacro:macro>  
+
+
+    <xacro:macro name="inertial_box" params="mass x y z *origin">
+        <inertial>
+            <xacro:insert_block name="origin"/>
+            <mass value="${mass}" />
+            <inertia ixx="${(1/12) * mass * (y*y+z*z)}" ixy="0.0" ixz="0.0"
+                    iyy="${(1/12) * mass * (x*x+z*z)}" iyz="0.0"
+                    izz="${(1/12) * mass * (x*x+y*y)}" />
+        </inertial>
+    </xacro:macro>
+
+
+    <xacro:macro name="inertial_cylinder" params="mass length radius *origin">
+        <inertial>
+            <xacro:insert_block name="origin"/>
+            <mass value="${mass}" />
+            <inertia ixx="${(1/12) * mass * (3*radius*radius + length*length)}" ixy="0.0" ixz="0.0"
+                    iyy="${(1/12) * mass * (3*radius*radius + length*length)}" iyz="0.0"
+                    izz="${(1/2) * mass * (radius*radius)}" />
+        </inertial>
+    </xacro:macro>
+
+
+</robot>
