@@ -5,137 +5,111 @@
 <!-- call xacro-->
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
     
-    <!-- Inertial xacro-->
+    <!-- Properties xacro-->
     <xacro:include filename="base_properties.xacro"/>
 
-    <!-- links -->
+    <!-- World link-joints -->
     <link name="base_link">
     </link>
 
     <link name="base_footprint">
     </link>
-
-    <link name="chassis_link">
-        <visual>
-            <origin xyz="${chassis_link_offset} 0 ${chassis_height_offset}"/>
-            <geometry>
-                <mesh filename="package://bot/description/meshes/model-base_part.dae"/>
-            </geometry>
-        </visual>
-        <collision>
-            <origin xyz="${chassis_link_offset} 0 ${chassis_height_offset}"/>
-            <geometry>
-                <mesh filename="package://bot/description/meshes/model-base_part.dae"/>
-            </geometry>
-        </collision>
-        <xacro:inertial_box mass="${chassis_mass}" x="${chassis_base}" y="${chassis_base}" z="${chassis_height}">
-            <origin xyz="${chassis_link_offset} 0 ${chassis_height_offset}" rpy="0 0 0"/>
-        </xacro:inertial_box>
-    </link>
-
-    <link name="left_back_wheel">
-        <visual>
-            <geometry>
-                <mesh filename="package://bot/description/meshes/model-wheel_part_curve.dae"/>
-            </geometry>
-        </visual>
-        <collision>
-            <geometry>
-                <mesh filename="package://bot/description/meshes/model-wheel_part_curve.dae"/>
-            </geometry>
-        </collision>
-        <xacro:inertial_cylinder mass="${wheel_mass}" length="${wheel_length}" radius="${wheel_radius}">
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-        </xacro:inertial_cylinder>
-    </link> 
-
-    <link name="right_back_wheel">
-        <visual>
-            <geometry>
-                <mesh filename="package://bot/description/meshes/model-wheel_part_curve.dae"/>
-            </geometry>
-        </visual>
-        <collision>
-            <geometry>
-                <mesh filename="package://bot/description/meshes/model-wheel_part_curve.dae"/>
-            </geometry>
-        </collision>
-        <xacro:inertial_cylinder mass="${wheel_mass}" length="${wheel_length}" radius="${wheel_radius}">
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-        </xacro:inertial_cylinder>
-    </link> 
-
-    <link name="left_front_wheel">
-        <visual>
-            <geometry>
-                <mesh filename="package://bot/description/meshes/model-wheel_part_curve.dae"/>
-            </geometry>
-        </visual>
-        <collision>
-            <geometry>
-                <mesh filename="package://bot/description/meshes/model-wheel_part_curve.dae"/>
-            </geometry>
-        </collision>
-        <xacro:inertial_cylinder mass="${wheel_mass}" length="${wheel_length}" radius="${wheel_radius}">
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-        </xacro:inertial_cylinder>
-    </link> 
-
-    <link name="right_front_wheel">
-        <visual>
-            <geometry>
-                <mesh filename="package://bot/description/meshes/model-wheel_part_curve.dae"/>
-            </geometry>
-        </visual>
-        <collision>
-            <geometry>
-                <mesh filename="package://bot/description/meshes/model-wheel_part_curve.dae"/>
-            </geometry>
-        </collision>
-        <xacro:inertial_cylinder mass="${wheel_mass}" length="${wheel_length}" radius="${wheel_radius}">
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-        </xacro:inertial_cylinder>
-    </link> 
-
-    <!-- Joints -->
-    <joint name="footprint-base" type="fixed">
-        <parent link="base"/>
-        <child link="footprint"/>
+    
+    <joint name="base_joint" type="fixed">
+        <parent link="base_footprint"/>
+        <child link="base_link"/>
         <origin xyz="0 0 0" rpy="0 0 0"/>
     </joint>
 
-    <joint name="chassis-base" type="fixed">
-        <parent link="base"/>
-        <child link="chassis"/>
-        <origin xyz="${chassis_joint_offset} 0 0"/>
+    <!-- <link name="odom">
+    </link>
+    
+    <joint name="base_odom" type="fixed">
+        <parent link="base_footprint"/>
+        <child link="odom"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint> -->
+
+    <!-- Body link-joints -->
+    <link name="chassis_link">
+        <visual>
+            <geometry>
+                <mesh filename="package://bot/description/meshes/model-chassis_part.dae" scale="${scale}"/>
+            </geometry>
+            <xacro:scaled_origin x="0.0" y="0.0" z="0.0"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://bot/description/meshes/model-chassis_part.dae" scale="${scale}"/>
+            </geometry>
+            <xacro:scaled_origin x="0.0" y="0.0" z="0.0"/>
+        </collision>
+        <xacro:inertial_box mass="${chassis_mass}" x="${actual_bot_width}" y="${actual_bot_length}" z="${actual_chassis_height}">
+            <!-- <origin xyz="0 0 0" rpy="0 0 0"/> -->
+            <xacro:scaled_origin_rpy x="0" y="0"  z="0" roll="0" pitch="0" yaw="0"/>
+        </xacro:inertial_box>
+    </link>
+
+    <joint name="chassis_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="chassis_link"/>
+        <xacro:scaled_origin x="0.0" y="0.0" z="0.0"/>
     </joint>
 
-    <joint name="left_back_wheel-base" type="continuous">
-        <parent link="base"/>
-        <child link="left_back_wheel"/>
-        <origin xyz="${backwheel_offset} ${leftwheel_offset} 0" rpy="${left_roll} 0 0"/>
-        <axis xyz="0 0 1"/>
-    </joint>
+    <!-- Wheel link-joints -->
+    <xacro:macro name="wheel_link" params="pos_x pos_y">
+        <link name="${pos_x}_${pos_y}_wheel_link">
+            <visual>
+                <geometry>
+                    <mesh filename="package://bot/description/meshes/model-wheel_part_curve.dae" scale="${scale}"/>
+                </geometry>
+                <xacro:scaled_origin_rpy x="0" y="0"  z="0" roll="0" pitch="0" yaw="0"/>
+            </visual>
+            <collision>
+                <geometry>
+                    <mesh filename="package://bot/description/meshes/model-wheel_part_curve.dae" scale="${scale}"/>
+                </geometry>
+                <xacro:scaled_origin_rpy x="0" y="0"  z="0" roll="0" pitch="0" yaw="0"/>
+            </collision>
+            <xacro:inertial_cylinder mass="${wheel_mass}" length="${total_wheel_length}" radius="${actual_wheel_radius}">
+                <!-- <origin xyz="0 0 0" rpy="0 0 0"/> -->
+            <xacro:scaled_origin_rpy x="0" y="0"  z="0" roll="0" pitch="0" yaw="0"/>
+            </xacro:inertial_cylinder>
+        </link> 
+    </xacro:macro>
     
-    <joint name="right_back_wheel-base" type="continuous">
-        <parent link="base"/>
-        <child link="right_back_wheel"/>
-        <origin xyz="${backwheel_offset} ${rightwheel_offset} 0" rpy="${right_roll} 0 0"/>
-        <axis xyz="0 0 -1"/>
-    </joint>
+    <xacro:wheel_link pos_x="left" pos_y="back"/>
+    <xacro:wheel_link pos_x="right" pos_y="back"/>
+    <xacro:wheel_link pos_x="left" pos_y="front"/>
+    <xacro:wheel_link pos_x="right" pos_y="front"/>
 
-    <joint name="left_front_wheel-base" type="continuous">
-        <parent link="base"/>
-        <child link="left_front_wheel"/>
-        <origin xyz="${frontwheel_offset} ${leftwheel_offset} 0" rpy="${left_roll} 0 0"/>
-        <axis xyz="0 0 1"/>
-    </joint>
+    <xacro:macro name="wheel_joint" params="pos_x pos_y axis">
+        <xacro:if value="${pos_x == 'left'}">
+            <xacro:property name="wheel_x" value="10.0"/>
+            <xacro:property name="wheel_turn" value="${left_roll}"/>
+        </xacro:if>
+        <xacro:if value="${pos_x == 'right'}">
+            <xacro:property name="wheel_x" value="10.0"/>
+            <xacro:property name="wheel_turn" value="${right_roll}"/>
+        </xacro:if>
+        <xacro:if value="${pos_y == 'back'}">
+            <xacro:property name="wheel_y" value="10.0"/>
+        </xacro:if>
+        <xacro:if value="${pos_y == 'front'}">
+            <xacro:property name="wheel_y" value="10.0"/>
+        </xacro:if>
+        <joint name="${pos_x}_${pos_y}_wheel_joint" type="continuous">
+            <parent link="base_link"/>
+            <child link="${pos_x}_${pos_y}_wheel_link"/>
+            <origin xyz="${wheel_x} ${wheel_y} 0" rpy="${wheel_turn} 0 0"/>
+            <xacro:scaled_origin_rpy x="${wheel_x}" y="${wheel_y}"  z="0" roll="${wheel_turn}" pitch="0" yaw="0"/>
+            <axis xyz="0 0 ${axis}"/>
+        </joint>
+    </xacro:macro>
     
-    <joint name="right_front_wheel-base" type="continuous">
-        <parent link="base"/>
-        <child link="right_front_wheel"/>
-        <origin xyz="${frontwheel_offset} ${rightwheel_offset} 0" rpy="${right_roll} 0 0"/>
-        <axis xyz="0 0 -1"/>
-    </joint>
-    
+    <xacro:wheel_joint pos_x="left" pos_y="back" axis="1"/>
+    <xacro:wheel_joint pos_x="right" pos_y="back" axis="-1"/>
+    <xacro:wheel_joint pos_x="left" pos_y="front" axis="1"/>
+    <xacro:wheel_joint pos_x="right" pos_y="front" axis="-1"/>
+
 </robot>
