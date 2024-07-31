@@ -1,3 +1,5 @@
+# Just some code
+
 import os
 
 from ament_index_python.packages import get_package_share_directory
@@ -19,6 +21,8 @@ def generate_launch_description():
 
     package_name='bot' #<--- CHANGE ME
 
+    gazebo_params_file = os.path.join(get_package_share_directory(package_name), 'config', 'gazebo_params.yaml')
+
     rsp = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([os.path.join(
                     get_package_share_directory(package_name),'launch','rsp.launch.py'
@@ -26,15 +30,20 @@ def generate_launch_description():
     )
     
     # Include the Gazebo launch file, provided by the gazebo_ros package
-    gazebo = Node(package='ros_gz', executable='create',
-                        arguments=['-topic', 'robot_description',
-                                   '-name', 'my_bot', '-world', 'default'],
-                        output='screen')
-    
+    gazebo = IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([os.path.join(
+                    get_package_share_directory('gazebo_ros'), 'launch', 'gazebo.launch.py')]), 
+                    launch_arguments={'extra_gazebo_args': '--ros-args --params-file' + gazebo_params_file, 'world': './src/bot/worlds/obstacles.world'}.items()
+             )
+
     # Run the spawner node from the gazebo_ros package. The entity name doesn't really matter if you only have a single robot.
-    spawn_entity = Node(package='ros_gz_bridge', executable='parameter_bridge',
-                        arguments=['/TOPIC@ROS_MSG@IGN_MSG'],
+    spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',
+                        arguments=['-topic', 'robot_description',
+                                   '-entity', 'my_bot'],
                         output='screen')
+
+    # added state publisher
+    state_publisher = Node(package='joint_state_publisher_gui', executable='joint_state_publisher_gui')
 
     #added ROS2 control spawners 
     diff_drive_spawner = Node(
@@ -50,11 +59,24 @@ def generate_launch_description():
         arguments=["joint_broad"],
     )
 
+    #added keyboard tele operation
+    key_teleop = Node(package="teleop_twist_keyboard", executable="teleop_twist_keyboard",
+                      arguments=['/cmd_vel:=/diff_cont/cmd_vel'])
+    
+    twist_stamper = Node(
+        package='twist_stamper',
+        executable='twist_stamper',
+        remappings=[('/cmd_vel_in','/diff_cont/cmd_vel_unstamped'),
+                    ('/cmd_vel_out','/diff_cont/cmd_vel')]
+      )
+
     # Launch them all!
     return LaunchDescription([
         rsp,
         gazebo,
-        # spawn_entity,
-        # diff_drive_spawner,
-        # joint_broad_spawner
+        spawn_entity,
+        diff_drive_spawner,
+        joint_broad_spawner,
+        # twist_stamper
+        # key_teleop
     ])
