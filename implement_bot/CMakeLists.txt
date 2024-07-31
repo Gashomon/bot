@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(bot)
+project(implement_bot)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -20,7 +20,6 @@ find_package(ament_cmake REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
-find_package(rclcpp REQUIRED)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -34,7 +33,7 @@ if(BUILD_TESTING)
 endif()
 
 install(
-  DIRECTORY config description launch worlds 
+  DIRECTORY config description hardware launch maps worlds 
   DESTINATION share/${PROJECT_NAME}
 )
 
