@@ -1,5 +1,7 @@
 # Main launch file with simulations & gui
 
+# Combined Bot & visuals launch 
+
 # import package path-finding method1
 import os
 from ament_index_python.packages import get_package_share_directory

@@ -7,42 +7,62 @@ from launch.substitutions import LaunchConfiguration
 from launch.actions import DeclareLaunchArgument
 from launch_ros.actions import Node
 
-import xacro
-
-
+from launch.actions import IncludeLaunchDescription
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+ 
 def generate_launch_description():
 
-    # Check if we're told to use sim time
-    use_sim_time = LaunchConfiguration('use_sim_time')
+    # config files
+    world_name = LaunchConfiguration('world_name')
 
-    # Process the URDF file
-    pkg_path = os.path.join(get_package_share_directory('bot'))
-    xacro_file = os.path.join(pkg_path,'description','main_urdf.xacro')
-    robot_description_config = xacro.process_file(xacro_file)
-    world_file = 'meh'
-    # Create a robot_state_publisher node
-    params = {'topic': robot_description_config.toxml(), 'name': use_sim_time, 'world': world_file}
+    rviz_config = LaunchConfiguration('rviz_config')
+
+    # define config file paths
+    pkg_path = os.path.join(get_package_share_directory('implement_bot'))
     
-    gazebo = Node(
-        package='ros_gz', 
-        executable='create',
-        output='screen')
+    default_rviz = os.path.join(pkg_path,'config/rviz/rviz.rviz')
+    # default_rviz = ''
+    default_gazebo = os.path.join(pkg_path,'worlds','practice.world')
 
-    # added state publisher gui
-    joint_state_publisher = Node(
-        package='rviz2', 
-        executable='rviz2',
-        output='screen',
-        params = ''
-        )
+    world_n = 'practice.world'
+    default_world = os.path.join(pkg_path,'worlds', world_n)
+
+    # gazebo classic launch
+    gazebo_cl = IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([os.path.join(
+                    get_package_share_directory('gazebo_ros'), 'launch', 'gazebo.launch.py')]), 
+                    launch_arguments={'world': default_world}.items()
+             )
+    # creates entity of robot for controller managers
+    entity_spawner = Node(
+        package = 'gazebo_ros', 
+        executable = 'spawn_entity.py',
+        arguments = ['-topic', 'robot_description', '-entity', 'robot1'],
+        output = 'screen'
+    )
+    
+    # rviz launch
+    rviz = Node(
+        package = 'rviz2', 
+        executable = 'rviz2',
+        output = 'screen',
+        arguments = ['-d', default_rviz]
+    )
 
     # Launch!
     return LaunchDescription([
         DeclareLaunchArgument(
-            'use_sim_time',
-            default_value='false',
-            description='Use sim time if true'),
-
-        robot_state_publisher,
-        joint_state_publisher 
+            'world_name',
+            default_value = 'practice.world',
+            description='loaded world for gazebo'
+        ),
+        DeclareLaunchArgument(
+            'rviz_config',
+            default_value = 'rviz.rviz',
+            description='loaded rviz config'
+        ), 
+        
+        gazebo_cl,
+        entity_spawner,
+        # rviz 
     ])

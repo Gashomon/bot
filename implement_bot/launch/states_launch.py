@@ -36,7 +36,7 @@ def generate_launch_description():
         package = 'joint_state_publisher_gui', 
         executable = 'joint_state_publisher_gui',
         output = 'screen',
-        # condition = IfCondition(jsp_on == 'true')
+        condition = IfCondition(jsp_on)
         )
 
     # Launch!
@@ -46,13 +46,13 @@ def generate_launch_description():
             default_value = 'false',
             description = 'Use sim time if true'
         ),
-        # DeclareLaunchArgument(
-        #     'jsp_on',
-        #     default_value = 'false',
-        #     choices = ['true', 'false'],
-        #     description = 'Actviate joint state publisher'
-        # ),
+        DeclareLaunchArgument(
+            'jsp_on',
+            default_value = 'false',
+            choices = ['true', 'false'],
+            description = 'Actviate joint state publisher'
+        ),
 
         robot_state_publisher,
-        # joint_state_publisher
+        joint_state_publisher
     ])
