@@ -9,7 +9,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
     
     <!-- Inertial xacro-->
-    <xacro:include filename="inertial_macros.xacro"/>
+    <xacro:include filename="base_properties.xacro"/>
 
     <!-- Static Variables -->
     <xacro:property name="left_roll" value="${-pi/2}"/>
@@ -34,7 +34,7 @@
     <xacro:property name="rightwheel_offset" value="-${(chassis_base/2) + (wheel_length/2)}"/>
 
     <!-- Materials -->
-    <material name="white">
+    <!-- <material name="white">
         <color rgba="1 1 1 1" />
     </material>
     
@@ -52,7 +52,7 @@
 
     <material name="red">
         <color rgba="1 0 0 1"/>
-    </material>
+    </material> -->
 
     <!-- links -->
     <link name="base">

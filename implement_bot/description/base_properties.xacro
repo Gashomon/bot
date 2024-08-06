@@ -16,25 +16,25 @@ Lengths are in meters, Mass are in kilograms, Angles are in radians, Values are 
 
     <xacro:property name="bot_pos_x" value="0.0"/>
     <xacro:property name="bot_pos_y" value="0.0"/>
-    <xacro:property name="bot_pos_z" value="0.0"/>
+    <xacro:property name="bot_pos_z" value="-0.019"/>
 
-    <xacro:property name="actual_bot_width" value="10.0"/>
-    <xacro:property name="actual_bot_length" value="10.0"/>
+    <xacro:property name="actual_bot_width" value="0.25"/>
+    <xacro:property name="actual_bot_length" value="0.15"/>
 
-    <xacro:property name="actual_chassis_height" value="10.0"/>
+    <xacro:property name="actual_chassis_height" value="0.067"/>
     <xacro:property name="chassis_mass" value="10.0"/>
 
-    <xacro:property name="actual_storage_height" value="10.0"/>
+    <xacro:property name="actual_storage_height" value="1.0"/>
     <xacro:property name="storage_mass" value="10.0"/>
 
-    <xacro:property name="actual_top_height" value="10.0"/>
+    <xacro:property name="actual_top_height" value="1.0"/>
     <xacro:property name="top_mass" value="10.0"/>
 
-    <xacro:property name="actual_wheel_radius" value="10.0"/>
-    <xacro:property name="actual_wheel_thickness" value="10.0"/>
-    <xacro:property name="actual_shaft_length" value="10.0"/>
+    <xacro:property name="actual_wheel_radius" value="0.1275"/>
+    <xacro:property name="actual_wheel_thickness" value="0.1"/>
+    <xacro:property name="actual_shaft_length" value="0.2"/>
     <xacro:property name="total_wheel_length" value="${actual_shaft_length + actual_wheel_thickness}"/>
-    <xacro:property name="wheel_mass" value="10.0"/>
+    <xacro:property name="wheel_mass" value="5.0"/>
 
     <!-- Macros-->
     <xacro:macro name="scaled_origin" params="x y z">
