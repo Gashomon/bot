@@ -9,32 +9,35 @@ Lengths are in meters, Mass are in kilograms, Angles are in radians, Values are 
     <!-- Constants -->
     <xacro:property name="left_roll" value="${-pi/2}"/>
     <xacro:property name="right_roll" value="${pi/2}"/>
+    <xacro:property name="smol_offset" value="0.01"/>
+    <xacro:property name="kgmm2_to_kgm2" value="1e-6" />
+    <xacro:property name="some_value" value="0.5" />
 
     <!-- Variables -->
     <xacro:property name="scale_val" value="1.0"/>
     <xacro:property name="scale" value="${scale_val} ${scale_val} ${scale_val}"/>
 
-    <xacro:property name="bot_pos_x" value="0.0"/>
-    <xacro:property name="bot_pos_y" value="0.0"/>
-    <xacro:property name="bot_pos_z" value="-0.019"/>
+    <xacro:property name="bot_pos_x" value="0.01"/>
+    <xacro:property name="bot_pos_y" value="0.01"/>
+    <xacro:property name="bot_pos_z" value="0.01"/>
 
-    <xacro:property name="actual_bot_width" value="0.25"/>
-    <xacro:property name="actual_bot_length" value="0.15"/>
+    <xacro:property name="actual_bot_width" value="0.4572"/>
+    <xacro:property name="actual_bot_length" value="0.4572"/>
 
-    <xacro:property name="actual_chassis_height" value="0.067"/>
-    <xacro:property name="chassis_mass" value="10.0"/>
+    <xacro:property name="actual_chassis_height" value="0.2286"/>
+    <xacro:property name="chassis_mass" value="5.0"/>
 
-    <xacro:property name="actual_storage_height" value="1.0"/>
+    <xacro:property name="actual_storage_height" value="0.4572"/>
     <xacro:property name="storage_mass" value="10.0"/>
 
-    <xacro:property name="actual_top_height" value="1.0"/>
+    <xacro:property name="actual_top_height" value="0.1524"/>
     <xacro:property name="top_mass" value="10.0"/>
 
-    <xacro:property name="actual_wheel_radius" value="0.1275"/>
-    <xacro:property name="actual_wheel_thickness" value="0.1"/>
-    <xacro:property name="actual_shaft_length" value="0.2"/>
-    <xacro:property name="total_wheel_length" value="${actual_shaft_length + actual_wheel_thickness}"/>
-    <xacro:property name="wheel_mass" value="5.0"/>
+    <xacro:property name="actual_wheel_radius" value="${(0.2032)/2}"/>
+    <xacro:property name="actual_wheel_thickness" value="0.0762"/>
+    <xacro:property name="actual_shaft_length" value="0.127"/>
+    <xacro:property name="actual_shaft_thickness" value="0.0232"/>
+    <xacro:property name="wheel_mass" value="2.0"/>
 
     <!-- Macros-->
     <xacro:macro name="scaled_origin" params="x y z">
@@ -78,8 +81,8 @@ Lengths are in meters, Mass are in kilograms, Angles are in radians, Values are 
         <inertial>
             <xacro:insert_block name="origin"/>
             <mass value="${mass}" />
-            <inertia ixx="${(2/5) * mass * (radius*radius)}" ixy="0.0" ixz="0.0"
-                    iyy="${(2/5) * mass * (radius*radius)}" iyz="0.0"
+            <inertia ixx="${(2/5) * mass * (radius*radius)}" ixy="${mass*some_value}" ixz="${mass*some_value}"
+                    iyy="${(2/5) * mass * (radius*radius)}" iyz="${mass*some_value}"
                     izz="${(2/5) * mass * (radius*radius)}" />
         </inertial>
     </xacro:macro>  
@@ -88,21 +91,22 @@ Lengths are in meters, Mass are in kilograms, Angles are in radians, Values are 
         <inertial>
             <xacro:insert_block name="origin"/>
             <mass value="${mass}" />
-            <inertia ixx="${(1/12) * (y*y+z*z)}" ixy="0.0" ixz="0.0"
-                    iyy="${(1/12) * (x*x+z*z)}" iyz="0.0"
-                    izz="${(1/12) * (x*x+y*y)}" />
+            <inertia    ixx="${(1/12) * mass * (x*x+z*z)*scale_val}" ixy="${0* some_value}" ixz="${0*some_value}"
+                        iyy="${(1/12) * mass * (y*y+z*z)*scale_val}" iyz="${0*some_value}"
+                        izz="${(1/12) * mass * (y*y+x*x)*scale_val}" />
         </inertial>
     </xacro:macro>
 
-    <xacro:macro name="inertial_cylinder" params="mass length radius *origin">
+    <xacro:macro name="inertial_cylinder" params="mass length radius *scaled_origin_rpy">
         <inertial>
-            <xacro:insert_block name="origin"/>
+            <xacro:insert_block name="scaled_origin_rpy"/>
             <mass value="${mass}" />
-            <inertia ixx="${(1/12) * mass * (3*radius*radius + length*length)}" ixy="0.0" ixz="0.0"
-                    iyy="${(1/12) * mass * (3*radius*radius + length*length)}" iyz="0.0"
-                    izz="${(1/2) * mass * (radius*radius)}" />
+            <inertia ixx="${(1/12) * mass * (3*radius*radius + length*length) * scale_val}" ixy="${mass*some_value}" ixz="${mass*some_value}"
+                    iyy="${(1/12) * mass * (3*radius*radius + length*length) * scale_val}" iyz="${mass*some_value}"
+                    izz="${(1/2) * mass * (radius*radius) * scale_val}" />
         </inertial>
+        
     </xacro:macro>
 
-
+    
 </robot>

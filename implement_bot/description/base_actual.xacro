@@ -51,7 +51,7 @@
     <joint name="chassis_joint" type="fixed">
         <parent link="base_link"/>
         <child link="chassis_link"/>
-        <xacro:scaled_origin x="0.0" y="0.0" z="0.0"/>
+        <xacro:scaled_origin x="${bot_pos_x}" y="${bot_pos_y}" z="${bot_pos_z}"/>
     </joint>
 
     <!-- Wheel link-joints -->
@@ -61,16 +61,16 @@
                 <geometry>
                     <mesh filename="package://implement_bot/description/meshes/model-wheel_part_curve.dae" scale="${scale}"/>
                 </geometry>
-                <xacro:scaled_origin_rpy x="${-(actual_wheel_thickness/2) - actual_shaft_length}" y="${actual_wheel_radius}"  z="-0.032" roll="0" pitch="0" yaw="0"/>
+                <xacro:scaled_origin_rpy x="${-actual_shaft_length*2 -(actual_wheel_thickness/2)}" y="${actual_wheel_radius + actual_shaft_thickness}"  z="${-actual_wheel_radius/2 + actual_shaft_thickness*2/3}" roll="0" pitch="0" yaw="0"/>
             </visual>
             <collision>
                 <geometry>
                     <mesh filename="package://implement_bot/description/meshes/model-wheel_part_curve.dae" scale="${scale}"/>
                 </geometry>
-                <xacro:scaled_origin_rpy x="${-(actual_wheel_thickness/2) - actual_shaft_length}" y="${actual_wheel_radius}"  z="-0.032" roll="0" pitch="0" yaw="0"/>
+                <xacro:scaled_origin_rpy x="${-actual_shaft_length*2 -(actual_wheel_thickness/2)}" y="${actual_wheel_radius + actual_shaft_thickness}"  z="${-actual_wheel_radius/2 + actual_shaft_thickness*2/3}" roll="0" pitch="0" yaw="0"/>
             </collision>
             <xacro:inertial_cylinder mass="${wheel_mass}" length="${actual_wheel_thickness}" radius="${actual_wheel_radius}">
-                <xacro:scaled_origin_rpy x="${-(actual_wheel_thickness/2) - actual_shaft_length}" y="${actual_wheel_radius}"  z="-0.032" roll="0" pitch="0" yaw="0"/>
+                <xacro:scaled_origin_rpy x="${-actual_shaft_length*2 -(actual_wheel_thickness/2)}" y="${actual_wheel_radius + actual_shaft_thickness}"  z="${-actual_wheel_radius/2 + actual_shaft_thickness*2/3}" roll="0" pitch="0" yaw="0"/>
             </xacro:inertial_cylinder>
         </link> 
     </xacro:macro>
@@ -82,18 +82,18 @@
 
     <xacro:macro name="wheel_joint" params="pos_x pos_y axis">
         <xacro:if value="${pos_x == 'left'}">
-            <xacro:property name="wheel_x" value="${-actual_bot_width}"/>
+            <xacro:property name="wheel_x" value="${-(actual_bot_width/2) - actual_wheel_radius}"/>
             <xacro:property name="wheel_turn" value="${pi}"/>
         </xacro:if>
         <xacro:if value="${pos_x == 'right'}">
-            <xacro:property name="wheel_x" value="${actual_bot_width}"/>
+            <xacro:property name="wheel_x" value="${(actual_bot_width/2) + actual_wheel_radius}"/>
             <xacro:property name="wheel_turn" value="0"/>
         </xacro:if>
         <xacro:if value="${pos_y == 'back'}">
-            <xacro:property name="wheel_y" value="${-actual_bot_length}"/>
+            <xacro:property name="wheel_y" value="${-(actual_bot_length/2 - actual_wheel_radius)}"/>
         </xacro:if>
         <xacro:if value="${pos_y == 'front'}">
-            <xacro:property name="wheel_y" value="${actual_bot_length}"/>
+            <xacro:property name="wheel_y" value="${(actual_bot_length/2 - actual_wheel_radius)}"/>
         </xacro:if>
         <joint name="${pos_x}_${pos_y}_wheel_joint" type="continuous">
             <parent link="chassis_link"/>
@@ -101,11 +101,11 @@
             <xacro:scaled_origin_rpy x="${wheel_x}" y="${wheel_y}"  z="${actual_wheel_radius/2}" roll="0" pitch="${wheel_turn}" yaw="0"/>
             <axis xyz="${axis} 0 0"/>
         </joint>
-        <!-- <gazebo reference="${pos_x}_${pos_y}_wheel_link">
+        <gazebo reference="${pos_x}_${pos_y}_wheel_link">
             <material>Gazebo/Blue</material>
-            <mu1 value="0.1"/>
-            <mu2 value="0.1"/>
-         </gazebo> -->
+            <mu1 value="1.0"/>
+            <mu2 value="0.125"/>
+         </gazebo>
     </xacro:macro>
     
     <xacro:wheel_joint pos_x="left" pos_y="back" axis="1"/>

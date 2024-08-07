@@ -10,19 +10,21 @@
             <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${pi}"/>
             <material name="black"/>
         </visual>
-        <!-- <xacro:lidar_inertia xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/> -->
         <collision>
             <geometry>
                 <cylinder radius="0.05" length="0.04"/>
             </geometry>
             <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
         </collision>
+        <xacro:inertial_cylinder mass="0.10" length="0.04" radius="0.05">
+                <xacro:scaled_origin_rpy x="0" y="0"  z="0" roll="0" pitch="0" yaw="0"/>
+        </xacro:inertial_cylinder>
     </link>
 
     <joint name="lidar_link_joint" type="fixed">
-        <parent link="base_link"/>
+        <parent link="chassis_link"/>
         <child link="lidar_link"/>
-        <origin xyz="0.0 0.0 ${scale_val* 0.2116}" rpy="0.0 0.0 0.0"/>
+        <origin xyz="0.0 0.0 ${scale_val* 0.5}" rpy="0.0 0.0 0.0"/>
     </joint>
 
 
@@ -31,7 +33,7 @@
     <joint name="lidar_frame_joint" type="fixed">
         <parent link="lidar_link"/>
         <child link="laser_frame"/>
-        <origin xyz="0.0 0.0 ${scale_val* 0.025101}" rpy="0.0 0.0 0.0"/>
+        <origin xyz="0.0 0.0 ${scale_val* 0.0}" rpy="0.0 0.0 0.0"/>
     </joint>
 
     <gazebo reference="laser_frame">
