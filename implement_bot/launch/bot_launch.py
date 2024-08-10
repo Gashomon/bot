@@ -48,20 +48,6 @@ def generate_launch_description():
                 launch_arguments={'use_sim_time': use_sim_time, 'jsp_on': jsp_on}.items()
     )
 
-    # added ROS2 control manager 
-    diff_drive_spawner = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=["diff_cont"]
-    )
-
-    # added ROS2 control manager 
-    joint_broad_spawner = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=["joint_broad"]
-    )
-
     # compressed launch description function
     ld = LaunchDescription()
 
@@ -71,8 +57,6 @@ def generate_launch_description():
 
     # add launch files
     ld.add_action(states_publisher)
-    ld.add_action(diff_drive_spawner)
-    ld.add_action(joint_broad_spawner)
 
     # Launch them all!
     return ld
