@@ -12,7 +12,7 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
  
 def generate_launch_description():
 
-    # config files
+    # config files unused
     world_name = LaunchConfiguration('world_name')
 
     rviz_config = LaunchConfiguration('rviz_config')
@@ -51,18 +51,18 @@ def generate_launch_description():
 
     # Launch!
     return LaunchDescription([
-        DeclareLaunchArgument(
-            'world_name',
-            default_value = 'practice.world',
-            description='loaded world for gazebo'
-        ),
-        DeclareLaunchArgument(
-            'rviz_config',
-            default_value = 'rviz.rviz',
-            description='loaded rviz config'
-        ), 
+        # DeclareLaunchArgument(
+        #     'world_name',
+        #     default_value = 'practice.world',
+        #     description='loaded world for gazebo'
+        # ),
+        # DeclareLaunchArgument(
+        #     'rviz_config',
+        #     default_value = 'rviz.rviz',
+        #     description='loaded rviz config'
+        # ), 
         
         gazebo_cl,
         entity_spawner,
-        # rviz 
+        rviz    
     ])
