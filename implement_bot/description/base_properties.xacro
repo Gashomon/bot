@@ -7,19 +7,19 @@ Lengths are in meters, Mass are in kilograms, Angles are in radians, Values are 
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
 
     <!-- Constants -->
-    <xacro:property name="left_roll" value="${-pi/2}"/>
-    <xacro:property name="right_roll" value="${pi/2}"/>
+    <xacro:property name="right_roll" value="${-pi/2}"/>
+    <xacro:property name="left_roll" value="${pi/2}"/>
     <xacro:property name="smol_offset" value="0.01"/>
     <xacro:property name="kgmm2_to_kgm2" value="1e-6" />
-    <xacro:property name="some_value" value="0.5" />
+    <xacro:property name="some_value" value="0" />
 
     <!-- Variables -->
     <xacro:property name="scale_val" value="1.0"/>
     <xacro:property name="scale" value="${scale_val} ${scale_val} ${scale_val}"/>
 
-    <xacro:property name="bot_pos_x" value="0.01"/>
-    <xacro:property name="bot_pos_y" value="0.01"/>
-    <xacro:property name="bot_pos_z" value="0.01"/>
+    <xacro:property name="bot_pos_x" value="0.0"/>
+    <xacro:property name="bot_pos_y" value="0.0"/>
+    <xacro:property name="bot_pos_z" value="${actual_wheel_radius/2 + 0.0}"/>
 
     <xacro:property name="actual_bot_width" value="0.4572"/>
     <xacro:property name="actual_bot_length" value="0.4572"/>
@@ -41,15 +41,15 @@ Lengths are in meters, Mass are in kilograms, Angles are in radians, Values are 
 
     <!-- Macros-->
     <xacro:macro name="scaled_origin" params="x y z">
-        <origin xyz="   ${bot_pos_x + (x * scale_val)}
-                        ${bot_pos_y + (y * scale_val)} 
-                        ${bot_pos_z + (z * scale_val)}" />
+        <origin xyz="   ${(x * scale_val)}
+                        ${(y * scale_val)} 
+                        ${(z * scale_val)}" />
     </xacro:macro>
 
     <xacro:macro name="scaled_origin_rpy" params="x y z roll pitch yaw">
-        <origin xyz="   ${bot_pos_x + (x * scale_val)} 
-                        ${bot_pos_y + (y * scale_val)} 
-                        ${bot_pos_z + (z * scale_val)}" 
+        <origin xyz="   ${(x * scale_val)} 
+                        ${(y * scale_val)} 
+                        ${(z * scale_val)}" 
                 
                 rpy="${roll} ${pitch} ${yaw}"/>
     </xacro:macro>
