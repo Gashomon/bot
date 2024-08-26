@@ -1,7 +1,8 @@
 # ROS COMMANDS
 ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r /cmd_vel:=/diff_cont/cmd_vel_unstamped
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r /cmd_vel:=/cmd_vel_key
 rqt_graph
-ros2 launch slam_toolbox online_async_launch.py slam_params_file:=./src/bot/config/mapper_params_online_async.yaml use_sim_time:=true
+ros2 launch slam_toolbox online_async_launch.py slam_params_file:=./src/bot/implement_bot/config/mapper_params_online_async.yaml use_sim_time:=true
 ros2 run nav2_map_server map_server --ros-args -p yaml_filename:=map_save.yaml -p use_sim_time:=true
 ros2 run nav2_util lifecycle_bringup map_server
 ros2 run nav2_amcl amcl --ros-args -p use_sim_time:=true
