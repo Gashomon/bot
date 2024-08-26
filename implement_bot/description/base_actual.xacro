@@ -18,16 +18,24 @@
     <joint name="base_joint" type="fixed">
         <parent link="base_link"/>
         <child link="base_footprint"/>
-        <origin xyz="0 0 -0.01" rpy="0 0 0"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
     </joint>
 
-    <!-- <link name="odom">
+    <link name="odom">
     </link>
-    <joint name="base_odom" type="fixed">
-        <parent link="base_link"/>
+    <joint name="odom_base" type="fixed">
+        <parent link="odom"/>
+        <child link="base_link"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <link name="map">
+    </link>
+    <joint name="map_odom" type="fixed">
+        <parent link="map"/>
         <child link="odom"/>
         <origin xyz="0 0 0" rpy="0 0 0"/>
-    </joint> -->
+    </joint>
 
     <!-- Body link-joints -->
     <link name="chassis_link">
