@@ -16,11 +16,28 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 # find dependencies
-find_package( ament_cmake REQUIRED)
+find_package(ament_cmake REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 
+# CODE dependencies
+# find_package(applicate_bot REQUIRED)
+
+# ROBOT dependencies
+# find_package(robot_description REQUIRED)
+find_package(nav2_bringup REQUIRED)
+find_package(nav2_amcl REQUIRED)
+find_package(nav2_map_server REQUIRED)
+find_package(ros2_control REQUIRED)
+find_package(slam_toolbox REQUIRED)
+
+# HARDWARE dependencies
+find_package(hardware_interface REQUIRED)
+
+# SENSOR dependencies
+find_package(imu_sensor_broadcaster REQUIRED)
+# find_package(rplidar_ros REQUIRED)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -34,8 +51,26 @@ if(BUILD_TESTING)
 endif()
 
 install(
-  DIRECTORY config description hardware launch maps worlds 
+  DIRECTORY config description hardware launch maps worlds   
   DESTINATION share/${PROJECT_NAME}
 )
+
+# SETTING EXECUTABLES
+
+# launch directory
+# set(launch_dir "src/bot/implement_bot/launch/")
+
+# # To record launch files as executables
+# add_executable(visuals ${launch_dir}visuals_launch.py)
+
+# # To add dependencies specifially for each executable
+# # ament_target_dependencies()
+
+# # To enable all recorded executables to the computer
+# install(
+#   TARGETS
+#   visuals
+#   DESTINATION lib/${PROJECT_NAME}
+# )
 
 ament_package()

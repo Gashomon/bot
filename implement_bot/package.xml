@@ -9,6 +9,24 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
+  <!-- CODE -->
+  <exec_depend>applicate_bot</exec_depend>
+
+  <!-- ROBOT -->
+  <exec_depend>robot_description</exec_depend>
+  <exec_depend>nav2_bringup</exec_depend>
+  <exec_depend>nav2_amcl</exec_depend>
+  <exec_depend>nav2_map_server</exec_depend>
+  <exec_depend>ros2_control</exec_depend>
+  <exec_depend>slam_toolbox</exec_depend>
+  
+  <!-- HARDWARE -->
+  <exec_depend>hardware interface</exec_depend>
+
+  <!-- SENSOR -->
+  <exec_depend>imu_sensor_broadcaster</exec_depend>
+  <exec_depend>rplidar_ros</exec_depend>
+
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
 
