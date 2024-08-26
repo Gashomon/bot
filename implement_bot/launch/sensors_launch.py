@@ -17,5 +17,5 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
-        lidar_sensor
+        # lidar_sensor
     ])

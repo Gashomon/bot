@@ -28,8 +28,8 @@ def generate_launch_description():
     package_path = get_package_share_directory(package_name)
 
     # Visuals Launcher Args
-    default_rviz = os.path.join(package_path,'config/rviz/rviz.rviz')
-    world_n = 'practice.world'
+    default_rviz = os.path.join(package_path,'config/rviz/nav2_config.rviz')
+    world_n = 'house.world'
     default_world = os.path.join(package_path,'worlds', world_n)
 
     # Bot Launcher Args
@@ -71,23 +71,11 @@ def generate_launch_description():
     )
     
     # Run the spawner node from the gazebo_ros package. The entity name doesn't really matter if you only have a single robot.
-    spawn_entity = Node(package='ros_gz_bridge', executable='parameter_bridge',
+    spawn_bridge = Node(package='ros_gz_bridge', executable='parameter_bridge',
                         arguments=['/TOPIC@ROS_MSG@IGN_MSG'],
                         output='screen')
 
-    #added ROS2 control spawners 
-    diff_drive_spawner = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=["diff_cont"],
-    )
-
-    #added ROS2 control spawners 
-    joint_broad_spawner = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=["joint_broad"],
-    )
+    
 
     ld = LaunchDescription()
 
@@ -97,10 +85,10 @@ def generate_launch_description():
 
     #launch files
     ld.add_action(visuals_launch)
+    ld.add_action(spawn_bridge)
     ld.add_action(bot_launch)
-    ld.add_action(spawn_entity)
-    ld.add_action(diff_drive_spawner)
-    ld.add_action(joint_broad_spawner)
+    # ld.add_action(diff_drive_spawner)
+    # ld.add_action(joint_broad_spawner)
 
     # Launch them all!
     return ld

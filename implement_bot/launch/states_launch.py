@@ -3,9 +3,11 @@ import os
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
-from launch.substitutions import LaunchConfiguration
-from launch.actions import DeclareLaunchArgument
+from launch.substitutions import LaunchConfiguration, PythonExpression
+from launch.actions import DeclareLaunchArgument, LogInfo
 from launch_ros.actions import Node
+
+# from launch.
 
 import xacro
 
@@ -39,6 +41,27 @@ def generate_launch_description():
         condition = IfCondition(jsp_on)
         )
 
+    twist_params = os.path.join(pkg_path, 'config', 'twist_mux.yaml')
+    twist_remaps = Node(
+        package="twist_mux",
+        executable="twist_mux",
+        parameters=[twist_params, {use_sim_time:True}],
+        remappings=[('/cmd_vel_out', '/diff_cont/cmd_vel_unstamped')]
+    )
+    #added ROS2 control spawners 
+    diff_drive_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["diff_cont"],
+    )
+
+    #added ROS2 control spawners 
+    joint_broad_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["joint_broad"],
+    )
+
     # Launch!
     return LaunchDescription([
         DeclareLaunchArgument(
@@ -54,5 +77,9 @@ def generate_launch_description():
         ),
 
         robot_state_publisher,
-        joint_state_publisher
+        joint_state_publisher,
+        twist_remaps,
+        diff_drive_spawner,
+        joint_broad_spawner
+
     ])

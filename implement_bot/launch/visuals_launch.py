@@ -22,9 +22,9 @@ def generate_launch_description():
     
     default_rviz = os.path.join(pkg_path,'config/rviz/rviz.rviz')
     # default_rviz = ''
-    default_gazebo = os.path.join(pkg_path,'worlds','practice.world')
+    default_gazebo = os.path.join(pkg_path,'worlds','house.world')
 
-    world_n = 'practice.world'
+    world_n = 'house.world'
     default_world = os.path.join(pkg_path,'worlds', world_n)
 
     # gazebo classic launch
@@ -33,7 +33,8 @@ def generate_launch_description():
                     get_package_share_directory('gazebo_ros'), 'launch', 'gazebo.launch.py')]), 
                     launch_arguments={'world': default_world}.items()
              )
-    # creates entity of robot for controller managers
+
+    # creates entity of robot for simulation
     entity_spawner = Node(
         package = 'gazebo_ros', 
         executable = 'spawn_entity.py',
