@@ -20,6 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'navigate = applicate_bot.nav_func:main',
+            'keyboard = applicate_bot.key_input:main'
         ],
     },
 )
