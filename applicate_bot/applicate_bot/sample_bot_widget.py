@@ -8,6 +8,19 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
+import numpy as np
+import nav_func_basic
+bot = nav_func_basic.NavigationNode()
+# Set waypoints and start navigation
+waypoints = {
+            '0':(0.0, 0.0, 0.0),  # Assuming the robot stops facing the original direction
+            '1':(4.0, 2.5, np.radians(0)),
+            '2':(2.5, 2.5, np.radians(90)),
+            '3':(2.5, 7.0, np.radians(-130.60)),
+            '4':(-3.5, 0.0, np.radians(11.31)),
+            '5':(9.0, 2.5, np.radians(155.56)),
+            '6':(3.5, 5.0, np.radians(-125.00)),
+}
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -44,15 +57,15 @@ class Ui_Form(object):
         self.x_pos_lbl = QtWidgets.QLabel(parent=Form)
         self.x_pos_lbl.setGeometry(QtCore.QRect(290, 70, 61, 16))
         self.x_pos_lbl.setObjectName("x_pos_lbl")
-        self.x_pos_out = QtWidgets.QLineEdit(parent=Form)
-        self.x_pos_out.setGeometry(QtCore.QRect(290, 130, 113, 21))
-        self.x_pos_out.setObjectName("x_pos_out")
+        self.y_pos_in = QtWidgets.QLineEdit(parent=Form)
+        self.y_pos_in.setGeometry(QtCore.QRect(290, 130, 113, 21))
+        self.y_pos_in.setObjectName("y_pos_in")
         self.y_pos_label = QtWidgets.QLabel(parent=Form)
         self.y_pos_label.setGeometry(QtCore.QRect(290, 110, 61, 16))
         self.y_pos_label.setObjectName("y_pos_label")
-        self.angle_out = QtWidgets.QLineEdit(parent=Form)
-        self.angle_out.setGeometry(QtCore.QRect(290, 180, 113, 21))
-        self.angle_out.setObjectName("angle_out")
+        self.angle_in = QtWidgets.QLineEdit(parent=Form)
+        self.angle_in.setGeometry(QtCore.QRect(290, 180, 113, 21))
+        self.angle_in.setObjectName("angle_in")
         self.angle_lbl = QtWidgets.QLabel(parent=Form)
         self.angle_lbl.setGeometry(QtCore.QRect(290, 160, 61, 16))
         self.angle_lbl.setObjectName("angle_lbl")
@@ -70,6 +83,12 @@ class Ui_Form(object):
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
+        # FUNCTIONS
+        self.base_bt.clicked.connect(lambda: self.goDest("Base Station", 0.0, 0.0, 0.0))
+        self.dest1_bt.clicked.connect(lambda: self.goDest("Destination 1", 1.0, 0.0, 0.0))
+        self.dest2_bt.clicked.connect(lambda: self.goDest("Destination 2", 2.0, 2.0, 180.0))
+        self.pos_bt.clicked.connect(lambda: self.goDest(self.getDest()))
+
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
@@ -85,6 +104,29 @@ class Ui_Form(object):
         self.angle_lbl.setText(_translate("Form", "angle"))
         self.pos_bt.setText(_translate("Form", "RUN"))
         self.response_lbl.setText(_translate("Form", "ROBOT RESPONSE"))
+
+
+    def goDest(self, dest, x, y, a):
+        if dest == "error":
+            self.err("wrong input")
+        else:
+            self.response_lbl.setText("Going to " + dest)
+            bot.follow_waypoints(bot.create_pose_stamped(x, y, np.radians(a)))
+
+    def getDest(self):
+        x = self.x_pos_in.text()
+        y = self.y_pos_in.text()
+        a = self.angle_in.text()
+        if x.isnumeric() and y.isnumeric() and a.isnumeric():
+            txt = "pos: " + x + ", " + y + ": " + a + "°" 
+            return txt, x, y, a
+        else:
+            return "error"
+    
+    def err(self, msg):
+        self.response_lbl.setText("Error: " + msg)
+
+
 
 
 if __name__ == "__main__":
