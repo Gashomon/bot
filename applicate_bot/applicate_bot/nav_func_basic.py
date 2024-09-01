@@ -4,7 +4,6 @@ from rclpy.node import Node
 from nav2_simple_commander.robot_navigator import BasicNavigator
 from geometry_msgs.msg import PoseStamped
 import tf_transformations
-import numpy as np
 
 import sys
 from select import select
