@@ -6,6 +6,7 @@ from geometry_msgs.msg import PoseStamped
 import tf_transformations
 import numpy as np
 
+# 
 import sys
 from select import select
 
@@ -14,9 +15,9 @@ if sys.platform == 'win32':
 else:
     import termios
     import tty
+# 
 
-# Set waypoints and start navigation
-waypoints = {
+pop = {
             '1':(4.0, 2.5, np.radians(0)),
             '2':(2.5, 2.5, np.radians(90)),
             '3':(2.5, 7.0, np.radians(-130.60)),
@@ -24,36 +25,10 @@ waypoints = {
             '5':(9.0, 2.5, np.radians(155.56)),
             '6':(3.5, 5.0, np.radians(-125.00)),
             '7':(0.0, 0.0, 0.0)  # Assuming the robot stops facing the original direction
-}
-
-def getKey(settings, timeout):
-    if sys.platform == 'win32':
-        # getwch() returns a string on Windows
-        key = msvcrt.getwch()
-    else:
-        tty.setraw(sys.stdin.fileno())
-        # sys.stdin.read() returns a string on Linux
-        rlist, _, _ = select([sys.stdin], [], [], timeout)
-        if rlist:
-            key = sys.stdin.read(1)
-        else:
-            key = ''
-        termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
-    return key
-
-def saveTerminalSettings():
-    if sys.platform == 'win32':
-        return None
-    return termios.tcgetattr(sys.stdin)
-
-def restoreTerminalSettings(old_settings):
-    if sys.platform == 'win32':
-        return
-    termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
-
-class NavigationNode(Node):  
+        }
+class HousePatrolNode(Node):  
     def __init__(self):
-        super().__init__('nav_func') 
+        super().__init__('house_patrol') 
         self.navigator = BasicNavigator()
 
         # Set initial pose
@@ -62,6 +37,18 @@ class NavigationNode(Node):
 
         # Wait for Nav2 to be active
         self.navigator.waitUntilNav2Active()
+
+        # Set waypoints and start navigation
+        waypoints = [
+            self.create_pose_stamped(4.0, 2.5, np.radians(0)),
+            self.create_pose_stamped(2.5, 2.5, np.radians(90)),
+            self.create_pose_stamped(2.5, 7.0, np.radians(-130.60)),
+            self.create_pose_stamped(-3.5, 0.0, np.radians(11.31)),
+            self.create_pose_stamped(9.0, 2.5, np.radians(155.56)),
+            self.create_pose_stamped(3.5, 5.0, np.radians(-125.00)),
+            self.create_pose_stamped(0.0, 0.0, 0.0)  # Assuming the robot stops facing the original direction
+        ]
+        self.set_path()
 
     def create_pose_stamped(self, position_x, position_y, orientation_z):
         q_x, q_y, q_z, q_w = tf_transformations.quaternion_from_euler(0.0, 0.0, orientation_z)
@@ -84,32 +71,56 @@ class NavigationNode(Node):
             self.get_logger().info('Navigation Feedback: %s' % feedback)
         result = self.navigator.getResult()
         self.get_logger().info('Navigation Result: %s' % result)
-
-def main(args=None):
-    rclpy.init(args=args)
-    node = NavigationNode() 
-    settings = saveTerminalSettings()
-    key_timeout = 0.5
-    for i in waypoints.keys():
-        node.create_pose_stamped(waypoints[i][0], waypoints[i][1], waypoints[i][2])
-
-    try:
-        rclpy.spin(node)
-        
-        while(1):
-            key = getKey(settings, key_timeout)
-            if key in waypoints.keys():
-                curr_way = node.create_pose_stamped(waypoints[key][0], waypoints[key][1], waypoints[key][2])
-                node.follow_waypoints(curr_way)
+        self.set_path()
+# 
+    def get_key(self, settings, timeout):
+        if sys.platform == 'win32':
+            # getwch() returns a string on Windows
+            key = msvcrt.getwch()
+        else:
+            tty.setraw(sys.stdin.fileno())
+            # sys.stdin.read() returns a string on Linux
+            rlist, _, _ = select([sys.stdin], [], [], timeout)
+            if rlist:
+                key = sys.stdin.read(1)
             else:
-                self.get_logger().info('bing chilling...\n')
+                key = ''
+            termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
+        return key
+    
+    def saveTerminalSettings(self):
+        if sys.platform == 'win32':
+            return None
+        return termios.tcgetattr(sys.stdin)
+
+    def restoreTerminalSettings(old_settings):
+        if sys.platform == 'win32':
+            return
+        termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
+
+    def set_path(self):
+        settings = self.saveTerminalSettings()
+        key_timeout = 0.5
+        self.get_logger().info('Starting. Press some keys...\n')
+        while(1):
+            key = self.get_key(settings, key_timeout)
+            if key in pop.keys():
+                dest = [self.create_pose_stamped(pop[key][0], pop[key][1], pop[key][2])]
+                self.follow_waypoints(dest)
+                self.get_logger().info('Finished! Press some keys...\n')
+            else:
+                # self.get_logger().info('Press some keys...\n')
                 if (key == '\x03'):
                     break
-
-    except Exception as e:
-        print(e)
+# 
+def main(args=None):
+    rclpy.init(args=args)
+    node = HousePatrolNode()  
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        pass
     finally:
-        restoreTerminalSettings(settings) 
         node.destroy_node()
         rclpy.shutdown()
 

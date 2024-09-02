@@ -16,7 +16,7 @@ else:
 
 class NavigationNode(Node):  
     def __init__(self):
-        super().__init__('nav_func') 
+        super().__init__('NavigationNode') 
         self.navigator = BasicNavigator()
 
         # Set initial pose
@@ -25,7 +25,7 @@ class NavigationNode(Node):
 
         # Wait for Nav2 to be active
         self.navigator.waitUntilNav2Active()
-
+        
     def create_pose_stamped(self, position_x, position_y, orientation_z):
         q_x, q_y, q_z, q_w = tf_transformations.quaternion_from_euler(0.0, 0.0, orientation_z)
         pose = PoseStamped()

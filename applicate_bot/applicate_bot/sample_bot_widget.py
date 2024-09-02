@@ -9,8 +9,11 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 
 import numpy as np
-import nav_func_basic
+import rclpy
+rclpy.init(args=None)
+from applicate_bot import nav_func_basic
 bot = nav_func_basic.NavigationNode()
+
 # Set waypoints and start navigation
 waypoints = {
             '0':(0.0, 0.0, 0.0),  # Assuming the robot stops facing the original direction
@@ -84,9 +87,9 @@ class Ui_Form(object):
         QtCore.QMetaObject.connectSlotsByName(Form)
 
         # FUNCTIONS
-        self.base_bt.clicked.connect(lambda: self.goDest("Base Station", 0.0, 0.0, 0.0))
-        self.dest1_bt.clicked.connect(lambda: self.goDest("Destination 1", 1.0, 0.0, 0.0))
-        self.dest2_bt.clicked.connect(lambda: self.goDest("Destination 2", 2.0, 2.0, 180.0))
+        self.base_bt.clicked.connect(lambda: self.goDest(["Base Station", 0.0, 0.0, 0.0]))
+        self.dest1_bt.clicked.connect(lambda: self.goDest(["Destination 1", 1.0, 0.0, 0.0]))
+        self.dest2_bt.clicked.connect(lambda: self.goDest(["Destination 2", 2.0, 2.0, 180.0]))
         self.pos_bt.clicked.connect(lambda: self.goDest(self.getDest()))
 
     def retranslateUi(self, Form):
@@ -106,30 +109,64 @@ class Ui_Form(object):
         self.response_lbl.setText(_translate("Form", "ROBOT RESPONSE"))
 
 
-    def goDest(self, dest, x, y, a):
+    def goDest(self, arr):
+        dest = arr[0]
+        x = float(arr[1])
+        y = float(arr[2])
+        a = np.radians(float(arr[3]))
         if dest == "error":
             self.err("wrong input")
         else:
             self.response_lbl.setText("Going to " + dest)
-            bot.follow_waypoints(bot.create_pose_stamped(x, y, np.radians(a)))
-
+            bot.follow_waypoints([bot.create_pose_stamped(x, y, a)])
+    
     def getDest(self):
         x = self.x_pos_in.text()
         y = self.y_pos_in.text()
         a = self.angle_in.text()
+        xneg = False
+        yneg = False
+        aneg = False
+        if x[0]== '-':
+            x = self.rmchars(x, 1, 'left')
+            xneg = True
+        if y[0]== '-':
+            y = self.rmchars(y, 1, 'left')
+            yneg = True
+        if a[0]== '-':
+            a = self.rmchars(a, 1, 'left')
+            aneg = True
         if x.isnumeric() and y.isnumeric() and a.isnumeric():
+            if xneg:
+                x= '-'+x
+            if yneg:
+                y='-'+y
+            if aneg:
+                a='-'+a 
             txt = "pos: " + x + ", " + y + ": " + a + "°" 
-            return txt, x, y, a
+            arr = [txt, x, y, a]
+            return arr
         else:
-            return "error"
+            
+            return ["error", 0,0,0]
     
     def err(self, msg):
         self.response_lbl.setText("Error: " + msg)
+        return
+    
+    def rmchars(self, word, n, dir):
+        new =''
+        for i in range(len(word)):
+            if dir == 'left' and i < n+i:
+                n-=1
+                continue
+            elif dir == 'right' and i> len(word)-n:
+                n-=1
+                continue
+            new+=word[i]
+        return new
 
-
-
-
-if __name__ == "__main__":
+def main(args=None):
     import sys
     app = QtWidgets.QApplication(sys.argv)
     Form = QtWidgets.QWidget()
@@ -137,3 +174,7 @@ if __name__ == "__main__":
     ui.setupUi(Form)
     Form.show()
     sys.exit(app.exec())
+    
+
+if __name__ == "__main__":
+    main()
