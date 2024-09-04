@@ -62,6 +62,46 @@
         <xacro:scaled_origin x="${bot_pos_x}" y="${bot_pos_y}" z="${bot_pos_z}"/>
     </joint>
 
+    <!-- Motor link-joints -->
+    <xacro:macro name="motor_link_joint" params="pos_x axis">
+        <link name="${pos_x}_motor_link">
+            <visual>
+                <geometry> 
+                    <cylinder radius="0.01" length="0.01"/>
+                </geometry>
+                <xacro:scaled_origin_rpy x="${-actual_shaft_length*2 -(actual_wheel_thickness/2)}" y="${actual_wheel_radius + actual_shaft_thickness}"  z="${-actual_wheel_radius/2 + actual_shaft_thickness*2/3}" roll="0" pitch="0" yaw="0"/>
+            </visual>
+            <collision>
+                <geometry> 
+                    <cylinder radius="0.01" length="0.01"/>
+                </geometry>
+                <origin xyz="0 0 0" rpy="0 ${pi/2} 0 "/>
+            </collision>
+            <xacro:inertial_cylinder mass="${wheel_mass}" length="${actual_wheel_thickness}" radius="${actual_wheel_radius}">
+                <origin xyz="0 0 0" rpy="0 ${pi/2} 0 "/>
+            </xacro:inertial_cylinder>
+        </link> 
+
+        <xacro:if value="${pos_x == 'left'}">
+            <xacro:property name="wheel_x" value="${+(actual_bot_width/2) + actual_wheel_radius}"/>
+            <xacro:property name="wheel_turn_x" value="0"/>
+        </xacro:if>
+        <xacro:if value="${pos_x == 'right'}">
+            <xacro:property name="wheel_x" value="${-(actual_bot_width/2) - actual_wheel_radius}"/>          
+            <xacro:property name="wheel_turn_x" value="${pi}"/>
+        </xacro:if>
+        <xacro:property name="wheel_turn_y" value="${pi/2}"/>
+        <joint name="${pos_x}_motor_joint" type="continuous">
+            <parent link="chassis_link"/>
+            <child link="${pos_x}_motor_link"/>
+            <xacro:scaled_origin_rpy x="0.0" y="${wheel_x}"  z="${actual_wheel_radius/2}" roll="0" pitch="${wheel_turn_x}" yaw="${wheel_turn_y}"/>
+            <axis xyz="${axis} 0 0"/>
+        </joint>
+    </xacro:macro>
+
+    <xacro:motor_link_joint pos_x="left" axis="1"/>
+    <xacro:motor_link_joint pos_x="right" axis="-1"/>
+
     <!-- Wheel link-joints -->
     <xacro:macro name="wheel_link" params="pos_x pos_y">
         <link name="${pos_x}_${pos_y}_wheel_link">
@@ -114,6 +154,7 @@
             <child link="${pos_x}_${pos_y}_wheel_link"/>
             <xacro:scaled_origin_rpy x="${wheel_x}" y="${wheel_y}"  z="${actual_wheel_radius/2}" roll="0" pitch="${wheel_turn_x}" yaw="${wheel_turn_y}"/>
             <axis xyz="${axis} 0 0"/>
+            <mimic joint="${pos_x}_motor_joint"/>
         </joint>
         <gazebo reference="${pos_x}_${pos_y}_wheel_link">
             <material>Gazebo/Blue</material>
