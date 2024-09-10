@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
-from nav2_simple_commander.robot_navigator import BasicNavigator
+# from nav2_simple_commander.robot_navigator import BasicNavigator
+from applicate_bot.modded_robot_navigator import BasicNavigator
 from geometry_msgs.msg import PoseStamped
 import tf_transformations
 
 import sys
 from select import select
 
+import os
 if sys.platform == 'win32':
     import msvcrt
 else:

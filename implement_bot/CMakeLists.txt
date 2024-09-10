@@ -51,7 +51,7 @@ if(BUILD_TESTING)
 endif()
 
 install(
-  DIRECTORY config description hardware launch maps worlds   
+  DIRECTORY config description hardware import launch maps worlds   
   DESTINATION share/${PROJECT_NAME}
 )
 
@@ -61,7 +61,7 @@ install(
 # set(launch_dir "src/bot/implement_bot/launch/")
 
 # # To record launch files as executables
-# add_executable(visuals ${launch_dir}visuals_launch.py)
+# add_executable(visuals ${launch_dir}visuals.launch.py)
 
 # # To add dependencies specifially for each executable
 # # ament_target_dependencies()
