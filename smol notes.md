@@ -1,0 +1,1 @@
+learning notes abt used stuff
