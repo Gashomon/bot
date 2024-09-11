@@ -23,7 +23,9 @@ setup(
             'nav_key = applicate_bot.nav_func_key:main',
             'nav_basic = applicate_bot.nav_func_basic:main',
             'keyboard = applicate_bot.key_input:main',
-            'widget = applicate_bot.sample_bot_widget:main'
+            'widget = applicate_bot.sample_bot_widget:main',
+            'motor_gui = applicate_bot.motor_gui:main',
+            'motor_driver = applicate_bot.motor_driver:main'
         ],
     },
 )
