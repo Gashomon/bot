@@ -42,14 +42,14 @@ def generate_launch_description():
         )
 
     # states_publisher launch file
-    states_publisher_path = os.path.join( package_path,'launch','states_launch.py')
+    states_publisher_path = os.path.join( package_path,'launch','states.launch.py')
     states_publisher = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(states_publisher_path),
                 launch_arguments={'use_sim_time': use_sim_time, 'jsp_on': jsp_on}.items()
     )
 
     # sensors_publisher launch file
-    sensors_publisher_path = os.path.join( package_path,'launch','sensors_launch.py')
+    sensors_publisher_path = os.path.join( package_path,'launch','sensors.launch.py')
     sensors_publisher = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(sensors_publisher_path),
                 launch_arguments={'use_sim_time': use_sim_time, 'jsp_on': jsp_on}.items()

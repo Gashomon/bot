@@ -72,14 +72,14 @@ def generate_launch_description():
     nav2_map = Node(
         package = "nav2_map_server",
         executable = "map_server",
-        arguments=['--ros-args', '-p','yaml_filename:=src/bot/implement_bot/maps/map_save.yaml', '-p', 'use_sim_time:=true'],
+        arguments=['--ros-args', '-p','yaml_filename:=src/bot/implement_bot/maps/house_map.yaml', '-p', 'use_sim_time:=true'],
     )
     ld = LaunchDescription()
     ld.add_action(decl_use_slam)
     ld.add_action(decl_use_sim_time)
     
-    ld.add_action(slam_toolbox)
-    # ld.add_action(robot_loc) 
+    # ld.add_action(slam_toolbox)
+    ld.add_action(robot_loc) 
     #  
     # ld.add_action(nav2_lifecycle_amcl)
     # ld.add_action(nav2_lifecycle_map)

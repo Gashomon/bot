@@ -51,8 +51,8 @@ def generate_launch_description():
         )
     # path finding method 1
     package_path = get_package_share_directory(package_name)
-    visuals_launch_path = os.path.join( package_path,'launch','visuals_launch.py')
-    bot_launch_path = os.path.join( package_path,'launch','bot_launch.py')
+    visuals_launch_path = os.path.join( package_path,'launch','visuals.launch.py')
+    bot_launch_path = os.path.join( package_path,'launch','bot.launch.py')
 
     # path finding method 2
     # package_path = FindPackageShare(package_name)

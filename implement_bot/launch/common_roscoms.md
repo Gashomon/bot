@@ -16,3 +16,11 @@ ros2 topic pub /diff_cont/cmd_vel_unstamped geometry_msgs/msg/Twist "{linear: {x
 
 # RVIZ
 
+# LIDAR
+ros2 run ldlidar_node ldlidar_node # <--- not recommended. Better using the launch file 
+ros2 lifecycle set /lidar_node configure
+ros2 lifecycle set /lidar_node activate
+ros2 launch ldlidar_node ldlidar.launch.py
+ros2 launch ldlidar_node ldlidar_with_mgr.launch.py
+ros2 launch ldlidar_node ldlidar_rviz2.launch.py
+

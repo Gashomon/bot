@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
-from nav2_simple_commander.robot_navigator import BasicNavigator
+# from nav2_simple_commander.robot_navigator import BasicNavigator
+from applicate_bot.modded_robot_navigator import BasicNavigator
 from geometry_msgs.msg import PoseStamped
 import tf_transformations
-import numpy as np
 
 import sys
 from select import select
 
+import os
 if sys.platform == 'win32':
     import msvcrt
 else:
@@ -17,7 +18,7 @@ else:
 
 class NavigationNode(Node):  
     def __init__(self):
-        super().__init__('nav_func') 
+        super().__init__('NavigationNode') 
         self.navigator = BasicNavigator()
 
         # Set initial pose
@@ -26,7 +27,7 @@ class NavigationNode(Node):
 
         # Wait for Nav2 to be active
         self.navigator.waitUntilNav2Active()
-
+        
     def create_pose_stamped(self, position_x, position_y, orientation_z):
         q_x, q_y, q_z, q_w = tf_transformations.quaternion_from_euler(0.0, 0.0, orientation_z)
         pose = PoseStamped()

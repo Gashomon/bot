@@ -39,7 +39,8 @@ def generate_launch_description():
         package = 'gazebo_ros', 
         executable = 'spawn_entity.py',
         arguments = ['-topic', 'robot_description', '-entity', 'robot1'],
-        output = 'screen'
+        output = 'screen',
+        name = 'gazebo_spawner'
     )
     
     # rviz launch
@@ -47,7 +48,8 @@ def generate_launch_description():
         package = 'rviz2', 
         executable = 'rviz2',
         output = 'screen',
-        arguments = ['-d', default_rviz]
+        arguments = ['-d', default_rviz],
+        name = 'rviz2'
     )
 
     # Launch!

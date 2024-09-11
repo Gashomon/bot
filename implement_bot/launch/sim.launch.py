@@ -25,7 +25,7 @@ def generate_launch_description():
 
     rsp = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([os.path.join(
-                    get_package_share_directory(package_name),'launch','states_launch.py'
+                    get_package_share_directory(package_name),'launch','states.launch.py'
                 )]), launch_arguments={'use_sim_time': 'true', 'jsp_on' : 'false'}.items()
     )
     
