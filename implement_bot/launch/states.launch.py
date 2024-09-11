@@ -63,7 +63,12 @@ def generate_launch_description():
         arguments=["joint_broad"],
         name = 'joint_broad_controller'
     )
-
+    
+    # controller manager
+    controller_manager = Node(
+        package="controller_manager",
+        executable="ros2_control_node",
+     ) 
     # Launch!
     return LaunchDescription([
         DeclareLaunchArgument(
@@ -81,6 +86,7 @@ def generate_launch_description():
         robot_state_publisher,
         joint_state_publisher,
         twist_remaps,
+        # controller_manager,
         diff_drive_spawner,
         joint_broad_spawner
 
