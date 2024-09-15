@@ -24,3 +24,5 @@ ros2 launch ldlidar_node ldlidar.launch.py
 ros2 launch ldlidar_node ldlidar_with_mgr.launch.py
 ros2 launch ldlidar_node ldlidar_rviz2.launch.py
 
+# SERIAL
+ros2 run applicate_bot motor_driver --ros-args -p serial_port:=/dev/ttyUSB0 -p baud_rate:=57600 -p loop_rate:=30 -p encoder_cpr:=2000

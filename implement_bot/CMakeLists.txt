@@ -34,10 +34,12 @@ find_package(slam_toolbox REQUIRED)
 
 # HARDWARE dependencies
 find_package(hardware_interface REQUIRED)
+# find_package(python3-serial REQUIRED)
 
 # SENSOR dependencies
-find_package(imu_sensor_broadcaster REQUIRED)
+# find_package(imu_sensor_broadcaster REQUIRED)
 # find_package(rplidar_ros REQUIRED)
+# find_package(ldlidar-robot-ros2 REQUIRED)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
