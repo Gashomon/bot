@@ -24,7 +24,7 @@ def generate_launch_description():
     # default_rviz = ''
     default_gazebo = os.path.join(pkg_path,'worlds','house.world')
 
-    world_n = 'house.world'
+    world_n = 'actual_unfinal.world'
     default_world = os.path.join(pkg_path,'worlds', world_n)
 
     # gazebo classic launch

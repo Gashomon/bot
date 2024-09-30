@@ -20,7 +20,7 @@ def generate_launch_description():
     # Declare launch arguments
     declare_map_file_path_cmd = DeclareLaunchArgument(
         name='map_file_path',
-        default_value='./src/bot/implement_bot/maps/house_map.yaml',
+        default_value='./src/bot/implement_bot/maps/modded_actual.yaml',
         description='Path to the map file')
 
     declare_use_sim_time_cmd = DeclareLaunchArgument(
@@ -32,7 +32,7 @@ def generate_launch_description():
     start_localization_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(localization_launch_file),
         launch_arguments={
-            'map': './src/bot/implement_bot/maps/house_map.yaml',
+            'map': './src/bot/implement_bot/maps/modded_actual.yaml',
             'params_file': nav2_params_file_path
         }.items()
     )

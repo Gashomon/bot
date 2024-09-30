@@ -277,8 +277,8 @@ global_costmap:
         map_subscribe_transient_local: True
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        cost_scaling_factor: 3.0
-        inflation_radius: 0.4
+        cost_scaling_factor: 5.0
+        inflation_radius: 0.6
       always_send_full_costmap: True
 
 map_server:
@@ -286,7 +286,7 @@ map_server:
     use_sim_time: True
     # Overridden in launch by the "map" launch configuration or provided default value.
     # To use in yaml, remove the default "map" value in the tb3_simulation_launch.py file & provide full path to map below.
-    yaml_filename: "src/bot/implement_bot/maps/new.yaml"
+    yaml_filename: "src/bot/implement_bot/maps/modded_actual.yaml"
 
 map_saver:
   ros__parameters:
