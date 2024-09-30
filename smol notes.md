@@ -22,6 +22,9 @@ ESP32 Pins - https://randomnerdtutorials.com/esp32-pinout-reference-gpios/
 Arduino Comms - https://github.com/joshnewans/serial_motor_demo
 
 Raspi GPIO Control - https://ubuntu.com/tutorials/gpio-on-raspberry-pi#1-overview
+
+Nav2 Concept - https://docs.nav2.org/concepts/index.html
+
 Commands for Installs: (forgotten some)
     Important Installs
         
