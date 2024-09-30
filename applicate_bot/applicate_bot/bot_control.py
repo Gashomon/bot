@@ -1,39 +1,37 @@
-import rclpy
-from rclpy.node import Node
+# Python file compilation of all control commands
 
 from std_msgs.msg import String
 
+import nav_func_basic
+import motor_driver
 
-class BotControl(Node):
+nav = nav_func_basic.NavigationNode()
+mot = motor_driver.MotorDriver()
 
-    def __init__(self):
-        super().__init__('bot_control')
-        self.publisher_ = self.create_publisher(String, 'bot_commands', 10)
-        timer_period = 0.5  # seconds
-        self.timer = self.create_timer(timer_period, self.timer_callback)
-        self.i = 0
+class BotControl():
 
-    def timer_callback(self):
-        msg = String()
-        msg.data = 'Hello World: %d' % self.i
-        self.publisher_.publish(msg)
-        self.get_logger().info('Publishing: "%s"' % msg.data)
-        self.i += 1
-
-
-def main(args=None):
-    rclpy.init(args=args)
-
-    bot_controller = BotControl()
-
-    rclpy.spin(bot_controller)
-
-    # Destroy the node explicitly
-    # (optional - otherwise it will be done automatically
-    # when the garbage collector destroys the node object)
-    bot_controller.destroy_node()
-    rclpy.shutdown()
-
-
-if __name__ == '__main__':
-    main()
+    def command(self, cmd, sprm1, sprm2, iprm1, fprm1, fprm2):
+        if cmd == 'travel':
+            nav.follow_waypoints
+        elif cmd == 'display':
+            if sprm1 == '':
+                return
+        elif cmd == 'sound':
+            if sprm1 == '':
+                return
+        elif cmd == 'lock':
+            if sprm1 == '':
+                return
+        elif cmd == '':
+            if sprm1 == '':
+                return
+        elif cmd == '':
+            if sprm1 == '':
+                return
+        elif cmd == '':
+            if sprm1 == '':
+                return
+        else:
+            return
+        
+            

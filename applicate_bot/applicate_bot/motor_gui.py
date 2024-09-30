@@ -4,9 +4,9 @@ import time
 from tkinter import *
 import math
 
-from applicate_bot_msgs.msg import MotorCommand
-from applicate_bot_msgs.msg import MotorVels
-from applicate_bot_msgs.msg import EncoderVals
+from app_msgs.msg import MotorCommand
+from app_msgs.msg import MotorVels
+from app_msgs.msg import EncoderVals
 
 
 class MotorGui(Node):

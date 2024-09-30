@@ -1,13 +1,12 @@
 import rclpy
 from rclpy.node import Node
-from applicate_bot_msgs.msg import MotorCommand
-from applicate_bot_msgs.msg import MotorVels
-from applicate_bot_msgs.msg import EncoderVals
+from app_msgs.msg import MotorCommand
+from app_msgs.msg import MotorVels
+from app_msgs.msg import EncoderVals
 import time
 import math
 import serial
 from threading import Lock
-
 
 
 class MotorDriver(Node):
