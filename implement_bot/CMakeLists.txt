@@ -50,6 +50,39 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
+    # Libraries
+## COMPILE
+add_library(
+  diffbot_system
+  SHARED
+  hardware/diffbot_system.cpp
+)
+target_compile_features(diffbot_system PUBLIC cxx_std_17)
+target_include_directories(diffbot_system PUBLIC
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/hardware/include>
+  $<INSTALL_INTERFACE:include/diffbot_system>
+)
+ament_target_dependencies(
+  diffbot_system PUBLIC
+  ${THIS_PACKAGE_INCLUDE_DEPENDS}
+)
+
+# Export hardware plugins
+pluginlib_export_plugin_description_file(hardware_interface diffbot_system.xml)
+
+install(
+  DIRECTORY hardware/include/
+  DESTINATION include/diffbot_system
+)
+
+install(TARGETS diffbot_system
+  EXPORT export_diffbot_system
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+    # lib END
+
 install(
   DIRECTORY config description hardware import launch maps worlds   
   DESTINATION share/${PROJECT_NAME}
