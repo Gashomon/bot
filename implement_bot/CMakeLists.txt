@@ -17,11 +17,14 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rclcpp_lifecycle REQUIRED)
+find_package(pluginlib REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 
-# CODE dependencies
+# ALL CODE dependencies
 # find_package(applicate_bot REQUIRED)
 
 # ROBOT dependencies
@@ -34,10 +37,14 @@ find_package(slam_toolbox REQUIRED)
 
 # HARDWARE dependencies
 find_package(hardware_interface REQUIRED)
+find_package(controller_manager REQUIRED)
+find_package(backward_ros REQUIRED)
 
 # SENSOR dependencies
 find_package(imu_sensor_broadcaster REQUIRED)
-# find_package(rplidar_ros REQUIRED)
+find_package(rplidar_ros REQUIRED)
+
+# ROS2CONTROl dependencies
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -50,44 +57,51 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-    # Libraries
-## COMPILE
+install(
+  DIRECTORY 
+    config
+    description
+    hardware
+    import 
+    launch
+    maps
+    worlds
+  DESTINATION share/${PROJECT_NAME}
+)
+
+## COMPILE ROS2 Libraries
 add_library(
-  diffbot_system
+  implement_bot
   SHARED
   hardware/diffbot_system.cpp
 )
-target_compile_features(diffbot_system PUBLIC cxx_std_17)
-target_include_directories(diffbot_system PUBLIC
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/hardware/include>
-  $<INSTALL_INTERFACE:include/diffbot_system>
+target_compile_features(implement_bot PUBLIC cxx_std_17)
+target_include_directories(implement_bot PUBLIC
+$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/hardware/include>
+$<INSTALL_INTERFACE:include/diffbot_system>
 )
 ament_target_dependencies(
-  diffbot_system PUBLIC
-  ${THIS_PACKAGE_INCLUDE_DEPENDS}
+  implement_bot PUBLIC
+  hardware_interface
+  pluginlib
+  rclcpp
+  rclcpp_lifecycle
 )
-
 # Export hardware plugins
 pluginlib_export_plugin_description_file(hardware_interface diffbot_system.xml)
 
+# INSTALL
 install(
   DIRECTORY hardware/include/
   DESTINATION include/diffbot_system
 )
 
-install(TARGETS diffbot_system
-  EXPORT export_diffbot_system
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-  RUNTIME DESTINATION bin
-)
-    # lib END
-
-install(
-  DIRECTORY config description hardware import launch maps worlds   
-  DESTINATION share/${PROJECT_NAME}
-)
-
+  # install(TARGETS implement_bot
+  #   EXPORT implement_bot
+  #   ARCHIVE DESTINATION lib
+  #   LIBRARY DESTINATION lib
+  #   RUNTIME DESTINATION bin
+  # )
 # SETTING EXECUTABLES
 
 # launch directory

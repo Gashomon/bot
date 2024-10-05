@@ -21,7 +21,10 @@
   <exec_depend>slam_toolbox</exec_depend>
   
   <!-- HARDWARE -->
-  <exec_depend>hardware interface</exec_depend>
+  <depend>hardware interface</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_lifecycle</depend>
+  <depend>pluginlib</depend>
 
   <!-- SENSOR -->
   <exec_depend>imu_sensor_broadcaster</exec_depend>

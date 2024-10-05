@@ -24,5 +24,12 @@
         </joint>
        
     </ros2_control>
+
+    <!-- For Gazebo Simulation of ROS2 Control -->
+    <gazebo>
+        <plugin name="ros2_controller" filename="libgazebo_ros2_control.so">
+            <parameters>$(find implement_bot)/config/gazebo_controller_params.yaml</parameters>
+        </plugin>
+    </gazebo>
     
 </robot>
