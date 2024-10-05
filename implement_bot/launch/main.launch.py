@@ -29,7 +29,7 @@ def generate_launch_description():
 
     # Visuals Launcher Args
     default_rviz = os.path.join(package_path,'config/rviz/nav2_config.rviz')
-    world_n = 'actual_unfinal.world'
+    world_n = 'botworld.world'
     default_world = os.path.join(package_path,'worlds', world_n)
 
     # Bot Launcher Args
