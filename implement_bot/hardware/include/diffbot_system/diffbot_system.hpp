@@ -33,7 +33,7 @@
 #include "esp_comms.hpp"
 #include "wheel.hpp"
 
-namespace diffbotSystem
+namespace implement_bot
 {
 class DiffBotHardwareSystem : public hardware_interface::SystemInterface
 {
@@ -55,46 +55,46 @@ struct Config
 
 
 public:
-  RCLCPP_SHARED_PTR_DEFINITIONS(DiffDriveArduinoHardware);
+  RCLCPP_SHARED_PTR_DEFINITIONS(DiffBotHardwareSystem);
 
-  DIFFDRIVE_ARDUINO_PUBLIC
+//   DIFFBOT_HARDWARE_PUBLIC
   hardware_interface::CallbackReturn on_init(
     const hardware_interface::HardwareInfo & info) override;
 
-  DIFFDRIVE_ARDUINO_PUBLIC
+//   DIFFBOT_HARDWARE_PUBLIC
   std::vector<hardware_interface::StateInterface> export_state_interfaces() override;
 
-  DIFFDRIVE_ARDUINO_PUBLIC
+//   DIFFBOT_HARDWARE_PUBLIC
   std::vector<hardware_interface::CommandInterface> export_command_interfaces() override;
 
-  DIFFDRIVE_ARDUINO_PUBLIC
+//   DIFFBOT_HARDWARE_PUBLIC
   hardware_interface::CallbackReturn on_configure(
     const rclcpp_lifecycle::State & previous_state) override;
 
-  DIFFDRIVE_ARDUINO_PUBLIC
+//   DIFFBOT_HARDWARE_PUBLIC
   hardware_interface::CallbackReturn on_cleanup(
     const rclcpp_lifecycle::State & previous_state) override;
 
 
-  DIFFDRIVE_ARDUINO_PUBLIC
+//   DIFFBOT_HARDWARE_PUBLIC
   hardware_interface::CallbackReturn on_activate(
     const rclcpp_lifecycle::State & previous_state) override;
 
-  DIFFDRIVE_ARDUINO_PUBLIC
+//   DIFFBOT_HARDWARE_PUBLIC
   hardware_interface::CallbackReturn on_deactivate(
     const rclcpp_lifecycle::State & previous_state) override;
 
-  DIFFDRIVE_ARDUINO_PUBLIC
+//   DIFFBOT_HARDWARE_PUBLIC
   hardware_interface::return_type read(
     const rclcpp::Time & time, const rclcpp::Duration & period) override;
 
-  DIFFDRIVE_ARDUINO_PUBLIC
+//   DIFFBOT_HARDWARE_PUBLIC
   hardware_interface::return_type write(
     const rclcpp::Time & time, const rclcpp::Duration & period) override;
 
 private:
 
-  ArduinoComms comms_;
+  EspComms comms_;
   Config cfg_;
   Wheel wheel_l_;
   Wheel wheel_r_;

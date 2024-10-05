@@ -34,7 +34,7 @@ class EspComms
 
 public:
 
-  ArduinoComms() = default;
+  EspComms() = default;
 
   void connect(const std::string &serial_device, int32_t baud_rate, int32_t timeout_ms)
   {  
