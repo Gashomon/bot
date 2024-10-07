@@ -1,37 +1,17 @@
-import rclpy
-from rclpy.node import Node
+#  Blink an LED with the LGPIO library
+#  Uses lgpio library, compatible with kernel 5.11
+#  Author: William 'jawn-smith' Wilson
 
-from std_msgs.msg import String
+import time
+import lgpio
 
+RELAYPIN = 23
+# open the gpio chip and set the LED pin as output
+device = lgpio.gpiochip_open(0)
+lgpio.gpio_claim_output(device, RELAYPIN) # use pin as output 
 
-class MinimalSubscriber(Node):
-
-    def __init__(self):
-        super().__init__('minimal_subscriber')
-        self.subscription = self.create_subscription(
-            String,
-            'topic',
-            self.listener_callback,
-            10)
-        self.subscription  # prevent unused variable warning
-
-    def listener_callback(self, msg):
-        self.get_logger().info('I heard: "%s"' % msg.data)
-
-
-def main(args=None):
-    rclpy.init(args=args)
-
-    minimal_subscriber = MinimalSubscriber()
-
-    rclpy.spin(minimal_subscriber)
-
-    # Destroy the node explicitly
-    # (optional - otherwise it will be done automatically
-    # when the garbage collector destroys the node object)
-    minimal_subscriber.destroy_node()
-    rclpy.shutdown()
-
-
-if __name__ == '__main__':
-    main()
+def lock(state):
+    if state == 'on':
+        lgpio.gpio_write(device, RELAYPIN, 1)
+    if state == 'off':
+        lgpio.gpio_write(device, RELAYPIN, 0)
