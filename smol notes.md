@@ -28,3 +28,4 @@ Nav2 Concept - https://docs.nav2.org/concepts/index.html
 Commands for Installs: (forgotten some)
     Important Installs
         
+sudo apt install python3-lgpio
