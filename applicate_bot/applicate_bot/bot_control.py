@@ -1,21 +1,22 @@
 # Python file compilation of all control commands
 
-from std_msgs.msg import String
+# from std_msgs.msg import String
 
 import navigation.nav_func_basic as Nav
-
 import numpy as np
+from modules import lock
+from modules import audio
 
 # bot functions
 nav = Nav.NavigationNode()
 
 # TRAVERSALS (unfinalized data)
 destinations = {
-    'Home': (0.0, 0.0, 0.0), 
-    'Dean': (0.5, 0.0, 0.0), 
-    'CE'  : (0.4, 0.0, 0.0),
-    'CpE' : (0.3, 0.0, 0.0),
-    'ME'  : (0.2, 0.0, 0.0)
+    'Home': (0.0, 0.0, np.radians(0)), 
+    'Dean': (0.5, 0.0, np.radians(0)), 
+    'CE'  : (0.4, 0.0, np.radians(0)),
+    'CpE' : (0.3, 0.0, np.radians(0)),
+    'ME'  : (0.2, 0.0, np.radians(0))
 }
 # SAMPLE
 # 'name_of_waypoint' : (x_coordinate, y,_coordinate, angle_of_position)
@@ -33,10 +34,15 @@ class BotCommands():
         else:
             return 'wrong points'
     
-    def sound(self, filename):
-        return
+    def sound(self, situation):
+        audio.playfor(situation)
     
     def lock(self, state):
-        return
+        if state == 'open':
+            lock.lock('off')
+        elif state == 'close':
+            lock.lock('on')
+            
+            
     
 
