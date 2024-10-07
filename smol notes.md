@@ -29,3 +29,4 @@ Commands for Installs: (forgotten some)
     Important Installs
         
 sudo apt install python3-lgpio
+pip install playsound

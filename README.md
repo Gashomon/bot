@@ -28,7 +28,10 @@ Ros2 Control (ALL hardware integration, can replace all other packages if setup 
 Ros2 Controllers (Reading Controller Managers)
 Gazebo Ros2 Control (Gazebo to Ros2 Control)
 ldrobot-lidar-ros2 (lidar)
-LGPIO (Raspi Pin)
+
+- For External Pheriperals:
+LGPIO (Raspi Pins)
+PlaySound (Playing Audio)
 
 - For SLAM & Navigation:
 Slam Toolbox (mapping & localization)
