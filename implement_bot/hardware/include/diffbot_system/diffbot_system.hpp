@@ -33,7 +33,7 @@
 #include "esp_comms.hpp"
 #include "wheel.hpp"
 
-namespace implement_bot
+namespace NewHardwareInterface
 {
 class DiffBotHardwareSystem : public hardware_interface::SystemInterface
 {
@@ -55,7 +55,7 @@ struct Config
 
 
 public:
-  RCLCPP_SHARED_PTR_DEFINITIONS(DiffBotHardwareSystem);
+  RCLCPP_SHARED_PTR_DEFINITIONS(DiffBotHardwareSystem)
 
 //   DIFFBOT_HARDWARE_PUBLIC
   hardware_interface::CallbackReturn on_init(

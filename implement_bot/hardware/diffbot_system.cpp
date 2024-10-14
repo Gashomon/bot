@@ -23,7 +23,7 @@
 #include "hardware_interface/types/hardware_interface_type_values.hpp"
 #include "rclcpp/rclcpp.hpp"
 
-namespace implement_bot
+namespace NewHardwareInterface
 {
 hardware_interface::CallbackReturn DiffBotHardwareSystem::on_init(
   const hardware_interface::HardwareInfo & info)
@@ -219,7 +219,7 @@ hardware_interface::return_type DiffBotHardwareSystem::read(
   return hardware_interface::return_type::OK;
 }
 
-hardware_interface::return_type DiffBotHardwareSystem::write(
+hardware_interface::return_type NewHardwareInterface::DiffBotHardwareSystem::write(
   const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
 {
   if (!comms_.connected())
@@ -236,4 +236,4 @@ hardware_interface::return_type DiffBotHardwareSystem::write(
 }  // namespace diffdrive_arduino
 
 #include "pluginlib/class_list_macros.hpp"
-PLUGINLIB_EXPORT_CLASS(implement_bot::DiffBotHardwareSystem, hardware_interface::SystemInterface)
+PLUGINLIB_EXPORT_CLASS(NewHardwareInterface::DiffBotHardwareSystem, hardware_interface::SystemInterface)

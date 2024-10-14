@@ -4,8 +4,13 @@ from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
 from launch.substitutions import LaunchConfiguration, PythonExpression
-from launch.actions import DeclareLaunchArgument, LogInfo
+from launch.actions import DeclareLaunchArgument, LogInfo, TimerAction
 from launch_ros.actions import Node
+
+from launch.substitutions import Command
+from launch.actions import RegisterEventHandler
+from launch.event_handlers import OnProcessStart
+from launch.actions import TimerAction
 
 # from launch.
 
@@ -23,9 +28,10 @@ def generate_launch_description():
     pkg_path = os.path.join(get_package_share_directory('implement_bot'))
     xacro_file = os.path.join(pkg_path,'description','main_urdf.xacro')
     robot_description_config = xacro.process_file(xacro_file)
-    
+    robot_description = robot_description_config.toxml()
+
     # Create a robot_state_publisher node
-    rsp_params = {'robot_description': robot_description_config.toxml(), 'use_sim_time': use_sim_time}
+    rsp_params = {'robot_description': robot_description, 'use_sim_time': use_sim_time}
     robot_state_publisher = Node(
         package = 'robot_state_publisher',
         executable = 'robot_state_publisher',
@@ -48,27 +54,59 @@ def generate_launch_description():
         parameters=[twist_params, {use_sim_time:True}],
         remappings=[('/cmd_vel_out', '/diff_cont/cmd_vel_unstamped')]
     )
+        
+    # real robot controller manager
+    controller_yaml_file = os.path.join(
+        get_package_share_directory('implement_bot'),
+        'config',
+        'bot_controller_params.yaml'
+    )
+
+    robobo = Command(['ros2 param get --hide-type /robot_state_publisher robot_description'])
+    real_bot_controller = Node(
+        package="controller_manager",
+        executable="ros2_control_node",
+        parameters=[{'robot_description' :robobo}, controller_yaml_file],
+        output={
+          'stdout': 'screen',
+          'stderr': 'screen',
+          }
+     ) 
+    
+    delayed_controller_manager = TimerAction(period=3.0, actions=[real_bot_controller])
+    
+    # just controller manager
+    controller_manager = Node(
+        package="controller_manager",
+        executable="ros2_control_node",
+     ) 
+    
     #added ROS2 control spawners 
     diff_drive_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["diff_cont"],
-        name = 'diff_drive_controller'
+        arguments=["diff_cont"]
+    )
+
+    delayed_diff_drive_spawner = RegisterEventHandler(
+        event_handler=OnProcessStart(
+            target_action=real_bot_controller,
+            on_start=[diff_drive_spawner],
+        )
     )
 
     #added ROS2 control spawners 
     joint_broad_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["joint_broad"],
-        name = 'joint_broad_controller'
+        arguments=["joint_broad"]
     )
-    
-    # controller manager
-    controller_manager = Node(
-        package="controller_manager",
-        executable="ros2_control_node",
-     ) 
+    delayed_joint_broad_spawner = RegisterEventHandler(
+        event_handler=OnProcessStart(
+            target_action=real_bot_controller,
+            on_start=[joint_broad_spawner],
+        )
+    )
     # Launch!
     return LaunchDescription([
         DeclareLaunchArgument(
@@ -86,8 +124,8 @@ def generate_launch_description():
         robot_state_publisher,
         joint_state_publisher,
         twist_remaps,
-        # controller_manager,
-        diff_drive_spawner,
-        joint_broad_spawner
+        delayed_controller_manager,
+        delayed_diff_drive_spawner,
+        delayed_joint_broad_spawner
 
     ])

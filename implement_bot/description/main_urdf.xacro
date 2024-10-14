@@ -2,7 +2,7 @@
 <!-- loaded urdf file for robot-->
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro"  name="robot1">
 
-    <xacro:property name="use_ros2_control" value="false"/>
+    <xacro:property name="use_ros2_control" value="true"/>
 
     <xacro:if value="${use_ros2_control}">
         <xacro:include filename="ros2_control.xacro"/> 

@@ -25,6 +25,7 @@
   <depend>rclcpp</depend>
   <depend>rclcpp_lifecycle</depend>
   <depend>pluginlib</depend>
+  <depend>libserial-dev</depend>
 
   <!-- SENSOR -->
   <exec_depend>imu_sensor_broadcaster</exec_depend>

@@ -87,8 +87,6 @@ def generate_launch_description():
     ld.add_action(visuals_launch)
     ld.add_action(spawn_bridge)
     ld.add_action(bot_launch)
-    # ld.add_action(diff_drive_spawner)
-    # ld.add_action(joint_broad_spawner)
 
     # Launch them all!
     return ld
