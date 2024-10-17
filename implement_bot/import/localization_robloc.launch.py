@@ -42,8 +42,13 @@ def generate_launch_description():
     use_respawn = LaunchConfiguration('use_respawn')
     log_level = LaunchConfiguration('log_level')
 
-    lifecycle_nodes = ['map_server', 'amcl']
+    # lifecycle_nodes = ['map_server', 'amcl']
+    lifecycle_nodes = ['map_server', 'ekf_filter_node_odom', 'ekf_filter_node_map', 'navsat_transform_node']
 
+    # robot_localization variables
+    rl_params_file = os.path.join(
+        pkg_dir, "config", "dual_ekf.yaml")
+    
     # Map fully qualified names to relative ones so the node's namespace can be prepended.
     # In case of the transforms (tf), currently, there doesn't seem to be a better alternative
     # https://github.com/ros/geometry2/issues/32
@@ -85,7 +90,7 @@ def generate_launch_description():
 
     declare_params_file_cmd = DeclareLaunchArgument(
         'params_file',
-        default_value=os.path.join(pkg_dir, 'config', 'nav_params.yaml'),
+        default_value=os.path.join(pkg_dir, 'config', 'nav_params_robloc.yaml'),
         description='Full path to the ROS2 parameters file to use for all launched nodes')
 
     declare_autostart_cmd = DeclareLaunchArgument(
@@ -106,8 +111,17 @@ def generate_launch_description():
 
     declare_log_level_cmd = DeclareLaunchArgument(
         'log_level', default_value='info',
-        description='log level')
+        description='log level'),
 
+    # robot localization stuffs
+    output_final_pos = DeclareLaunchArgument(
+                "output_final_position", default_value="false"
+            ),
+    output_final_loc = DeclareLaunchArgument(
+                "output_location", default_value="~/dual_ekf_navsat_example_debug.txt"
+            ),
+    # robot localization stuffs
+    
     load_nodes = GroupAction(
         condition=IfCondition(PythonExpression(['not ', use_composition])),
         actions=[
@@ -121,18 +135,41 @@ def generate_launch_description():
                 parameters=[configured_params],
                 arguments=['--ros-args', '--log-level', log_level],
                 remappings=remappings),
+
+            # robot localization stuffs
             Node(
-                package='nav2_amcl',
-                executable='amcl',
-                name='amcl',
-                output='screen',
-                respawn=use_respawn,
-                respawn_delay=2.0,
-                parameters=[configured_params],
-                arguments=['--ros-args', '--log-level', log_level],
-                remappings=remappings),
+                package="robot_localization",
+                executable="ekf_node",
+                name="ekf_filter_node_odom",
+                output="screen",
+                parameters=[rl_params_file, {"use_sim_time": True}],
+                remappings=[("odometry/filtered", "odometry/local")],
+            ),
             Node(
-                package='nav2_lifecycle_manager',
+                package="robot_localization",
+                executable="ekf_node",
+                name="ekf_filter_node_map",
+                output="screen",
+                parameters=[rl_params_file, {"use_sim_time": True}],
+                remappings=[("odometry/filtered", "odometry/global")],
+            ),
+            Node(
+                package="robot_localization",
+                executable="navsat_transform_node",
+                name="navsat_transform",
+                output="screen",
+                parameters=[rl_params_file, {"use_sim_time": True}],
+                remappings=[
+                    ("imu/data", "imu/data"),
+                    ("gps/fix", "gps/fix"),
+                    ("gps/filtered", "gps/filtered"),
+                    ("odometry/gps", "odometry/gps"),
+                    ("odometry/filtered", "odometry/global"),
+                ],
+            ),
+            # robot localization stuffs
+            Node(
+                package='robot_localization',
                 executable='lifecycle_manager',
                 name='lifecycle_manager_localization',
                 output='screen',
@@ -153,12 +190,40 @@ def generate_launch_description():
                 name='map_server',
                 parameters=[configured_params],
                 remappings=remappings),
+
+            # robot localization stuffs 
             ComposableNode(
-                package='nav2_amcl',
-                plugin='nav2_amcl::AmclNode',
-                name='amcl',
-                parameters=[configured_params],
-                remappings=remappings),
+                package='ekf_node',
+                plugin='Ekf::Ekf',
+                name='ekf_filter_node_odom',
+                output="screen",
+                parameters=[rl_params_file, {"use_sim_time": True}],
+                remappings=[("odometry/filtered", "odometry/local")],
+            ),
+            ComposableNode(
+                package='ekf_node',
+                plugin='Ekf::Ekf',
+                name='ekf_filter_node_map',
+                output="screen",
+                parameters=[rl_params_file, {"use_sim_time": True}],
+                remappings=[("odometry/filtered", "odometry/global")],
+            ),
+            ComposableNode(
+                package='ekf_node',
+                plugin='Ekf::Ekf',
+                name='navsat_transform',
+                name="navsat_transform",
+                output="screen",
+                parameters=[rl_params_file, {"use_sim_time": True}],
+                remappings=[
+                    ("imu/data", "imu/data"),
+                    ("gps/fix", "gps/fix"),
+                    ("gps/filtered", "gps/filtered"),
+                    ("odometry/gps", "odometry/gps"),
+                    ("odometry/filtered", "odometry/global"),
+                ],
+            ),
+            # robot localization stuffs
             ComposableNode(
                 package='nav2_lifecycle_manager',
                 plugin='nav2_lifecycle_manager::LifecycleManager',
@@ -185,6 +250,10 @@ def generate_launch_description():
     ld.add_action(declare_container_name_cmd)
     ld.add_action(declare_use_respawn_cmd)
     ld.add_action(declare_log_level_cmd)
+
+    # robot localization stuffs
+    ld.add_action(output_final_pos)
+    ld.add_action(output_final_loc)
 
     # Add the actions to launch all of the localiztion nodes
     ld.add_action(load_nodes)

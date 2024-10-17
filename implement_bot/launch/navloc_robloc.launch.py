@@ -11,11 +11,11 @@ def generate_launch_description():
     pkg_dir = FindPackageShare(package='implement_bot').find('implement_bot')
 
     # Localization and navigation launch file paths
-    localization_launch_file = os.path.join(pkg_dir, 'import', 'localization.launch.py')
+    localization_launch_file = os.path.join(pkg_dir, 'import', 'localization_robloc.launch.py')
     navigation_launch_file = os.path.join(pkg_dir, 'import', 'modded_navigation.launch.py')
 
     # Path to the custom nav2_params.yaml file
-    nav2_params_file_path = os.path.join(pkg_dir, 'config', 'nav_params.yaml')
+    nav2_params_file_path = os.path.join(pkg_dir, 'config', 'nav_params_robloc.yaml')
     config_path = os.path.join(pkg_dir, 'config')
     map_path = os.path.join(pkg_dir, 'maps')
 

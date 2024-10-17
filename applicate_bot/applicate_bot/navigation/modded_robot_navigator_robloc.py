@@ -55,7 +55,7 @@ class BasicNavigator(Node):
         self.feedback = None
         self.status = None
 
-        amcl_pose_qos = QoSProfile(
+        loc_pose_qos = QoSProfile(
           durability=QoSDurabilityPolicy.TRANSIENT_LOCAL,
           reliability=QoSReliabilityPolicy.RELIABLE,
           history=QoSHistoryPolicy.KEEP_LAST,
@@ -77,9 +77,9 @@ class BasicNavigator(Node):
         self.backup_client = ActionClient(self, BackUp, 'backup')
         self.assisted_teleop_client = ActionClient(self, AssistedTeleop, 'assisted_teleop')
         self.localization_pose_sub = self.create_subscription(PoseWithCovarianceStamped,
-                                                              'amcl_pose',
-                                                              self._amclPoseCallback,
-                                                              amcl_pose_qos)
+                                                              'navsat_transform',
+                                                              self._locPoseCallback,
+                                                              loc_pose_qos)
         self.initial_pose_pub = self.create_publisher(PoseWithCovarianceStamped,
                                                       'initialpose',
                                                       10)
@@ -308,10 +308,10 @@ class BasicNavigator(Node):
         else:
             return TaskResult.UNKNOWN
 
-    def waitUntilNav2Active(self, navigator='bt_navigator', localizer='amcl'):
+    def waitUntilNav2Active(self, navigator='bt_navigator', localizer='navsat_transform'):
         """Block until the full navigation system is up and running."""
         self._waitForNodeToActivate(localizer)
-        if localizer == 'amcl':
+        if localizer == 'navsat_transform':
             self._waitForInitialPose()
         self._waitForNodeToActivate(navigator)
         self.info('Nav2 is ready for use!')
@@ -557,8 +557,8 @@ class BasicNavigator(Node):
             rclpy.spin_once(self, timeout_sec=1.0)
         return
 
-    def _amclPoseCallback(self, msg):
-        self.debug('Received amcl pose')
+    def _locPoseCallback(self, msg):
+        self.debug('Received robot location pose')
         self.initial_pose_received = True
         return
 
