@@ -26,21 +26,20 @@ find_package(pluginlib REQUIRED)
 # ALL CODE dependencies
 # find_package(applicate_bot REQUIRED)
 
-# ROBOT dependencies
+# Navigation dependencies
 # find_package(robot_description REQUIRED)
 find_package(nav2_bringup REQUIRED)
 find_package(nav2_amcl REQUIRED)
 find_package(nav2_map_server REQUIRED)
-find_package(ros2_control REQUIRED)
 find_package(slam_toolbox REQUIRED)
 
 # HARDWARE dependencies
 find_package(hardware_interface REQUIRED)
+find_package(ros2_control REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(controller_manager REQUIRED)
 find_package(backward_ros REQUIRED)
-# find_package(serial REQUIRED)
 
 # SENSOR dependencies
 find_package(imu_sensor_broadcaster REQUIRED)
