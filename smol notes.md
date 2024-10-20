@@ -25,6 +25,9 @@ Raspi GPIO Control - https://ubuntu.com/tutorials/gpio-on-raspberry-pi#1-overvie
 
 Nav2 Concept - https://docs.nav2.org/concepts/index.html
 
+Robot Localization -    https://medium.com/@zillur-rahman/how-to-use-the-ros-robot-localization-package-534fe04014d3
+                        https://github.com/ros-navigation/navigation2_tutorials/tree/master/nav2_gps_waypoint_follower_demo
+
 Commands for Installs: (forgotten some)
     Important Installs
         
