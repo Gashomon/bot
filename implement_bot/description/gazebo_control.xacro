@@ -29,6 +29,9 @@
     <gazebo>
         <plugin name="ros2_controller" filename="libgazebo_ros2_control.so">
             <parameters>$(find implement_bot)/config/gazebo_controller_params.yaml</parameters>
+            <ros>
+                <remapping>~/out:=gazebo/wheel_odom</remapping>
+            </ros>
         </plugin>
     </gazebo>
     
