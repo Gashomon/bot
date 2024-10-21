@@ -8,8 +8,6 @@ test if diy hardware interface is working (if diffdrive is listening properly)
 
 implement diy hardware interface to imu sensor
 
-somehow robloc is broken, fix it.
-
 rename all needed stuffs. update launch files.
 
 Later parts of the game:
