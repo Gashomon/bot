@@ -81,6 +81,13 @@
 
     <!-- Macro for Ultrasonic Sensors -->
     <xacro:macro name="range_link_joint" params="pos_x">
+        <link name="${pos_x}_range_frame"/>
+        <joint name="${pos_x}_range_frame_joint" type="fixed">
+            <parent link="${pos_x}_range_link"/>
+            <child link="${pos_x}_range_frame"/>
+            <origin xyz="0.0 0.0 ${scale_val* 0.0}" rpy="0.0 0.0 0.0"/>
+        </joint>
+        
         <gazebo reference="${pos_x}_range_frame">
             <sensor name="${pos_x}_us_sensor" type="ray">
                 <pose> 0 0 0 0 0 0 </pose>
