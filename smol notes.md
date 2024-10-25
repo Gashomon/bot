@@ -21,6 +21,18 @@ ESP32 Pins - https://randomnerdtutorials.com/esp32-pinout-reference-gpios/
 
 Arduino Comms - https://github.com/joshnewans/serial_motor_demo
 
+Raspi GPIO Control - https://ubuntu.com/tutorials/gpio-on-raspberry-pi#1-overview
+
+Nav2 Concept - https://docs.nav2.org/concepts/index.html
+
+Robot Localization -    https://medium.com/@zillur-rahman/how-to-use-the-ros-robot-localization-package-534fe04014d3
+                        https://github.com/ros-navigation/navigation2_tutorials/tree/master/nav2_gps_waypoint_follower_demo
+
+IMU Reading -   https://machinelearningsite.com/reading-mpu6050-data-with-raspberry-pi-and-python/
+                https://lastminuteengineers.com/mpu6050-accel-gyro-arduino-tutorial/
+                
 Commands for Installs: (forgotten some)
     Important Installs
         
+sudo apt install python3-lgpio
+pip install playsound

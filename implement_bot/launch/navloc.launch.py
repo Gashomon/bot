@@ -16,11 +16,13 @@ def generate_launch_description():
 
     # Path to the custom nav2_params.yaml file
     nav2_params_file_path = os.path.join(pkg_dir, 'config', 'nav_params.yaml')
+    config_path = os.path.join(pkg_dir, 'config')
+    map_path = os.path.join(pkg_dir, 'maps')
 
     # Declare launch arguments
     declare_map_file_path_cmd = DeclareLaunchArgument(
         name='map_file_path',
-        default_value='./src/bot/implement_bot/maps/house_map.yaml',
+        default_value= os.path.join(map_path, 'modded_actual.yaml'),
         description='Path to the map file')
 
     declare_use_sim_time_cmd = DeclareLaunchArgument(
@@ -32,7 +34,7 @@ def generate_launch_description():
     start_localization_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(localization_launch_file),
         launch_arguments={
-            'map': './src/bot/implement_bot/maps/house_map.yaml',
+            'map': os.path.join(map_path, 'modded_actual.yaml'),
             'params_file': nav2_params_file_path
         }.items()
     )

@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+    <!-- Lidar Link -->
     <link name="ldlidar_link">
         <visual>
             <geometry>
@@ -20,6 +21,7 @@
         </xacro:inertial_cylinder>
     </link>
 
+    <!-- Lidar Joint to Base Link -->
     <joint name="lidar_link_joint" type="fixed">
         <parent link="chassis_link"/>
         <child link="ldlidar_link"/>
@@ -27,41 +29,73 @@
         <!-- <origin xyz="0.0 0.0 ${(scale_val* (actual_chassis_height) + 0.02)}" rpy="0.0 0.0 0.0"/> -->
     </joint>
 
+    <!-- Macro for Ultrasonic Sensors -->
+    <xacro:macro name="range_link_joint" params="pos_x">
+        <link name="${pos_x}_range_link">
+            <visual>
+                <geometry> 
+                    <box size="0.015 0.03 0.001"/>
+                </geometry>
+                <xacro:scaled_origin_rpy x="0.0" y="0.0"  z="0.0" roll="0" pitch="0" yaw="0"/>
+            </visual>
+            <collision>
+                <geometry> 
+                    <box size="0.015 0.03 0.01"/>
+                </geometry>
+                <xacro:scaled_origin_rpy x="0.0" y="0.0"  z="0.0" roll="0" pitch="0" yaw="0"/>
+            </collision>
+            <xacro:inertial_box mass="0.001" x="0.0" y="0.0" z="0.0">
+            <origin xyz="0.0 0 0.0" rpy="-1 0 0"/>
+            </xacro:inertial_box>
+        </link> 
 
-    <link name="laser_frame" />
+        <xacro:if value="${pos_x == 'left'}">
+            <xacro:property name="offset_x" value="${+(actual_bot_width/3)}"/>
+        </xacro:if>
+        <xacro:if value="${pos_x == 'right'}">
+            <xacro:property name="offset_x" value="${-(actual_bot_width/3)}"/>
+        </xacro:if>
+        <joint name="${pos_x}_range_joint" type="fixed">
+            <parent link="chassis_link"/>
+            <child link="${pos_x}_range_link"/>
+            <xacro:scaled_origin_rpy x="${(actual_bot_length/2) + smol_offset}" y="${offset_x}"  z="${actual_wheel_radius}" roll="0" pitch="0" yaw="0"/>
+            <axis xyz="0 0 0"/>
+        </joint>
 
-    <joint name="lidar_frame_joint" type="fixed">
-        <parent link="ldlidar_link"/>
-        <child link="laser_frame"/>
+        
+    </xacro:macro>
+    <!-- left ultrasonic sensor -->
+    <xacro:range_link_joint pos_x="left"/>
+    <!-- right ultrasonic sensor -->
+    <xacro:range_link_joint pos_x="right"/>
+
+
+
+    <!-- IMU Link -->
+    <link name="imu_link">
+        <visual>
+            <geometry>
+                <cylinder radius="0.01" length="0.01"/> 
+            </geometry>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${pi}"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="0.01" length="0.01"/>
+            </geometry>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        </collision>
+        <xacro:inertial_cylinder mass="0.10" length="0.01" radius="0.01">
+                <xacro:scaled_origin_rpy x="0" y="0"  z="0" roll="0" pitch="0" yaw="0"/>
+        </xacro:inertial_cylinder>
+    </link>
+
+    <!-- IMU joint to base link -->
+    <joint name="imu_link_joint" type="fixed">
+        <parent link="chassis_link"/>
+        <child link="imu_link"/>
         <origin xyz="0.0 0.0 ${scale_val* 0.0}" rpy="0.0 0.0 0.0"/>
     </joint>
 
-    <gazebo reference="laser_frame">
-        <sensor name="laser" type="ray">
-            <pose> 0 0 0 0 0 0 </pose>
-            <visualize>true</visualize>
-            <update_rate>10</update_rate>
-            <ray>
-                <scan>
-                    <horizontal>
-                        <samples>720</samples>
-                        <min_angle>-3.14</min_angle>
-                        <max_angle>3.14</max_angle>
-                    </horizontal>
-                </scan>
-                <range>
-                    <min>0.1</min>
-                    <max>12</max>
-                </range>
-            </ray>
-            <plugin name="lidar_gazebo" filename="libgazebo_ros_ray_sensor.so">
-                <ros>
-                    <argument>~/out:=scan</argument>
-                </ros>
-                <output_type>sensor_msgs/LaserScan</output_type>
-                <frame_name>laser_frame</frame_name>
-            </plugin>
-        </sensor>
-    </gazebo>
-
+    
 </robot>

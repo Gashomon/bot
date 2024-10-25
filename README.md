@@ -2,10 +2,12 @@ PROJECT DESCRIPTION OVERVIEW
 A Mobile Robot for Thesis.
 
 Required Installs
+
 - System Reqs:
 Sofware Properties Common (Getting GDP)
 Colcon Common Extensions (Cmake)
 SSH (headless connection)
+
 - Tools
 VSCode 
 Git 
@@ -27,6 +29,11 @@ Ros2 Control (ALL hardware integration, can replace all other packages if setup 
 Ros2 Controllers (Reading Controller Managers)
 Gazebo Ros2 Control (Gazebo to Ros2 Control)
 ldrobot-lidar-ros2 (lidar)
+ROBOT_LOCALIZATION (Data Fusion of sensors)
+
+- For External Pheriperals:
+LGPIO (Raspi Pins)
+PlaySound (Playing Audio)
 
 - For SLAM & Navigation:
 Slam Toolbox (mapping & localization)

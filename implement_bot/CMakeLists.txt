@@ -17,29 +17,45 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(pluginlib REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 
-# CODE dependencies
+# ALL CODE dependencies
 # find_package(applicate_bot REQUIRED)
 
-# ROBOT dependencies
+# Navigation dependencies
 # find_package(robot_description REQUIRED)
 find_package(nav2_bringup REQUIRED)
 find_package(nav2_amcl REQUIRED)
 find_package(nav2_map_server REQUIRED)
-find_package(ros2_control REQUIRED)
 find_package(slam_toolbox REQUIRED)
 
 # HARDWARE dependencies
 find_package(hardware_interface REQUIRED)
+<<<<<<< HEAD
 # find_package(python3-serial REQUIRED)
 
 # SENSOR dependencies
 # find_package(imu_sensor_broadcaster REQUIRED)
 # find_package(rplidar_ros REQUIRED)
 # find_package(ldlidar-robot-ros2 REQUIRED)
+=======
+find_package(ros2_control REQUIRED)
+find_package(rclcpp_components REQUIRED)
+find_package(rclcpp_lifecycle REQUIRED)
+find_package(controller_manager REQUIRED)
+find_package(backward_ros REQUIRED)
+
+# SENSOR dependencies
+find_package(imu_sensor_broadcaster REQUIRED)
+find_package(rplidar_ros REQUIRED)
+
+
+# ROS2CONTROl dependencies
+>>>>>>> 74202b1cace1109667ff679b0efbdeccca8b2b9a
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -53,10 +69,72 @@ if(BUILD_TESTING)
 endif()
 
 install(
-  DIRECTORY config description hardware import launch maps worlds   
+  DIRECTORY 
+    config
+    description
+    hardware
+    import 
+    launch
+    maps
+    worlds
   DESTINATION share/${PROJECT_NAME}
 )
 
+## COMPILE ROS2 Libraries
+add_library(
+  diffbot_system
+  SHARED
+  hardware/diffbot_system.cpp
+)
+target_compile_features(diffbot_system PUBLIC cxx_std_17)
+target_include_directories(diffbot_system PUBLIC
+$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/hardware/include>
+$<INSTALL_INTERFACE:include/diffbot_system>
+)
+ament_target_dependencies(
+  diffbot_system PUBLIC
+  hardware_interface
+  pluginlib
+  rclcpp
+  rclcpp_lifecycle
+  rclcpp_components
+  # serial
+  
+)
+target_link_libraries(diffbot_system PUBLIC serial)
+
+# Export hardware plugins
+pluginlib_export_plugin_description_file(hardware_interface diffbot_system.xml)
+
+# INSTALL
+install(
+  DIRECTORY hardware/include/
+  DESTINATION include/
+)
+
+install(TARGETS diffbot_system
+  EXPORT export_diffbot_system
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+
+ament_export_targets(export_diffbot_system HAS_LIBRARY_TARGET)
+ament_export_dependencies(
+  hardware_interface
+  pluginlib
+  rclcpp
+  rclcpp_lifecycle
+  rclcpp_components
+  # serial
+)
+
+  # install(TARGETS implement_bot
+  #   EXPORT implement_bot
+  #   ARCHIVE DESTINATION lib
+  #   LIBRARY DESTINATION lib
+  #   RUNTIME DESTINATION bin
+  # )
 # SETTING EXECUTABLES
 
 # launch directory

@@ -29,7 +29,7 @@ def generate_launch_description():
 
     # Visuals Launcher Args
     default_rviz = os.path.join(package_path,'config/rviz/nav2_config.rviz')
-    world_n = 'house.world'
+    world_n = 'botworld.world'
     default_world = os.path.join(package_path,'worlds', world_n)
 
     # Bot Launcher Args
@@ -76,7 +76,6 @@ def generate_launch_description():
                         output='screen')
 
     
-
     ld = LaunchDescription()
 
     # parameters
@@ -87,8 +86,6 @@ def generate_launch_description():
     ld.add_action(visuals_launch)
     ld.add_action(spawn_bridge)
     ld.add_action(bot_launch)
-    # ld.add_action(diff_drive_spawner)
-    # ld.add_action(joint_broad_spawner)
 
     # Launch them all!
     return ld
