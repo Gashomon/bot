@@ -12,19 +12,22 @@ nav = Nav.NavigationNode()
 
 # TRAVERSALS (unfinalized data)
 destinations = {
-    'Home': (0.0, 0.0, np.radians(0)), 
-    'Dean': (0.5, 0.0, np.radians(0)), 
-    'CE'  : (0.4, 0.0, np.radians(0)),
-    'CpE' : (0.3, 0.0, np.radians(0)),
-    'ME'  : (0.2, 0.0, np.radians(0))
+    'Initial': (0.0, 0.0, np.radians(0)), 
+    'Home': (1.2123, 0.0458, 0.01636), 
+    'Dean': (-28.0098, 1.37033, -1.5951), 
+    'CE'  : (-19.2221, 0.0, np.radians(0)),
+    'ME' : (-3.50651, 1.3341, -0.0429),
+    'CpE'  : (-7.8943, 1.4781, -0.0478),
+    'EE'  : (0.2, 0.0, np.radians(0)),
+    'ECE'  : (-9.3469, 1.4631, -0.04289)
 }
 # SAMPLE
 # 'name_of_waypoint' : (x_coordinate, y,_coordinate, angle_of_position)
-# '1':(4.0, 2.5, np.radians(0)), '2':(2.5, 2.5, np.radians(90))
+# '1':(4.0, 2.5, np.radians(0)), '2':(2.5, 2.5, np.radians(90)) #use np.radians if angle is initially degrees
 
 class BotCommands():
 
-    def travel(self, dest):
+    def simpleTravel(self, dest):
         if destinations.get(dest) is not None:
             station = {
                 nav.create_pose_stamped(destinations[dest][0], destinations[dest][1], destinations[dest][2])
@@ -34,6 +37,8 @@ class BotCommands():
         else:
             return 'wrong points'
     
+    # def complexTravel(self, dest) #inputting many points
+    
     def sound(self, situation):
         audio.playfor(situation)
     
@@ -42,6 +47,9 @@ class BotCommands():
             lock.lock('off')
         elif state == 'close':
             lock.lock('on')
+    
+
+    
             
             
     
