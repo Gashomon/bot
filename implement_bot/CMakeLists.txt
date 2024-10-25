@@ -35,14 +35,12 @@ find_package(slam_toolbox REQUIRED)
 
 # HARDWARE dependencies
 find_package(hardware_interface REQUIRED)
-<<<<<<< HEAD
 # find_package(python3-serial REQUIRED)
 
 # SENSOR dependencies
 # find_package(imu_sensor_broadcaster REQUIRED)
 # find_package(rplidar_ros REQUIRED)
 # find_package(ldlidar-robot-ros2 REQUIRED)
-=======
 find_package(ros2_control REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
@@ -50,12 +48,11 @@ find_package(controller_manager REQUIRED)
 find_package(backward_ros REQUIRED)
 
 # SENSOR dependencies
-find_package(imu_sensor_broadcaster REQUIRED)
-find_package(rplidar_ros REQUIRED)
+# find_package(imu_sensor_broadcaster REQUIRED)
+# find_package(rplidar_ros REQUIRED)
 
 
 # ROS2CONTROl dependencies
->>>>>>> 74202b1cace1109667ff679b0efbdeccca8b2b9a
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
