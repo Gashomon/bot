@@ -141,6 +141,6 @@ def generate_launch_description():
         delayed_controller_manager,
         delayed_diff_drive_spawner,
         delayed_joint_broad_spawner,
-        delayed_imu_broad_spawner
+        # delayed_imu_broad_spawner
 
     ])

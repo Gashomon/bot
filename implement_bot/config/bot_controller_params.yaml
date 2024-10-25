@@ -36,10 +36,10 @@ diff_cont:
 #   ros__parameters:
 #     use_local_topics: true
 
-imu_broad:
-  ros__parameters:
-    sensor_name: "imu"
-    frame_id: "imu_link"
+# imu_broad:
+#   ros__parameters:
+#     sensor_name: "imu"
+#     frame_id: "imu_link"
     # static_covariance_orientation:
     # static_covariance_angular_velocity:
     # static_covariance_linear_acceleration:

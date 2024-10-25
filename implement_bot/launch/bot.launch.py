@@ -64,7 +64,7 @@ def generate_launch_description():
 
     # add launch files
     ld.add_action(states_publisher)
-    # ld.add_action(sensors_publisher)
+    ld.add_action(sensors_publisher)
 
     # Launch them all!
     return ld
