@@ -8,12 +8,13 @@ import math
 import serial
 from threading import Lock
 
+# from app_msgs.msg import MotorCommand
+# import app_msgs.msg as pop
 
 class MotorDriver(Node):
 
     def __init__(self):
         super().__init__('motor_driver')
-
 
         # Setup parameters
 
@@ -41,8 +42,8 @@ class MotorDriver(Node):
             print("Serial debug enabled")
 
 
-
         # Setup topics & services
+        
 
         self.subscription = self.create_subscription(
             MotorCommand,
