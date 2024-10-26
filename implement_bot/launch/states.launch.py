@@ -137,7 +137,7 @@ def generate_launch_description():
 
         robot_state_publisher,
         joint_state_publisher,
-        # twist_remaps,
+        twist_remaps,
         delayed_controller_manager,
         delayed_diff_drive_spawner,
         delayed_joint_broad_spawner,
