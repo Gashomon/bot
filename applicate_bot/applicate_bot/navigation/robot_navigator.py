@@ -591,3 +591,5 @@ class BasicNavigator(Node):
     def debug(self, msg):
         self.get_logger().debug(msg)
         return
+
+    

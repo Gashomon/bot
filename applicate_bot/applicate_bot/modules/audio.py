@@ -3,6 +3,7 @@ from playsound import playsound
 
 soundlibpath = '../sound/'
 audio1 = 'audio.mp3'
+
 def playfor(situation):
     if situation == 'running':
         playsound(soundlibpath + audio1)
