@@ -216,6 +216,8 @@ hardware_interface::return_type DiffBotHardwareSystem::read(
   wheel_r_.pos = wheel_r_.calc_enc_angle();
   wheel_r_.vel = (wheel_r_.pos - pos_prev) / delta_seconds;
 
+  // RCLCPP_INFO(rclcpp::get_logger("DiffBotHardwareSystem"), "Successfully reading!");
+
   return hardware_interface::return_type::OK;
 }
 
@@ -231,6 +233,7 @@ hardware_interface::return_type NewHardwareInterface::DiffBotHardwareSystem::wri
   int motor_r_counts_per_loop = wheel_r_.cmd / wheel_r_.rads_per_count / cfg_.loop_rate;
   comms_.set_motor_values(motor_l_counts_per_loop, motor_r_counts_per_loop);
   // comms_.run_motor_pwm(20, 20);
+  // RCLCPP_INFO(rclcpp::get_logger("DiffBotHardwareSystem"), "Successfully writing!");
 
   return hardware_interface::return_type::OK;
 }

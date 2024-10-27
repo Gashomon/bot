@@ -31,8 +31,23 @@ Robot Localization -    https://medium.com/@zillur-rahman/how-to-use-the-ros-rob
 IMU Reading -   https://machinelearningsite.com/reading-mpu6050-data-with-raspberry-pi-and-python/
                 https://lastminuteengineers.com/mpu6050-accel-gyro-arduino-tutorial/
                 
+Touchscreen - https://www.gechic.com/en/ubuntu-multihead-touchscreen-mapping-settings
+
 Commands for Installs: (forgotten some)
     Important Installs
-        
+
+sudo apt install software-properties-common
+sudo add-apt-repository universe
+sudo apt update && sudo apt install ros-dev-tools
+sudo apt install ros-humble-desktop
+sudo apt install ros-humble-ros-base
+sudo apt install ros-humble-twist-mux
+sudo apt install ros-humble-robot-localization
+sudo apt install ros-humble-navigation2
+sudo apt install ros-humble-nav2-bringup
+sudo apt install ros-humble-ros2-control
+sudo apt install ros-humble-ros2-controllers
+sudo apt install ros-humble-*package_name*
+
 sudo apt install python3-lgpio
 pip install playsound
