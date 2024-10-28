@@ -36,6 +36,7 @@ Touchscreen - https://www.gechic.com/en/ubuntu-multihead-touchscreen-mapping-set
 Commands for Installs: (forgotten some)
     Important Installs
 
+humble installs
 sudo apt install software-properties-common
 sudo add-apt-repository universe
 sudo apt update && sudo apt install ros-dev-tools
@@ -50,9 +51,11 @@ sudo apt install ros-humble-ros2-control
 sudo apt install ros-humble-ros2-controllers
 sudo apt install ros-humble-xacro
 
+serial installs
 sudo apt install libserial-dev
 
 sudo apt install ros-humble-*package_name*
 
+other function installs
 sudo apt install python3-lgpio
 pip install playsound
