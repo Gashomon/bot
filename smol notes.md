@@ -42,11 +42,16 @@ sudo apt update && sudo apt install ros-dev-tools
 sudo apt install ros-humble-desktop
 sudo apt install ros-humble-ros-base
 sudo apt install ros-humble-twist-mux
+sudo apt install ros-humble-twist-mux-msgs
 sudo apt install ros-humble-robot-localization
 sudo apt install ros-humble-navigation2
 sudo apt install ros-humble-nav2-bringup
 sudo apt install ros-humble-ros2-control
 sudo apt install ros-humble-ros2-controllers
+sudo apt install ros-humble-xacro
+
+sudo apt install libserial-dev
+
 sudo apt install ros-humble-*package_name*
 
 sudo apt install python3-lgpio
