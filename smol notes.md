@@ -33,6 +33,8 @@ IMU Reading -   https://machinelearningsite.com/reading-mpu6050-data-with-raspbe
                 
 Touchscreen - https://www.gechic.com/en/ubuntu-multihead-touchscreen-mapping-settings
 
+Python Pass by Assignment - https://docs.python.org/3/faq/programming.html#how-do-i-write-a-function-with-output-parameters-call-by-reference
+
 Commands for Installs: (forgotten some)
     Important Installs
 
@@ -59,3 +61,6 @@ sudo apt install ros-humble-*package_name*
 other function installs
 sudo apt install python3-lgpio
 pip install playsound
+
+ui installs
+pip install pyside6

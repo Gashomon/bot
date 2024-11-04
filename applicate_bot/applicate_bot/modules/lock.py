@@ -10,8 +10,10 @@ RELAYPIN = 23
 device = lgpio.gpiochip_open(0)
 lgpio.gpio_claim_output(device, RELAYPIN) # use pin as output 
 
-def lock(state):
-    if state == 'on':
+def setState(state):
+    if state == 'LOCKED':
         lgpio.gpio_write(device, RELAYPIN, 1)
-    if state == 'off':
+    if state == 'UNLOCKED':
         lgpio.gpio_write(device, RELAYPIN, 0)
+def getState():
+    return

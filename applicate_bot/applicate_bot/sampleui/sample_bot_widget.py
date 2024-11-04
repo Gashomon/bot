@@ -11,8 +11,6 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 import numpy as np
 import rclpy
 rclpy.init(args=None)
-from applicate_bot import nav_func_basic
-bot = nav_func_basic.NavigationNode()
 
 # Set waypoints and start navigation
 waypoints = {

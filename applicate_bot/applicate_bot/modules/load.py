@@ -10,6 +10,6 @@ LOADPIN = 23
 device = lgpio.gpiochip_open(0)
 lgpio.gpio_claim_input(device, LOADPIN) # use pin as output 
 
-def readLoadSensor(state):
+def readLoadSensor():
     result = lgpio.gpio_read(device, LOADPIN)
     return result
