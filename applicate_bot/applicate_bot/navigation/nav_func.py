@@ -2,7 +2,7 @@
 import rclpy
 from rclpy.node import Node
 # from nav2_simple_commander.robot_navigator import BasicNavigator
-from applicate_bot.modded_robot_navigator import BasicNavigator
+from applicate_bot.navigation.robot_navigator import BasicNavigator
 from geometry_msgs.msg import PoseStamped
 import tf_transformations
 
@@ -49,6 +49,19 @@ class NavigationNode(Node):
             self.get_logger().info('Navigation Feedback: %s' % feedback)
         result = self.navigator.getResult()
         self.get_logger().info('Navigation Result: %s' % result)
+    
+    def simpleDrive(self, destinations, dest, getResult): #only destination points
+        if destinations.get(dest) is not None:
+            station = {
+                self.create_pose_stamped(destinations[dest][0], destinations[dest][1], destinations[dest][2])  
+            }
+            self.follow_waypoints(station)
+        else:
+            result = 'wrong points'
+        return
+    
+    # def complexDrive(self, dest[]) #inputting many points
+
 
 def main(args=None):
     rclpy.init(args=args)
