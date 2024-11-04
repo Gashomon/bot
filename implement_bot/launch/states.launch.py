@@ -125,7 +125,7 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument(
             'use_sim_time',
-            default_value = 'false',
+            default_value = 'truw',
             description = 'Use sim time if true'
         ),
         DeclareLaunchArgument(
@@ -138,9 +138,16 @@ def generate_launch_description():
         robot_state_publisher,
         joint_state_publisher,
         twist_remaps,
+
+        #simulation 
+        # controller_manager,
+        # diff_drive_spawner,
+        # joint_broad_spawner
+
+        # real bot
         delayed_controller_manager,
         delayed_diff_drive_spawner,
         delayed_joint_broad_spawner,
-        # delayed_imu_broad_spawner
+        delayed_imu_broad_spawner
 
     ])
