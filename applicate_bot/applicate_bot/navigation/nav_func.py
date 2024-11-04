@@ -2,7 +2,7 @@
 import rclpy
 from rclpy.node import Node
 # from nav2_simple_commander.robot_navigator import BasicNavigator
-from applicate_bot.navigation.robot_navigator import BasicNavigator
+from navigation.robot_navigator import BasicNavigator as BasicNavigator
 from geometry_msgs.msg import PoseStamped
 import tf_transformations
 
