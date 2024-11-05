@@ -66,5 +66,5 @@ diff_cont:
 #     use_local_topics: true
 
 Gazebo:
-  ros_parameters:
+  ros__parameters:
     publish_rate: 400.0
