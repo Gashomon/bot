@@ -28,20 +28,20 @@ def generate_launch_description():
     default_world = os.path.join(pkg_path,'worlds', world_n)
 
     # gazebo classic launch
-    gazebo_cl = IncludeLaunchDescription(
-                PythonLaunchDescriptionSource([os.path.join(
-                    get_package_share_directory('gazebo_ros'), 'launch', 'gazebo.launch.py')]), 
-                    launch_arguments={'world': default_world}.items()
-             )
+    # gazebo_cl = IncludeLaunchDescription(
+    #             PythonLaunchDescriptionSource([os.path.join(
+    #                 get_package_share_directory('gazebo_ros'), 'launch', 'gazebo.launch.py')]), 
+    #                 launch_arguments={'world': default_world}.items()
+    #          )
 
-    # creates entity of robot for simulation
-    entity_spawner = Node(
-        package = 'gazebo_ros', 
-        executable = 'spawn_entity.py',
-        arguments = ['-topic', 'robot_description', '-entity', 'robot1'],
-        output = 'screen',
-        name = 'gazebo_spawner'
-    )
+    # # creates entity of robot for simulation
+    # entity_spawner = Node(
+    #     package = 'gazebo_ros', 
+    #     executable = 'spawn_entity.py',
+    #     arguments = ['-topic', 'robot_description', '-entity', 'robot1'],
+    #     output = 'screen',
+    #     name = 'gazebo_spawner'
+    # )
     
     # rviz launch
     rviz = Node(
@@ -65,7 +65,7 @@ def generate_launch_description():
         #     description='loaded rviz config'
         # ), 
         
-        gazebo_cl,
-        entity_spawner,
+        # gazebo_cl,
+        # entity_spawner,
         rviz    
     ])

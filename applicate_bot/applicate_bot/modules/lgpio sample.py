@@ -8,7 +8,7 @@ import lgpio
 LED = 23
 BUTTON = 13
 # open the gpio chip and set the LED pin as output
-device = lgpio.gpiochip_open(0)
+device = lgpio.gpiochip_open(1)
 lgpio.gpio_claim_output(device, LED) # use pin as output 
 lgpio.gpio_claim_input(device, BUTTON) # use pin as in put
 

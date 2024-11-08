@@ -1,25 +1,24 @@
 # Python file compilation of all control commands
 
 # from std_msgs.msg import String
+import rclpy
+from rclpy.node import Node
+import sys
 
-import navigation.nav_func as Nav
+from applicate_bot.navigation import nav_func as Nav
 import numpy as np
-from modules import lock
-from modules import audio
-from modules import load
+from applicate_bot.modules import lock
+from applicate_bot.modules import audio
+from applicate_bot.modules import load
 
 IN_TRIAL_MODE = True
 if IN_TRIAL_MODE:
-    import gui.pre_ui.ui_func as UI
+    import applicate_bot.gui.pre_ui.ui_func as UI
 else:
-    import applicate_bot.applicate_bot.gui.pre_ui.ui_func as UI
+    import applicate_bot.gui.pre_ui.ui_func as UI
 
 import time
 from enum import Enum
-
-# bot imported functions
-nav = Nav.NavigationNode()
-ui = UI.UserInterface()
 
 # TRAVERSALS (simple data)
 destinationList = {
@@ -64,11 +63,22 @@ class BotCommands():
 
         self.task = None
         self.taskStep = None
+    
+    def __init__(self, nav, ui):
+        self.botStatus = None
+
+        self.currentStation = None
+        self.currentPass = None
+
+        self.task = None
+        self.taskStep = None
+        self.ui = ui
+        self.nav = nav
         
     def startUp(self):
         self.goTo("Home")
         self.botStatus = BotStatus.ATHOME
-        ui.switchTo("main")
+        self.ui.switchTo("control")
     
     def reset(self):
         self.goTo("Home")
@@ -93,7 +103,7 @@ class BotCommands():
         while not userConfirmed:
             if (isUser[0] == 1):
                 audio.playfor('nothing')
-                userConfirmed = ui.password.verify(userPassword)
+                userConfirmed = self.ui.password.verify(userPassword)
             elif (isUser[0] == 2):
                 audio.playfor('arrived')
                 self.confirm(isUser, newConfirmText)
@@ -117,10 +127,10 @@ class BotCommands():
         self.botStatus = BotStatus.BEGINTASK
               
     def getCommand(self):
-        ui.switchTo('control')
-        ui.control.pushButton_5.clicked.connect(self.rundel)
-        ui.control.pushButton_6.clicked.connect(self.runfec)
-        ui.control.pushButton_7.clicked.connect(self.runret)
+        self.ui.switchTo('control')
+        self.ui.control.pushButton_5.clicked.connect(self.rundel)
+        self.ui.control.pushButton_6.clicked.connect(self.runfec)
+        self.ui.control.pushButton_7.clicked.connect(self.runret)
         while self.task == None:
             self.botStatus = BotStatus.ATCMD
         self.botStatus = BotStatus.ATTASK
@@ -128,9 +138,9 @@ class BotCommands():
     # ACTIONS 
     def runfec(self):
         
-        ui.status.display("FETCHING...")
-        ui.control.comboBox_4
-        ui.control.comboBox_5
+        self.ui.status.display("FETCHING...")
+        self.ui.control.comboBox_4
+        self.ui.control.comboBox_5
 
     def rundel(self):
         # Set Task Name
@@ -157,11 +167,11 @@ class BotCommands():
         # Get Ready + Goto Receiver
         elif self.taskStep == 3:
             self.getReady()
-            dest = ui.control.comboBox_7.currentText()
+            dest = self.ui.control.comboBox_7.currentText()
             self.currentStation = dest
             self.currentPass = receiverPass
             self.botStatus = BotStatus.TRAVELLING
-            ui.status.display("DELIVERING...")
+            self.ui.status.display("DELIVERING...")
         
         # Open n Remove Items
         elif self.taskStep == 4:
@@ -174,19 +184,19 @@ class BotCommands():
             self.botStatus = BotStatus.FINISHEDTASK
         self.taskStep += 1
         
-        ui.control.comboBox_6
-        ui.control.comboBox_7
+        self.ui.control.comboBox_6
+        self.ui.control.comboBox_7
              
     def runret(self):
-        ui.status.display("RETRIEVING...")
-        ui.control.comboBox_8
-        ui.control.comboBox_9
+        self.ui.status.display("RETRIEVING...")
+        self.ui.control.comboBox_8
+        self.ui.control.comboBox_9
          
     # CONFIRM
     def confirm(self, someList, confirmText, bt1Text, bt2Text):
         audio.playfor('confirm')
         someList = [0]
-        ui.confirm.confirm(confirmText, lambda: self.setSomeList(someList, 0, 1), lambda: self.setSomeList(someList, 0, 2), bt1Text, bt2Text)
+        self.ui.confirm.confirm(confirmText, lambda: self.setSomeList(someList, 0, 1), lambda: self.setSomeList(someList, 0, 2), bt1Text, bt2Text)
         while not someList:
             pass
 
@@ -195,12 +205,12 @@ class BotCommands():
     
     # DRIVE
     def goTo(self, dest):
-        nav.simpleDrive(destinationList, dest)
-        while(not (nav.navigator.isTaskComplete())):
-            ui.status.display("GOING to " + dest)
+        self.nav.simpleDrive(destinationList, dest)
+        while(not (self.nav.navigator.isTaskComplete())):
+            self.ui.status.display("GOING to " + dest)
             audio.playfor('travelling')
             
-        ui.status.display("Arrived!")
+        self.ui.status.display("Arrived!")
         audio.playfor('arrived')
         self.botStatus == BotStatus.WAITING
 
@@ -229,18 +239,18 @@ class BotCommands():
         lock.setState("UNLOCKED")
         while lock.getState() == "OPEN":
             if load.readLoadSensor() > threshold:
-                ui.status.display("Too Heavy")
+                self.ui.status.display("Too Heavy")
             else:
-                ui.status.display("")
+                self.ui.status.display("")
         lock.setState('LOCKED')
         return
     
     def unLoad(self):
         lock.setState("UNLOCKED")
         while not (load.readLoadSensor() == 0):
-            ui.status.display("Please remove items")
+            self.ui.status.display("Please remove items")
         while not lock.getState == "CLOSED":
-            ui.status.display("Please close door")
+            self.ui.status.display("Please close door")
         isOkay = [0]
         while not isOkay[0] == 1:
             self.confirm(isOkay, "Is okay?")
@@ -257,9 +267,20 @@ class BotCommands():
     def record(self):
         self.botStatus = BotStatus.TRAVELLING
 
-def main():
-    bot = BotCommands()
+def main(args=None):
+    # bot imported functions
+    
+    ui = UI.UserInterface()
+    
+    # ui.widget.show()
+    
+    
+    rclpy.init(args=args)
+    nav = Nav.NavigationNode()
+    bot = BotCommands(nav, ui)
+    
     try:
+        rclpy.spin(nav)
         while not bot.botStatus == BotStatus.SHUTDOWN:
             bot.checkUp()
 
@@ -295,13 +316,16 @@ def main():
 
             else:
                 bot.botStatus = BotStatus.STARTUP
+            
+        # sys.exit(ui.app.exec())
            
     except:
         pass
     else:
         pass
     finally:
-        pass
+        nav.destroy_node()
+        rclpy.shutdown()
 
 if __name__ == '__main__':
     main()

@@ -84,7 +84,7 @@ def generate_launch_description():
 
     #launch files
     ld.add_action(visuals_launch)
-    ld.add_action(spawn_bridge)
+    # ld.add_action(spawn_bridge)
     ld.add_action(bot_launch)
 
     # Launch them all!

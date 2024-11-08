@@ -78,7 +78,7 @@ class BasicNavigator(Node):
         self.assisted_teleop_client = ActionClient(self, AssistedTeleop, 'assisted_teleop')
         self.localization_pose_sub = self.create_subscription(PoseWithCovarianceStamped,
                                                               'amcl_pose',
-                                                              self._locPoseCallback,
+                                                              self._amclPoseCallback,
                                                               amcl_pose_qos)
         self.initial_pose_pub = self.create_publisher(PoseWithCovarianceStamped,
                                                       'initialpose',

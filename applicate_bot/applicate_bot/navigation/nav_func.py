@@ -2,7 +2,7 @@
 import rclpy
 from rclpy.node import Node
 # from nav2_simple_commander.robot_navigator import BasicNavigator
-from navigation.robot_navigator import BasicNavigator as BasicNavigator
+from applicate_bot.navigation.robot_navigator import BasicNavigator as BasicNavigator
 from geometry_msgs.msg import PoseStamped
 import tf_transformations
 
@@ -26,7 +26,7 @@ class NavigationNode(Node):
         self.navigator.setInitialPose(initial_pose)
 
         # Wait for Nav2 to be active
-        self.navigator.waitUntilNav2Active()
+        # self.navigator.waitUntilNav2Active()
         
     def create_pose_stamped(self, position_x, position_y, orientation_z):
         q_x, q_y, q_z, q_w = tf_transformations.quaternion_from_euler(0.0, 0.0, orientation_z)

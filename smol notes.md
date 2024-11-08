@@ -52,6 +52,7 @@ sudo apt install ros-humble-nav2-bringup
 sudo apt install ros-humble-ros2-control
 sudo apt install ros-humble-ros2-controllers
 sudo apt install ros-humble-xacro
+sudo apt install ros-humble-tf-transformations
 
 serial installs
 sudo apt install libserial-dev
@@ -60,6 +61,8 @@ sudo apt install ros-humble-*package_name*
 
 other function installs
 sudo apt install python3-lgpio
+sudo adduser user_name dialout
+sudo apt install python3-pip
 pip install playsound
 
 ui installs
