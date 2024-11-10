@@ -29,7 +29,7 @@
         <!-- <origin xyz="0.0 0.0 ${(scale_val* (actual_chassis_height) + 0.02)}" rpy="0.0 0.0 0.0"/> -->
     </joint>
 
-    <!-- Macro for Ultrasonic Sensors -->
+    <!-- Macro for IR Sensors -->
     <xacro:macro name="range_link_joint" params="pos_x">
         <link name="${pos_x}_range_link">
             <visual>
@@ -64,12 +64,11 @@
 
         
     </xacro:macro>
-    <!-- left ultrasonic sensor -->
+
+    <!-- left IR sensor -->
     <xacro:range_link_joint pos_x="left"/>
-    <!-- right ultrasonic sensor -->
+    <!-- right IR sensor -->
     <xacro:range_link_joint pos_x="right"/>
-
-
 
     <!-- IMU Link -->
     <link name="imu_link">

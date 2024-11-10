@@ -1,5 +1,5 @@
-#ifndef DIFFDRIVE_ARDUINO_ARDUINO_COMMS_HPP
-#define DIFFDRIVE_ARDUINO_ARDUINO_COMMS_HPP
+#ifndef ESP_COMMS_HPP
+#define ESP_COMMS_HPP
 
 #include <cstring>
 #include <sstream>
@@ -78,23 +78,9 @@ public:
     return response;
   }
 
-
   void send_empty_msg()
   {
     std::string response = send_msg("\r");
-  }
-
-  void read_encoder_values(int &val_1, int &val_2)
-  {
-    std::string response = send_msg("e\r");
-
-    std::string delimiter = " ";
-    size_t del_pos = response.find(delimiter);
-    std::string token_1 = response.substr(0, del_pos);
-    std::string token_2 = response.substr(del_pos + delimiter.length());
-
-    val_1 = std::atoi(token_1.c_str());
-    val_2 = std::atoi(token_2.c_str());
   }
   
   void set_motor_values(int val_1, int val_2)
@@ -118,6 +104,36 @@ public:
     send_msg(ss.str());
   }
 
+  void read_encoders(int &enc_1, int &enc_2)
+  {
+    std::string response = send_msg("e\r");
+
+    std::string delimiter = " ";
+    size_t del_pos = response.find(delimiter);
+    std::string token_1 = response.substr(0, del_pos);
+    std::string token_2 = response.substr(del_pos + delimiter.length());
+
+    enc_1 = std::atoi(token_1.c_str());
+    enc_2 = std::atoi(token_2.c_str());
+  }
+
+    void read_range_sensors(int &sensor_1, int &sensor_2)
+  {
+    std::string response = send_msg("l\r");
+
+    std::string delimiter = " ";
+    size_t del_pos = response.find(delimiter);
+    std::string token_1 = response.substr(0, del_pos);
+    std::string token_2 = response.substr(del_pos + delimiter.length());
+
+    sensor_1 = std::atoi(token_1.c_str());
+    sensor_2 = std::atoi(token_2.c_str());
+  }
+
+    void read_imu_sensor(int &value)
+  {
+    std::string value = send_msg("i\r");
+  }
 private:
     SerialPort serial_conn_;
     int timeout_ms_;

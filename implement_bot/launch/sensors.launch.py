@@ -22,20 +22,6 @@ from launch_ros.actions import Node, LifecycleNode
 
 def generate_launch_description():
 
-    lidar_sensor = Node(
-        package='rplidar_ros',
-        executable='rplidar_composition',
-        output='screen',
-        parameters=[{
-            # 'serial_port': '/dev/serial/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.3:1.0-port0',
-            'serial_port': '/dev/ttyUSB1',
-            'frame_id': 'laser_frame',
-            'angle_compensate': True,
-            'scan_mode': 'Standard'
-        }],
-        name = 'rplidar'
-    )
-
     node_name = LaunchConfiguration('node_name')
     # Launch arguments
     declare_node_name_cmd = DeclareLaunchArgument(
@@ -84,7 +70,6 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
-        # lidar_sensor,
         declare_node_name_cmd,
         lc_mgr_node,
         ldlidar_node

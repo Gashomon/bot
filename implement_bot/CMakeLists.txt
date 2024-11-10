@@ -15,19 +15,18 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-# find dependencies
+# Basic dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(pluginlib REQUIRED)
+find_package(robot_state_publisher REQUIRED)
+find_package(joint_state_publisher REQUIRED)
+
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 
-# ALL CODE dependencies
-# find_package(applicate_bot REQUIRED)
-
 # Navigation dependencies
-# find_package(robot_description REQUIRED)
 find_package(nav2_bringup REQUIRED)
 find_package(nav2_amcl REQUIRED)
 find_package(nav2_map_server REQUIRED)
@@ -35,24 +34,20 @@ find_package(slam_toolbox REQUIRED)
 
 # HARDWARE dependencies
 find_package(hardware_interface REQUIRED)
-# find_package(python3-serial REQUIRED)
-
-# SENSOR dependencies
-# find_package(imu_sensor_broadcaster REQUIRED)
-# find_package(rplidar_ros REQUIRED)
-# find_package(ldlidar-robot-ros2 REQUIRED)
 find_package(ros2_control REQUIRED)
+find_package(ros2_controllers REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(controller_manager REQUIRED)
 find_package(backward_ros REQUIRED)
+# find_package(python3-serial REQUIRED)
 
 # SENSOR dependencies
-# find_package(imu_sensor_broadcaster REQUIRED)
-# find_package(rplidar_ros REQUIRED)
+find_package(ldlidar-robot-ros2 REQUIRED)
+find_package(imu_sensor_broadcaster REQUIRED)
+find_package(range_sensor_broadcaster REQUIRED)
+find_package(sensor_msgs REQUIRED)
 
-
-# ROS2CONTROl dependencies
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -65,6 +60,7 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
+# putting files in install to find by others
 install(
   DIRECTORY 
     config
@@ -77,17 +73,23 @@ install(
   DESTINATION share/${PROJECT_NAME}
 )
 
-## COMPILE ROS2 Libraries
+## COMPILE Libraries
+# diffbot motor & encoder library
 add_library(
   diffbot_system
   SHARED
   hardware/diffbot_system.cpp
 )
+# sensor library
+
+# diffbot compiles, includes, dependencies
 target_compile_features(diffbot_system PUBLIC cxx_std_17)
+
 target_include_directories(diffbot_system PUBLIC
 $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/hardware/include>
 $<INSTALL_INTERFACE:include/diffbot_system>
 )
+
 ament_target_dependencies(
   diffbot_system PUBLIC
   hardware_interface
@@ -95,15 +97,14 @@ ament_target_dependencies(
   rclcpp
   rclcpp_lifecycle
   rclcpp_components
-  # serial
-  
+  sensor_msgs
 )
 target_link_libraries(diffbot_system PUBLIC serial)
 
 # Export hardware plugins
 pluginlib_export_plugin_description_file(hardware_interface diffbot_system.xml)
 
-# INSTALL
+# INSTALLS
 install(
   DIRECTORY hardware/include/
   DESTINATION include/
@@ -123,7 +124,7 @@ ament_export_dependencies(
   rclcpp
   rclcpp_lifecycle
   rclcpp_components
-  # serial
+  sensor_msgs
 )
 
   # install(TARGETS implement_bot

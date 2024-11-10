@@ -8,3 +8,12 @@
     </description>
   </class>
 </library>
+
+<!--
+Library: actual library. anything, used in CMakeList. ideally match filename
+  Class: 
+    Name: anything, used in xacro
+    Type: must match type in actual file of loaded library
+    Base: must match ros2 controller
+  Description:
+-->

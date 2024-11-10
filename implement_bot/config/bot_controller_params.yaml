@@ -14,12 +14,12 @@ controller_manager:
 
 diff_cont:
   ros__parameters:
-    publish_rate: 40.0
+    publish_rate: 40.0 #Hz
     base_frame_id: base_link
     left_wheel_names: ["left_front_wheel_joint"]
     right_wheel_names: ["right_front_wheel_joint"]
-    wheel_separation: 0.6223
-    wheel_radius: 0.10115
+    wheel_separation: 0.6223 #meters
+    wheel_radius: 0.10115 #meters
     use_stamped_vel: false
     open_loop: true    
     # position_feedback: False
