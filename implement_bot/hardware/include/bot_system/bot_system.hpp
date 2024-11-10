@@ -102,7 +102,7 @@ namespace NewHardwareInterface
       Wheel wheel_l_;
       Wheel wheel_r_;
       RangeSensor range_l_;
-      RangeSensor rangle_r_;
+      RangeSensor range_r_;
       Imusensor imu_;
   };
 
