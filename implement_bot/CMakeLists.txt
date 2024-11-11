@@ -46,7 +46,6 @@ find_package(backward_ros REQUIRED)
 find_package(ldlidar-robot-ros2 REQUIRED)
 find_package(imu_sensor_broadcaster REQUIRED)
 find_package(range_sensor_broadcaster REQUIRED)
-find_package(sensor_msgs REQUIRED)
 
 
 if(BUILD_TESTING)
@@ -76,33 +75,32 @@ install(
 ## COMPILE Libraries
 # diffbot motor & encoder library
 add_library(
-  diffbot_system
+  bot_systemlib
   SHARED
-  hardware/diffbot_system.cpp
+  hardware/bot_system.cpp
 )
 # sensor library
 
 # diffbot compiles, includes, dependencies
-target_compile_features(diffbot_system PUBLIC cxx_std_17)
+target_compile_features(bot_systemlib PUBLIC cxx_std_17)
 
-target_include_directories(diffbot_system PUBLIC
+target_include_directories(bot_systemlib PUBLIC
 $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/hardware/include>
-$<INSTALL_INTERFACE:include/diffbot_system>
+$<INSTALL_INTERFACE:include/bot_systemlib>
 )
 
 ament_target_dependencies(
-  diffbot_system PUBLIC
+  bot_systemlib PUBLIC
   hardware_interface
   pluginlib
   rclcpp
   rclcpp_lifecycle
   rclcpp_components
-  sensor_msgs
 )
-target_link_libraries(diffbot_system PUBLIC serial)
+target_link_libraries(bot_systemlib PUBLIC serial)
 
 # Export hardware plugins
-pluginlib_export_plugin_description_file(hardware_interface diffbot_system.xml)
+pluginlib_export_plugin_description_file(hardware_interface bot_system.xml)
 
 # INSTALLS
 install(
@@ -110,21 +108,20 @@ install(
   DESTINATION include/
 )
 
-install(TARGETS diffbot_system
-  EXPORT export_diffbot_system
+install(TARGETS bot_systemlib
+  EXPORT export_bot_system
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
 )
 
-ament_export_targets(export_diffbot_system HAS_LIBRARY_TARGET)
+ament_export_targets(export_bot_system HAS_LIBRARY_TARGET)
 ament_export_dependencies(
   hardware_interface
   pluginlib
   rclcpp
   rclcpp_lifecycle
   rclcpp_components
-  sensor_msgs
 )
 
   # install(TARGETS implement_bot

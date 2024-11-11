@@ -65,124 +65,122 @@ hardware_interface::CallbackReturn DiffBotHardwareSystem::on_init(
   
   for (const hardware_interface::ComponentInfo & joint : info_.joints)
   {
-    if (joint.name.c_str() == cfg_.left_wheel_name || joint.name.c_str() == cfg_.right_wheel_name)
+    if (joint.command_interfaces.size() != 1)
     {
-      if (joint.command_interfaces.size() != 1)
-      {
-        RCLCPP_FATAL(
-          rclcpp::get_logger("DiffBotHardwareSystem"),
-          "Wheel Joint '%s' has %zu command interfaces found. 1 expected.", joint.name.c_str(),
-          joint.command_interfaces.size());
-        return hardware_interface::CallbackReturn::ERROR;
-      }
-
-      if (joint.command_interfaces[0].name != hardware_interface::HW_IF_VELOCITY)
-      {
-        RCLCPP_FATAL(
-          rclcpp::get_logger("DiffBotHardwareSystem"),
-          "Wheel Joint '%s' have %s command interfaces found. '%s' expected.", joint.name.c_str(),
-          joint.command_interfaces[0].name.c_str(), hardware_interface::HW_IF_VELOCITY);
-        return hardware_interface::CallbackReturn::ERROR;
-      }
-
-      if (joint.state_interfaces.size() != 2)
-      {
-        RCLCPP_FATAL(
-          rclcpp::get_logger("DiffBotHardwareSystem"),
-          "Wheel Joint '%s' has %zu state interface. 2 expected.", joint.name.c_str(),
-          joint.state_interfaces.size());
-        return hardware_interface::CallbackReturn::ERROR;
-      }
-
-      if (joint.state_interfaces[0].name != hardware_interface::HW_IF_POSITION)
-      {
-        RCLCPP_FATAL(
-          rclcpp::get_logger("DiffBotHardwareSystem"),
-          "Wheel Joint '%s' have '%s' as first state interface. '%s' expected.", joint.name.c_str(),
-          joint.state_interfaces[0].name.c_str(), hardware_interface::HW_IF_POSITION);
-        return hardware_interface::CallbackReturn::ERROR;
-      }
-
-      if (joint.state_interfaces[1].name != hardware_interface::HW_IF_VELOCITY)
-      {
-        RCLCPP_FATAL(
-          rclcpp::get_logger("DiffBotHardwareSystem"),
-          "Wheel Joint '%s' have '%s' as second state interface. '%s' expected.", joint.name.c_str(),
-          joint.state_interfaces[1].name.c_str(), hardware_interface::HW_IF_VELOCITY);
-        return hardware_interface::CallbackReturn::ERROR;
-      }
+      RCLCPP_FATAL(
+        rclcpp::get_logger("DiffBotHardwareSystem"),
+        "Wheel Joint '%s' has %zu command interfaces found. 1 expected.", joint.name.c_str(),
+        joint.command_interfaces.size());
+      return hardware_interface::CallbackReturn::ERROR;
     }
 
-    else if(joint.name.c_str() == cfg.left_range_name || joint.name.c_str() == cfg.right_range_name)
+    if (joint.command_interfaces[0].name != hardware_interface::HW_IF_VELOCITY)
     {
-      if (joint.command_interfaces.size() != 0)
+      RCLCPP_FATAL(
+        rclcpp::get_logger("DiffBotHardwareSystem"),
+        "Wheel Joint '%s' have %s command interfaces found. '%s' expected.", joint.name.c_str(),
+        joint.command_interfaces[0].name.c_str(), hardware_interface::HW_IF_VELOCITY);
+      return hardware_interface::CallbackReturn::ERROR;
+    }
+
+    if (joint.state_interfaces.size() != 2)
+    {
+      RCLCPP_FATAL(
+        rclcpp::get_logger("DiffBotHardwareSystem"),
+        "Wheel Joint '%s' has %zu state interface. 2 expected.", joint.name.c_str(),
+        joint.state_interfaces.size());
+      return hardware_interface::CallbackReturn::ERROR;
+    }
+
+    if (joint.state_interfaces[0].name != hardware_interface::HW_IF_POSITION)
+    {
+      RCLCPP_FATAL(
+        rclcpp::get_logger("DiffBotHardwareSystem"),
+        "Wheel Joint '%s' have '%s' as first state interface. '%s' expected.", joint.name.c_str(),
+        joint.state_interfaces[0].name.c_str(), hardware_interface::HW_IF_POSITION);
+      return hardware_interface::CallbackReturn::ERROR;
+    }
+
+    if (joint.state_interfaces[1].name != hardware_interface::HW_IF_VELOCITY)
+    {
+      RCLCPP_FATAL(
+        rclcpp::get_logger("DiffBotHardwareSystem"),
+        "Wheel Joint '%s' have '%s' as second state interface. '%s' expected.", joint.name.c_str(),
+        joint.state_interfaces[1].name.c_str(), hardware_interface::HW_IF_VELOCITY);
+      return hardware_interface::CallbackReturn::ERROR;
+    }
+    
+  }
+
+  for(const hardware_interface::ComponentInfo & sensor : info_.sensors)
+  {
+    if(sensor.name.c_str() == cfg.left_range_name || sensor.name.c_str() == cfg.right_range_name)
+    {
+      if (sensor.command_interfaces.size() != 0)
       {
         RCLCPP_FATAL(
           rclcpp::get_logger("DiffBotHardwareSystem"),
-          "Range Joint '%s' has %zu command interfaces found. 1 expected.", joint.name.c_str(),
-          joint.command_interfaces.size());
+          "Range sensor '%s' has %zu command interfaces found. 1 expected.", sensor.name.c_str(),
+          sensor.command_interfaces.size());
         return hardware_interface::CallbackReturn::ERROR;
       }
 
-      if (joint.state_interfaces.size() != 1)
+      if (sensor.state_interfaces.size() != 1)
       {
         RCLCPP_FATAL(
           rclcpp::get_logger("DiffBotHardwareSystem"),
-          "Range Joint '%s' has %zu state interface. 1 expected.", joint.name.c_str(),
-          joint.state_interfaces.size());
+          "Range sensor '%s' has %zu state interface. 1 expected.", sensor.name.c_str(),
+          sensor.state_interfaces.size());
         return hardware_interface::CallbackReturn::ERROR;
       }
 
-      if (joint.state_interfaces[0].name != hardware_interface::HW_IF_POSITION){
+      if (sensor.state_interfaces[0].name != hardware_interface::HW_IF_POSITION){
         RCLCPP_FATAL(
           rclcpp::get_logger("DiffBotHardwareSystem"),
-          "Range Joint '%s' have %s command interfaces found. '%s' expected.", joint.name.c_str(),
-          joint.command_interfaces[0].name.c_str(), hardware_interface::HW_IF_VELOCITY);
+          "Range sensor '%s' have %s command interfaces found. '%s' expected.", sensor.name.c_str(),
+          sensor.command_interfaces[0].name.c_str(), hardware_interface::HW_IF_VELOCITY);
         return hardware_interface::CallbackReturn::ERROR;
       }
     }
     
-    else if(joint.name.c_str() == cfg.imu_name)
+    else if(sensor.name.c_str() == cfg.imu_name)
     {
-      if (joint.command_interfaces.size() != 0)
+      if (sensor.command_interfaces.size() != 0)
       {
         RCLCPP_FATAL(
           rclcpp::get_logger("DiffBotHardwareSystem"),
-          "IMU Joint '%s' has %zu command interfaces found. 1 expected.", joint.name.c_str(),
-          joint.command_interfaces.size());
+          "IMU sensor '%s' has %zu command interfaces found. 1 expected.", sensor.name.c_str(),
+          sensor.command_interfaces.size());
         return hardware_interface::CallbackReturn::ERROR;
       }
 
-      if (joint.state_interfaces.size() != 1)
+      if (sensor.state_interfaces.size() != 1)
       {
         RCLCPP_FATAL(
           rclcpp::get_logger("DiffBotHardwareSystem"),
-          "Joint '%s' has %zu state interface. 1 expected.", joint.name.c_str(),
-          joint.state_interfaces.size());
+          "sensor '%s' has %zu state interface. 1 expected.", sensor.name.c_str(),
+          sensor.state_interfaces.size());
         return hardware_interface::CallbackReturn::ERROR;
       }
 
-      if (joint.state_interfaces[0].name != hardware_interface::HW_IF_VELOCITY){
+      if (sensor.state_interfaces[0].name != hardware_interface::HW_IF_VELOCITY){
         RCLCPP_FATAL(
           rclcpp::get_logger("DiffBotHardwareSystem"),
-          "Joint '%s' have %s command interfaces found. '%s' expected.", joint.name.c_str(),
-          joint.command_interfaces[0].name.c_str(), hardware_interface::HW_IF_VELOCITY);
+          "sensor '%s' have %s command interfaces found. '%s' expected.", sensor.name.c_str(),
+          sensor.command_interfaces[0].name.c_str(), hardware_interface::HW_IF_VELOCITY);
         return hardware_interface::CallbackReturn::ERROR;
       }
-    
-
     }
     
     else
     {
       RCLCPP_FATAL(
           rclcpp::get_logger("DiffBotHardwareSystem"),
-          "Unexpected Joint", joint.name.c_str());
+          "Unexpected sensor", sensor.name.c_str());
         return hardware_interface::CallbackReturn::ERROR;
     }
     
   }
-
   return hardware_interface::CallbackReturn::SUCCESS;
 }
 
@@ -324,7 +322,7 @@ hardware_interface::return_type NewHardwareInterface::DiffBotHardwareSystem::wri
   return hardware_interface::return_type::OK;
 }
 
-}  // namespace diffdrive_arduino
+}
 
 #include "pluginlib/class_list_macros.hpp"
-PLUGINLIB_EXPORT_CLASS(NewHardwareInterface::DiffBotHardwareSystem)
+PLUGINLIB_EXPORT_CLASS(NewHardwareInterface::DiffBotHardwareSystem, hardware_interface::SystemInterface)
