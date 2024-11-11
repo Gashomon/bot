@@ -1,5 +1,7 @@
 ## GUI REQUIREMENTS
 
+Guide on making ui
+
 ---
 
 **Logic & Concept**
@@ -21,9 +23,9 @@ main ui
 
 ## SPECIFICS
 
----
-
 Specific ui details may be confirmed later on the development phase...
+
+---
 
 **Password Window**
 > ClassName: _unimportant yet_
