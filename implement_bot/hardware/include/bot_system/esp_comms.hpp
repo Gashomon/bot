@@ -117,7 +117,7 @@ public:
     enc_2 = std::atoi(token_2.c_str());
   }
 
-    void read_range_sensors(int &sensor_1, int &sensor_2)
+    void read_range_sensors(double &sensor_1, double &sensor_2)
   {
     std::string response = send_msg("l\r");
 
@@ -126,13 +126,21 @@ public:
     std::string token_1 = response.substr(0, del_pos);
     std::string token_2 = response.substr(del_pos + delimiter.length());
 
-    sensor_1 = std::atoi(token_1.c_str());
-    sensor_2 = std::atoi(token_2.c_str());
+    sensor_1 = std::atof(token_1.c_str());
+    sensor_2 = std::atof(token_2.c_str());
   }
 
-    void read_imu_sensor(int &value)
+    void read_imu_sensor(double &vel_x, double &ang_z)
   {
-    std::string value = send_msg("i\r");
+    std::string response = send_msg("i\r");
+
+    std::string delimiter = " ";
+    size_t del_pos = response.find(delimiter);
+    std::string token_1 = response.substr(0, del_pos);
+    std::string token_2 = response.substr(del_pos + delimiter.length());
+    
+    vel_x = std::atof(token_1.c_str());
+    ang_z = std::atof(token_2.c_str());
   }
 private:
     SerialPort serial_conn_;

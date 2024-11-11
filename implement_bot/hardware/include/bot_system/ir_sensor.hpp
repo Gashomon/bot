@@ -1,5 +1,5 @@
-#ifndef IR_BOT_HPP
-#define IR_BOT_HPP
+#ifndef IR_SENSOR_HPP
+#define IR_SENSOR_HPP
 
 #include <string>
 
@@ -7,7 +7,7 @@ class RangeSensor
 {
     public:
     std::string name = "";
-    double pos = 0.0;
+    double range = 0.0;
 
     RangeSensor() = default;
     RangeSensor(const std::string &sensorName)

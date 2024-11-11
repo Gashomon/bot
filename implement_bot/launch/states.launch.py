@@ -73,7 +73,13 @@ def generate_launch_description():
           }
      ) 
     
-    delayed_controller_manager = TimerAction(period=3.0, actions=[real_bot_controller])
+    # delayed_controller_manager = RegisterEventHandler(
+    #     event_handler=OnProcessStart(
+    #         target_action=robot_state_publisher,
+    #         on_start=[real_bot_controller],
+    #     )
+    # )
+    delayed_controller_manager = TimerAction(period=4.0, actions=[real_bot_controller])
     
     # just controller manager
     controller_manager = Node(
@@ -121,11 +127,29 @@ def generate_launch_description():
         )
     )
 
+    left_range_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["left_range_broad"]
+    )
+
+    right_range_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["right_range_broad"]
+    )
+
+    delayed_range_broad_spawner = RegisterEventHandler(
+        event_handler=OnProcessStart(
+            target_action=real_bot_controller,
+            on_start=[right_range_spawner, left_range_spawner],
+        )
+    )
     # Launch!
     return LaunchDescription([
         DeclareLaunchArgument(
             'use_sim_time',
-            default_value = 'truw',
+            default_value = 'false',
             description = 'Use sim time if true'
         ),
         DeclareLaunchArgument(
@@ -148,6 +172,7 @@ def generate_launch_description():
         delayed_controller_manager,
         delayed_diff_drive_spawner,
         delayed_joint_broad_spawner,
-        # delayed_imu_broad_spawner
+        delayed_imu_broad_spawner,
+        delayed_range_broad_spawner
 
     ])

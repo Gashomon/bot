@@ -37,7 +37,7 @@
 
 namespace NewHardwareInterface
 {
-  class DiffBotHardwareSystem : public hardware_interface::SystemInterface
+  class BotHardwareSystem : public hardware_interface::SystemInterface
   {
 
     struct Config
@@ -53,14 +53,16 @@ namespace NewHardwareInterface
       int pid_d = 0;
       int pid_i = 0;
       int pid_o = 0;
+
       std::string left_range_name = "";
       std::string right_range_name = "";
+
       std::string imu_name = "";
     };
 
 
     public:
-      RCLCPP_SHARED_PTR_DEFINITIONS(DiffBotHardwareSystem)
+      RCLCPP_SHARED_PTR_DEFINITIONS(BotHardwareSystem)
 
     //   DIFFBOT_HARDWARE_PUBLIC
       hardware_interface::CallbackReturn on_init(

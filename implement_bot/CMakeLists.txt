@@ -20,7 +20,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(robot_state_publisher REQUIRED)
-find_package(joint_state_publisher REQUIRED)
+# find_package(joint_state_publisher REQUIRED)
 
 # uncomment the following section in order to fill in
 # further dependencies manually.
@@ -43,7 +43,7 @@ find_package(backward_ros REQUIRED)
 # find_package(python3-serial REQUIRED)
 
 # SENSOR dependencies
-find_package(ldlidar-robot-ros2 REQUIRED)
+# find_package(ldlidar-robot-ros2 REQUIRED)
 find_package(imu_sensor_broadcaster REQUIRED)
 find_package(range_sensor_broadcaster REQUIRED)
 
@@ -100,7 +100,7 @@ ament_target_dependencies(
 target_link_libraries(bot_systemlib PUBLIC serial)
 
 # Export hardware plugins
-pluginlib_export_plugin_description_file(hardware_interface bot_system.xml)
+pluginlib_export_plugin_description_file(hardware_interface bot_systemlib.xml)
 
 # INSTALLS
 install(
