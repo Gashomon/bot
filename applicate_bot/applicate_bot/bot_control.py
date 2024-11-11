@@ -79,6 +79,7 @@ class BotCommands():
         self.goTo("Home")
         self.botStatus = BotStatus.ATHOME
         self.ui.switchTo("control")
+        print("hehe")
     
     def reset(self):
         self.goTo("Home")
@@ -280,14 +281,19 @@ def main(args=None):
     bot = BotCommands(nav, ui)
     
     try:
-        rclpy.spin(nav)
-        while not bot.botStatus == BotStatus.SHUTDOWN:
+        # rclpy.spin(nav)
+        count = 0
+        while (count < 5):
+            print("lol")
+            print(count)
             bot.checkUp()
 
             if bot.botStatus == BotStatus.STARTUP:    
+                print("start")
                 bot.startUp()
 
             elif bot.botStatus == BotStatus.ATHOME:
+                print("home")
                 bot.getUser()
             
             elif bot.botStatus == BotStatus.BEGINTASK:
@@ -317,15 +323,19 @@ def main(args=None):
             else:
                 bot.botStatus = BotStatus.STARTUP
             
+            count += 1
+            
+        print("sad bye")
         # sys.exit(ui.app.exec())
            
-    except:
-        pass
+    except Exception as e:
+        print(e)
     else:
         pass
     finally:
         nav.destroy_node()
         rclpy.shutdown()
+        print("bye")
 
 if __name__ == '__main__':
     main()
