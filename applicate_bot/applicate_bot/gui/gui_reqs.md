@@ -28,7 +28,7 @@ Specific ui details may be confirmed later on the development phase...
 ---
 
 **Password Window**
-> ClassName: _unimportant yet_
+> ClassName: _unimportant yet_\
 > Objects:
 > - 0_bt        -> button
 > - 1_bt        -> button
@@ -47,10 +47,12 @@ Specific ui details may be confirmed later on the development phase...
 > - resp_lb     -> label
 
 **Status Window**
+> Objects:
 > - bigstat_lb  -> label
 > - smlstat_lb  -> label
 
 **Choice Window**
+> Objects:
 > - qst_lb      -> label
 > - note_lb     -> label
 > - ys_bt       -> button
