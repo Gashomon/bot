@@ -28,28 +28,28 @@ Specific ui details may be confirmed later on the development phase...
 **Password Window**
 > ClassName: _unimportant yet_
 > Objects:
->   0_bt        -> button
->   1_bt        -> button
->   2_bt        -> button
->   3_bt        -> button
->   4_bt        -> button
->   5_bt        -> button
->   6_bt        -> button
->   7_bt        -> button
->   8_bt        -> button
->   9_bt        -> button
->   del_bt      -> button
->   confirm_bt  -> button
->   clr_bt      -> button
->   input_tf    -> textfield
->   resp_lb     -> label
+> - 0_bt        -> button
+> - 1_bt        -> button
+> - 2_bt        -> button
+> - 3_bt        -> button
+> - 4_bt        -> button
+> - 5_bt        -> button
+> - 6_bt        -> button
+> - 7_bt        -> button
+> - 8_bt        -> button
+> - 9_bt        -> button
+> - del_bt      -> button
+> - confirm_bt  -> button
+> - clr_bt      -> button
+> - input_tf    -> textfield
+> - resp_lb     -> label
 
 **Status Window**
->   bigstat_lb  -> label
->   smlstat_lb  -> label
+> - bigstat_lb  -> label
+> - smlstat_lb  -> label
 
 **Choice Window**
->   qst_lb      -> label
->   note_lb     -> label
->   ys_bt       -> button
->   no_bt       -> button
+> - qst_lb      -> label
+> - note_lb     -> label
+> - ys_bt       -> button
+> - no_bt       -> button
