@@ -24,9 +24,9 @@ class NavigationNode(Node):
         # Set initial pose
         initial_pose = self.create_pose_stamped(0.0, 0.0, 0.0)
         self.navigator.setInitialPose(initial_pose)
-
+        print("pop")
         # Wait for Nav2 to be active
-        # self.navigator.waitUntilNav2Active()
+        self.navigator.waitUntilNav2Active()
         
     def create_pose_stamped(self, position_x, position_y, orientation_z):
         q_x, q_y, q_z, q_w = tf_transformations.quaternion_from_euler(0.0, 0.0, orientation_z)
@@ -50,14 +50,15 @@ class NavigationNode(Node):
         result = self.navigator.getResult()
         self.get_logger().info('Navigation Result: %s' % result)
     
-    def simpleDrive(self, destinations, dest, getResult): #only destination points
+    def simpleDrive(self, destinations, dest): #only destination points
         if destinations.get(dest) is not None:
-            station = {
+            station = [
+                # self.create_pose_stamped(0.0, 0.0, 0.0),
                 self.create_pose_stamped(destinations[dest][0], destinations[dest][1], destinations[dest][2])  
-            }
+            ]
             self.follow_waypoints(station)
         else:
-            result = 'wrong points'
+            print('wrong points')
         return
     
     # def complexDrive(self, dest[]) #inputting many points

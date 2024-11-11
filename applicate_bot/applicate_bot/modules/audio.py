@@ -5,14 +5,15 @@ soundlibpath = '../sound/'
 audio1 = 'audio.mp3'
 
 def playfor(situation):
-    if situation == 'running':
-        playsound(soundlibpath + audio1)
-    elif situation == 'arrived':
-        playsound(soundlibpath + audio1)
-    elif situation == 'departing':
-        playsound(soundlibpath + audio1)
-    elif situation == 'password':
-        playsound(soundlibpath + audio1)
+    # if situation == 'running':
+    #     playsound(soundlibpath + audio1)
+    # elif situation == 'arrived':
+    #     playsound(soundlibpath + audio1)
+    # elif situation == 'departing':
+    #     playsound(soundlibpath + audio1)
+    # elif situation == 'password':
+    #     playsound(soundlibpath + audio1)
+    pass
 
         
 # # backup for linux specifically (native player)
