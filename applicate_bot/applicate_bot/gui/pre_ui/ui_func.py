@@ -16,8 +16,38 @@ class UserInterface(MyGUI.GUI):
     def __init__(self):     
         super(MyGUI.GUI, self).__init__()
     
-    def switchTo(self, page):
+    def goto(self, page):
         self.widget.setCurrentIndex(PAGES.get(page))
+    
+    def sendcmd(self, transaction, type):
+        if type == 'del':
+            dest1 = self.control.comboBox_6.currentText
+            dest2 = self.control.comboBox_7.currentText
+            ttype = 1
+        if type == 'fet':
+            dest1 = self.control.comboBox_4.currentText
+            dest2 = self.control.comboBox_5.currentText
+            ttype = 2
+        if type == 'ret':
+            dest1 = self.control.comboBox_6.currentText
+            dest2 = self.control.comboBox_7.currentText
+            ttype = 3
+
+        transaction.dest1 = dest1
+        transaction.dest2 = dest2
+        transaction.type = ttype
+        return transaction
+
+    def check(self, question):
+        self.confirm.confirm(question, lambda:True, lambda:False)
+    
+    def verifyuser(self, password):
+        self.goto('password')
+        isgood = False
+        while not isgood:
+            self.password.pushButton_11.clicked.connect(isgood = lambda: self.password.verify(password))
+        
+        
 
 if __name__ == "__main__":
     ui = UserInterface()

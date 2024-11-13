@@ -5,7 +5,8 @@ soundlibpath = '../sound/'
 audio1 = 'audio.mp3'
 audios = {
     'situation1': 'audio.mp3',
-    'nosounderror' : 'nserr.mp3'
+    'nosounderror' : 'nserr.mp3',
+    'nothing' : 'nothing.mp3'
 }
 def playfor(situation):
     if audios.get(situation) is not None:

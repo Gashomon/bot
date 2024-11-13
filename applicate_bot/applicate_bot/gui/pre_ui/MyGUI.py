@@ -65,7 +65,7 @@ class PasswordUI(QMainWindow, passUi):
         self.pushButton_9.clicked.connect(lambda: self.addnum('9'))
         self.pushButton_10.clicked.connect(lambda: self.addnum('0'))
 
-        self.pushButton_11.clicked.connect(lambda: self.verify())
+        # self.pushButton_11.clicked.connect(lambda: self.verify())
         self.pushButton_12.clicked.connect(self.backspc)
         self.pushButton_13.clicked.connect(self.reset)
 

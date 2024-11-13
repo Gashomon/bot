@@ -74,14 +74,15 @@ class Bot():
         if self.EXPERIMENTAL:
             self.ui.goto("control")
             t = Transaction()
-            self.ui.control.pushButton_2.clicked.connect(
-                lambda: self.ui.sendcmd(t))
-            self.ui.control.pushButton_2.clicked.connect(
-                lambda: self.ui.sendcmd(t))
-            self.ui.control.pushButton_2.clicked.connect(
-                lambda: self.ui.sendcmd(t))
+            self.ui.control.pushButton_5.clicked.connect(
+                lambda: self.ui.sendcmd(t, 'del'))
+            self.ui.control.pushButton_6.clicked.connect(
+                lambda: self.ui.sendcmd(t, 'fet'))
+            self.ui.control.pushButton_7.clicked.connect(
+                lambda: self.ui.sendcmd(t, 'ret'))
             while t is None:
                 pass
+            t.password = self
             return t
         else:
            return self.server.waitforcmd()
@@ -100,7 +101,7 @@ class Bot():
         self.nav.navigator.goToPose(pose)
         while not self.nav.navigator.isTaskComplete():
             self.ui.display("travelling")
-        self.playfor('arrived')
+        self.playfor('nothing') 
     
     def deliver(self, transaction):
         t = transaction
@@ -112,7 +113,7 @@ class Bot():
         self.nav.navigator.goToPose(pose)
         while not self.nav.navigator.isTaskComplete():
             self.ui.display("travelling")
-        self.playfor('arrived')
+        self.playfor('nothing')
         
         q = "r u user?"
         while not self.ui.check(q):
@@ -142,7 +143,7 @@ class Bot():
         self.nav.navigator.goToPose(pose)
         while not self.nav.navigator.isTaskComplete():
             self.ui.display("travelling")
-        self.playfor('arrived')
+        self.playfor('nothing')
 
         q = "r u user?"
         while not self.ui.check(q):
@@ -171,4 +172,5 @@ class Bot():
         return True
 
         
-        
+    def genpass(self):
+        return "1111"

@@ -1,7 +1,7 @@
 import bot as Bot
 import applicate_bot.modules.modules as Modules
 import applicate_bot.navigation.nav_func as Nav
-import applicate_bot.gui.pre_ui.MyGUI as UI
+import applicate_bot.gui.pre_ui.ui_func as UI
 
 import rclpy
 from rclpy.Node import Node
@@ -12,7 +12,7 @@ def main(args=None):
     
     nav = Nav.NavigationNode()
     modules = Modules.Modules()
-    ui = UI.GUI()
+    ui = UI.UserInterface()
     ui.widget.show()
     bot = Bot.Bot(modules, nav, '' ,ui)
     
