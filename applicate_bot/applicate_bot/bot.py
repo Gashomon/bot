@@ -1,9 +1,9 @@
 import enum
 
-listofLongSituations = {}
-listofShoortSituations = {}
+longsituationslist = {}
+shortsituationslist = {}
 
-destinationList = {
+destinationlist = {
     'Initial': (0.0, 0.0, 0.0), 
     'Home': (1.2123, 0.0458, 0.01636), 
     'Dean': (-28.0098, 1.37033, -1.5951), 
@@ -24,8 +24,6 @@ class Transaction():
     type = None
     dest1 = None
     dest2 = None
-
-EXPERIMENTAL = True
     
 class Bot():
 
@@ -33,6 +31,7 @@ class Bot():
         pass
 
     def __init__(self, modules, nav, server, ui) -> None:
+        self.EXPERIMENTAL = True
         self.modules = modules
         self.nav = nav
         self.server = server
@@ -59,9 +58,9 @@ class Bot():
             return False
         
     def playfor(self, situation):
-        if listofLongSituations.get(situation) is not None:
+        if longsituationslist.get(situation) is not None:
             self.modules.playloop(situation)
-        if listofShoortSituations.get(situation) is not None:
+        if shortsituationslist.get(situation) is not None:
             self.modules.playonce(situation)
 
     def loadlight(self, limit):
@@ -72,7 +71,7 @@ class Bot():
             return True
         
     def getcmd(self):
-        if EXPERIMENTAL:
+        if self.EXPERIMENTAL:
             self.ui.goto("control")
             t = Transaction()
             self.ui.control.pushButton_2.clicked.connect(
@@ -97,8 +96,8 @@ class Bot():
         while not self.readydrive():
             self.ui.display("Not yet Ready")
         
-        pose = self.nav.create_pose_stamped(destinationList.get("Home"))
-        self.nav.goToPose(pose)
+        pose = self.nav.create_pose_stamped(destinationlist.get("Home"))
+        self.nav.navigator.goToPose(pose)
         while not self.nav.navigator.isTaskComplete():
             self.ui.display("travelling")
         self.playfor('arrived')
@@ -110,7 +109,7 @@ class Bot():
             self.ui.display("Not yet Ready")
 
         pose = self.nav.create_pose_stamped(t.dest1)
-        self.nav.goToPose(pose)
+        self.nav.navigator.goToPose(pose)
         while not self.nav.navigator.isTaskComplete():
             self.ui.display("travelling")
         self.playfor('arrived')
@@ -140,7 +139,7 @@ class Bot():
             self.ui.display("Not yet Ready")
 
         pose = self.nav.create_pose_stamped(t.dest2)
-        self.nav.goToPose(pose)
+        self.nav.navigator.goToPose(pose)
         while not self.nav.navigator.isTaskComplete():
             self.ui.display("travelling")
         self.playfor('arrived')

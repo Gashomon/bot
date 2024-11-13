@@ -5,11 +5,6 @@
 import time
 import lgpio
 
-LOADPIN = 23
-# open the gpio chip and set the LED pin as output
-device = lgpio.gpiochip_open(0)
-lgpio.gpio_claim_input(device, LOADPIN) # use pin as output 
-
-def readLoadSensor():
-    result = lgpio.gpio_read(device, LOADPIN)
+def readLoadSensor(device, loadpin):
+    result = lgpio.gpio_read(device, loadpin)
     return result

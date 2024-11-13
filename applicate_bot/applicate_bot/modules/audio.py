@@ -3,16 +3,15 @@ from playsound import playsound
 
 soundlibpath = '../sound/'
 audio1 = 'audio.mp3'
-
+audios = {
+    'situation1': 'audio.mp3',
+    'nosounderror' : 'nserr.mp3'
+}
 def playfor(situation):
-    # if situation == 'running':
-    #     playsound(soundlibpath + audio1)
-    # elif situation == 'arrived':
-    #     playsound(soundlibpath + audio1)
-    # elif situation == 'departing':
-    #     playsound(soundlibpath + audio1)
-    # elif situation == 'password':
-    #     playsound(soundlibpath + audio1)
+    if audios.get(situation) is not None:
+        playsound(soundlibpath + audios[situation])
+    else:
+        playsound(soundlibpath + audios["nosounderror"])
     pass
 
         

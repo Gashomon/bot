@@ -67,7 +67,7 @@ class NavigationNode(Node):
             feedback = self.navigator.getFeedback()
         result = self.navigator.getResult()
 
-    
+    def goPose
     # def complexDrive(self, dest[]) #inputting many points
 
 
