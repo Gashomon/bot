@@ -61,6 +61,13 @@ class NavigationNode(Node):
             print('wrong points')
         return
     
+    def simplerDrive(self, pose):
+        self.navigator.goToPose(pose)
+        while not self.navigator.isTaskComplete():
+            feedback = self.navigator.getFeedback()
+        result = self.navigator.getResult()
+
+    
     # def complexDrive(self, dest[]) #inputting many points
 
 

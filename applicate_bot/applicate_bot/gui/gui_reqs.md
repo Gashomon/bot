@@ -16,9 +16,26 @@ Guide on making ui
 
 **UI function Requirements**
 main ui
-> - `class(sound, lock, nav2, server, load)`
-> - 
->
+> **constructor**
+> - `uiclass()`
+
+> **objects**
+> - Control     -> window class
+> - Status      -> window class
+> - Choice      -> window class
+> - Password    -> window class
+> - Main        -> Window class
+> - mainpages   -> stackedWidget
+> - pages       -> enum class
+
+> **functions**
+> - void `goto(index)`  
+> - bool `verifyuser(password)`
+> - bool `check(q, n="", ch1='Y', ch2='N')`
+> - void `display(btxt, stxt="")`
+> - Transac `sendcmd(t)`
+> - string `generatepass()`
+
 ---
 
 ## SPECIFICS
@@ -26,6 +43,18 @@ main ui
 Specific ui details may be confirmed later on the development phase...
 
 ---
+
+**Transac Class**
+> ClassName: Transac _(unimportant yet)_\
+> - Transac()
+> - Transac()
+> Objects:
+> - sender      -> string
+> - receiver    -> string
+> - password    -> string
+> - type        -> string
+> - dest1       -> string
+> - dest2       -> string
 
 **Password Window**
 > ClassName: _unimportant yet_\
@@ -57,3 +86,5 @@ Specific ui details may be confirmed later on the development phase...
 > - note_lb     -> label
 > - ys_bt       -> button
 > - no_bt       -> button
+
+**Control Window**

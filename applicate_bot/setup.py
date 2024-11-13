@@ -27,6 +27,7 @@ setup(
             'motor_gui = applicate_bot.motorsample.motor_gui:main',
             'motor_driver = applicate_bot.motorsample.motor_driver:main',
             'botcont = applicate_bot.bot_control:main'
+            'appbpt = applicate_bot.app_bot.py:main'
         ],
     },
 )
