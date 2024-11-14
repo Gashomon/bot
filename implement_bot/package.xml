@@ -9,7 +9,7 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <!-- CODE -->
+  <!-- OTHER CODE -->
   <exec_depend>applicate_bot</exec_depend>
 
   <!-- ROBOT -->
@@ -33,6 +33,10 @@
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
+
+  <!-- SERVER -->
+  <depend>rclcpp</depend>
+  <depend>std_msgs</depend>
 
   <export>
     <build_type>ament_cmake</build_type>

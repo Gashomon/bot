@@ -47,6 +47,9 @@ find_package(backward_ros REQUIRED)
 find_package(imu_sensor_broadcaster REQUIRED)
 find_package(range_sensor_broadcaster REQUIRED)
 
+# SERVER dependencies
+# find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -124,12 +127,14 @@ ament_export_dependencies(
   rclcpp_components
 )
 
-  # install(TARGETS implement_bot
-  #   EXPORT implement_bot
-  #   ARCHIVE DESTINATION lib
-  #   LIBRARY DESTINATION lib
-  #   RUNTIME DESTINATION bin
-  # )
+# Export Server Listener
+add_executable(server src/server_publisher.cpp)
+ament_target_dependencies(server rclcpp std_msgs)
+
+install(TARGETS
+  server
+  DESTINATION lib/${PROJECT_NAME})
+
 # SETTING EXECUTABLES
 
 # launch directory

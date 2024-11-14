@@ -85,7 +85,7 @@ class Bot():
             t.password = self
             return t
         else:
-           return self.server.waitforcmd()
+           return self.server.waitforcmd(t)
     
     def run(self, transaction):
         if transaction.type == TransacType.DELIVER:
