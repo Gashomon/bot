@@ -22,7 +22,6 @@
   
   <!-- HARDWARE -->
   <depend>hardware interface</depend>
-  <depend>rclcpp</depend>
   <depend>rclcpp_lifecycle</depend>
   <depend>pluginlib</depend>
   <depend>libserial-dev</depend>

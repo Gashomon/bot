@@ -45,8 +45,8 @@ hardware_interface::CallbackReturn BotHardwareSystem::on_init(
   
   cfg_.left_range_name = info_.hardware_parameters["left_range_name"];
   cfg_.right_range_name = info_.hardware_parameters["right_range_name"];
-  cfg_.min_range = std::stof(info_.hardware_parameters["minimum_range"]);
-  cfg_.max_range = std::stof(info_.hardware_parameters["maximum_range"]);
+  // cfg_.min_range = std::stof(info_.hardware_parameters["minimum_range"]);
+  // cfg_.max_range = std::stof(info_.hardware_parameters["maximum_range"]);
 
   cfg_.imu_name = info_.hardware_parameters["imu_name"];
 
