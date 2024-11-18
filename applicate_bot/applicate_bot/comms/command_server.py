@@ -20,9 +20,8 @@ class ServerSub(Node):
             transaction.receiver  = self.msg[1]
             transaction.password  = self.msg[2]
             transaction.type  = self.msg[3]
-            transaction.type  = self.msg[4]
-            transaction.dest1  = self.msg[5]
-            transaction.dest2  = self.msg[6]
+            transaction.dest1  = self.msg[4]
+            transaction.dest2  = self.msg[5]
             return transaction
         
 

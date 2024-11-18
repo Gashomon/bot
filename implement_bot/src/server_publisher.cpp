@@ -104,10 +104,10 @@ int main(int argc, char *argv[]) {
             //cout << "Client disconnected " << endl;
             // break;
             close(clientSocket);
-              sockaddr_in client;
-              socklen_t clientSize = sizeof(client);
+            sockaddr_in client;
+            socklen_t clientSize = sizeof(client);
 
-              clientSocket = accept(listening, (sockaddr*)&client, &clientSize);
+            clientSocket = accept(listening, (sockaddr*)&client, &clientSize);
         }
         //RCLCPP_INFO(node->get_logger(), buf);
         message.data = buf;
