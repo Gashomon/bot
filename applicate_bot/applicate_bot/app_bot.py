@@ -1,11 +1,11 @@
-import bot as Bot
+import applicate_bot.bot as Bot
 import applicate_bot.modules.modules as Modules
 import applicate_bot.navigation.nav_func as Nav
 import applicate_bot.gui.pre_ui.ui_func as UI
 import applicate_bot.comms.command_server as Server
 
 import rclpy
-from rclpy.Node import Node
+# from rclpy.Node import Node
 import sys
 
 def main(args=None):

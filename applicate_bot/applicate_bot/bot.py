@@ -1,4 +1,4 @@
-import enum
+from enum import Enum
 
 longsituationslist = {}
 shortsituationslist = {}
@@ -14,8 +14,9 @@ destinationlist = {
     'ECE'  : (-9.3469, 1.4631, -0.04289)
 }
 
-class TransacType(enum):
+class TransacType(Enum):
     DELIVER = 1
+    FETCH = 2
 
 class Transaction():
     sender = ""

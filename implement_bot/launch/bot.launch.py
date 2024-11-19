@@ -55,6 +55,11 @@ def generate_launch_description():
                 launch_arguments={'use_sim_time': use_sim_time, 'jsp_on': jsp_on}.items()
     )
 
+    # server publisher launch file
+    server_publisher_path = os.path.join(package_path,'launch','server.py')
+    server_publisher = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(server_publisher_path)
+    )
     # compressed launch description function
     ld = LaunchDescription()
 
@@ -64,6 +69,7 @@ def generate_launch_description():
 
     # add launch files
     ld.add_action(states_publisher)
+    ld.add_action(server_publisher)
     # ld.add_action(sensors_publisher)
 
     # Launch them all!

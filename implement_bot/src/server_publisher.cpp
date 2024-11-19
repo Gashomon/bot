@@ -42,12 +42,12 @@ using namespace std::chrono_literals;
  
 int main(int argc, char *argv[]) {
 
-
+  cout << "Beginning..." << endl;
   int listening = socket(AF_INET, SOCK_STREAM, 0);
 
   if (listening == -1)
   {
-      // cerr << "Can't create a socket! Quitting" << endl;
+      cerr << "Can't create a socket! Quitting" << endl;
       return -1;
   }
 
@@ -90,7 +90,8 @@ int main(int argc, char *argv[]) {
         int bytesReceived = recv(clientSocket, buf, 4096, 0);
         if (bytesReceived == -1)
         {
-            //cout << "Error in recv(). Quitting" << endl;
+            cout << "Error in recv(). Quitting" << endl;
+            RCLCPP_INFO(node->get_logger(), "err recv");
             break;
             close(clientSocket);
             sockaddr_in client;
@@ -101,7 +102,8 @@ int main(int argc, char *argv[]) {
  
         if (bytesReceived == 0)
         {
-            //cout << "Client disconnected " << endl;
+            cout << "Client disconnected " << endl;
+            RCLCPP_INFO(node->get_logger(), "cli dis");
             // break;
             close(clientSocket);
             sockaddr_in client;
@@ -109,7 +111,7 @@ int main(int argc, char *argv[]) {
 
             clientSocket = accept(listening, (sockaddr*)&client, &clientSize);
         }
-        //RCLCPP_INFO(node->get_logger(), buf);
+        RCLCPP_INFO(node->get_logger(), buf);
         message.data = buf;
         RCLCPP_INFO(node->get_logger(), "Publishing: '%s'", message.data.c_str());
         publisher_->publish(message);

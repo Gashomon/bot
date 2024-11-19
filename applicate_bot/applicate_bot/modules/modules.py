@@ -1,12 +1,13 @@
-import load
-import lock
-import audio
+import applicate_bot.modules.load
+import applicate_bot.modules.lock
+import applicate_bot.modules.audio
 
 import time
 import lgpio
 
-import enum
-class GPIOpins(enum):
+from enum import Enum
+
+class GPIOpins(Enum):
     lockpin = 1
     loadpin = 2
     doorpin = 3
