@@ -21,6 +21,7 @@
         <origin xyz="0 0 0" rpy="0 0 0"/>
     </joint>
 
+    <!-- Final Odom used by EFK Node-->
     <link name="odom">
     </link>
     <joint name="odom_base" type="fixed">
@@ -28,6 +29,15 @@
         <child link="base_link"/>
         <origin xyz="0 0 0" rpy="0 0 0"/>
     </joint>
+
+    <!-- Odom used by AMCL -->
+    <!-- <link name="odom_unrefined">
+    </link>
+    <joint name="amcl_map" type="fixed">
+        <parent link="odom_unrefined"/>
+        <child link="base_link"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint> -->
 
     <link name="map">
     </link>

@@ -90,7 +90,7 @@ def generate_launch_description():
 
     declare_params_file_cmd = DeclareLaunchArgument(
         'params_file',
-        default_value=os.path.join(pkg_dir, 'config', 'nav_params_robloc.yaml'),
+        default_value=os.path.join(pkg_dir, 'config', 'full_navigation_params.yaml'),
         description='Full path to the ROS2 parameters file to use for all launched nodes')
 
     declare_autostart_cmd = DeclareLaunchArgument(
@@ -115,10 +115,10 @@ def generate_launch_description():
 
     # robot localization stuffs
     output_final_pos = DeclareLaunchArgument(
-                "output_final_position", default_value="false"
+                "output_final_position", default_value="~/final_poses_file.txt"
             ),
     output_final_loc = DeclareLaunchArgument(
-                "output_location", default_value="~/dual_ekf_navsat_example_debug.txt"
+                "output_location", default_value="~/bot_locs_file.txt"
             ),
     # robot localization stuffs
     
