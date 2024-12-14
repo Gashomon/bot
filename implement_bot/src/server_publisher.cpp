@@ -111,9 +111,9 @@ int main(int argc, char *argv[]) {
 
             clientSocket = accept(listening, (sockaddr*)&client, &clientSize);
         }
-        RCLCPP_INFO(node->get_logger(), buf);
-        message.data = buf;
+        message.data = buf;        
         RCLCPP_INFO(node->get_logger(), "Publishing: '%s'", message.data.c_str());
+        // RCLCPP_INFO(node->get_logger(), buf);
         publisher_->publish(message);
          
         // Echo message back to client

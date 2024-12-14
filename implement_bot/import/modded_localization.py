@@ -17,7 +17,7 @@ import os
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, GroupAction, SetEnvironmentVariable
+from launch.actions import DeclareLaunchArgument, GroupAction, SetEnvironmentVariable, IncludeLaunchDescription
 from launch.conditions import IfCondition
 from launch.substitutions import LaunchConfiguration, PythonExpression
 from launch_ros.actions import LoadComposableNodes
@@ -42,12 +42,12 @@ def generate_launch_description():
     use_respawn = LaunchConfiguration('use_respawn')
     log_level = LaunchConfiguration('log_level')
 
-    # lifecycle_nodes = ['map_server', 'amcl']
-    lifecycle_nodes = ['map_server', 'amcl', 'ekf_filter_node_odom']
+    lifecycle_nodes = ['map_server', 'amcl']
+    # lifecycle_nodes = ['map_server', 'amcl', 'ekf_filter_node_odom']
 
     # robot_localization variables
     rl_params_file = os.path.join(
-        pkg_dir, "config", "ekf_simple.yaml")
+        pkg_dir, "config", "full_navigation_params.yaml")
     
     # Map fully qualified names to relative ones so the node's namespace can be prepended.
     # In case of the transforms (tf), currently, there doesn't seem to be a better alternative
@@ -111,15 +111,24 @@ def generate_launch_description():
 
     declare_log_level_cmd = DeclareLaunchArgument(
         'log_level', default_value='info',
-        description='log level'),
+        description='log level')
 
     # robot localization stuffs
     output_final_pos = DeclareLaunchArgument(
-                "output_final_position", default_value="~/final_poses_file.txt"
-            ),
+            "output_final_position", default_value="~/final_poses_file.txt"
+            )
     output_final_loc = DeclareLaunchArgument(
                 "output_location", default_value="~/bot_locs_file.txt"
-            ),
+            )
+
+    ekf_localization_cmd = Node(
+                package="robot_localization",
+                executable="ekf_node",
+                name="ekf_filter_node",
+                output="screen",
+                parameters=[configured_params],
+                remappings=[("odometry/filtered", "odometry/local")],
+            )
     # robot localization stuffs
     
     load_nodes = GroupAction(
@@ -135,14 +144,6 @@ def generate_launch_description():
                 parameters=[configured_params],
                 arguments=['--ros-args', '--log-level', log_level],
                 remappings=remappings),
-
-            Node(
-                package="robot_localization",
-                executable="ekf_node",
-                name="ekf_filter_node",
-                output="screen",
-                parameters=[rl_params_file, {"use_sim_time": True}]
-            ),
 
             Node(
                 package='nav2_amcl',
@@ -178,13 +179,20 @@ def generate_launch_description():
                 parameters=[configured_params],
                 remappings=remappings),
 
+            # ComposableNode(
+            #     package='ekf_node',
+            #     plugin='Ekf::Ekf',
+            #     name='ekf_filter_node_odom',
+            #     # output="screen",
+            #     parameters=[rl_params_file, {"use_sim_time": True}],
+            # ),
+            
             ComposableNode(
-                package='ekf_node',
-                plugin='Ekf::Ekf',
-                name='ekf_filter_node_odom',
-                output="screen",
-                parameters=[rl_params_file, {"use_sim_time": True}],
-            ),
+                package='nav2_amcl',
+                plugin='nav2_amcl::AmclNode',
+                name='amcl',
+                parameters=[configured_params],
+                remappings=remappings),
             
             ComposableNode(
                 package='nav2_lifecycle_manager',
@@ -214,8 +222,7 @@ def generate_launch_description():
     ld.add_action(declare_log_level_cmd)
 
     # robot localization stuffs
-    ld.add_action(output_final_pos)
-    ld.add_action(output_final_loc)
+    ld.add_action(ekf_localization_cmd)
 
     # Add the actions to launch all of the localiztion nodes
     ld.add_action(load_nodes)

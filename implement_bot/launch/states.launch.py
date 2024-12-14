@@ -73,13 +73,15 @@ def generate_launch_description():
           }
      ) 
     
-    # delayed_controller_manager = RegisterEventHandler(
-    #     event_handler=OnProcessStart(
-    #         target_action=robot_state_publisher,
-    #         on_start=[real_bot_controller],
-    #     )
-    # )
-    delayed_controller_manager = TimerAction(period=4.0, actions=[real_bot_controller])
+    delayed_controller_manager = RegisterEventHandler(
+        event_handler=OnProcessStart(
+            target_action=robot_state_publisher,
+            on_start=[real_bot_controller],
+        )
+    )
+    # delayed_controller_manager = TimerAction(period=5.0, actions=[event_delayed_controller_manager])
+
+    
     
     # just controller manager
     controller_manager = Node(

@@ -2,110 +2,109 @@
 # Localization YAMLs
 ekf_filter_node:
     ros__parameters:
+      use_sim_time: true
+      frequency: 30.0
+      sensor_timeout: 0.1
+      two_d_mode: false
+      transform_time_offset: 0.0
+      transform_timeout: 0.0
+      print_diagnostics: true
+      debug: false
+      publish_tf: true
+      publish_acceleration: true
+      reset_on_time_jump: true
 
-        use_sim_time: true
-        frequency: 30.0
-        sensor_timeout: 0.1
-        two_d_mode: false
-        transform_time_offset: 0.0
-        transform_timeout: 0.0
-        print_diagnostics: true
-        debug: false
-        publish_tf: true
-        publish_acceleration: true
-        reset_on_time_jump: true
+      map_frame: map                   # Defaults to "map" if unspecified
+      odom_frame: odom                 # Defaults to "odom" if unspecified
+      base_link_frame: base_link  # Defaults to "base_link" if unspecified
+      world_frame: odom                # Defaults to the value of odom_frame if unspecified
 
-        map_frame: map                   # Defaults to "map" if unspecified
-        odom_frame: odom                 # Defaults to "odom" if unspecified
-        base_link_frame: base_link  # Defaults to "base_link" if unspecified
-        world_frame: odom                # Defaults to the value of odom_frame if unspecified
-
-        pose0: amcl/pose  #amcl pose covariance
-        
-        pose0_config: [true, true, true,
-                       false, false, false,
-                       true,  true,  true,
-                       false, false, true,
-                       false, false, false]
-       
-        #        [x_pos   , y_pos    , z_pos,
-        #         roll    , pitch    , yaw,
-        #         x_vel   , y_vel    , z_vel,
-        #         roll_vel, pitch_vel, yaw_vel,
-        #         x_accel , y_accel  , z_accel]
-        
-        # odom0: diffcont/odom  #diffcont odom
-        
-        # pose1_config: [false, false, false,
-        #                false, false, true,
-        #                true,  false, true,
-        #                false, false, false,
-        #                false, false, false]
-    
-        # imu0: imu_sensor #simulated_imu
-        imu0: imu/data #real_imu
-
-        imu0_config: [false, false, false,
-                      true,  true,  true,
+      pose0: amcl_pose  #amcl pose covariance
+      
+      pose0_config: [true, true, true,
                       false, false, false,
                       true,  true,  true,
-                      true,  true,  true]
+                      false, false, true,
+                      false, false, false]
+      
+              # [x_pos   , y_pos    , z_pos,
+              # roll    , pitch    , yaw,
+              # x_vel   , y_vel    , z_vel,
+              # roll_vel, pitch_vel, yaw_vel,
+              # x_accel , y_accel  , z_accel]
+      
+      odom0: diff_cont/odom  #diffcont odom
+      
+      odom0_config: [false, false, false,
+                     false, false, true,
+                     true,  false, true,
+                     false, false, false,
+                     false, false, false]
+  
+      # imu0: imu_sensor #simulated_imu
+      imu0: imu_broad/imu #real_imu
 
-        #        [x_pos   , y_pos    , z_pos,
-        #         roll    , pitch    , yaw,
-        #         x_vel   , y_vel    , z_vel,
-        #         roll_vel, pitch_vel, yaw_vel,
-        #         x_accel , y_accel  , z_accel]
-        
-        imu0_nodelay: false
-        imu0_differential: false
-        imu0_relative: true
-        imu0_queue_size: 7
-        imu0_pose_rejection_threshold: 0.8                 # Note the difference in parameter names
-        imu0_twist_rejection_threshold: 0.8                #
-        imu0_linear_acceleration_rejection_threshold: 0.8  #
+      imu0_config: [false, false, false,
+                    true,  true,  true,
+                    false, false, false,
+                    true,  true,  true,
+                    true,  true,  true]
 
-        imu0_remove_gravitational_acceleration: true
+      #        [x_pos   , y_pos    , z_pos,
+      #         roll    , pitch    , yaw,
+      #         x_vel   , y_vel    , z_vel,
+      #         roll_vel, pitch_vel, yaw_vel,
+      #         x_accel , y_accel  , z_accel]
+      
+      imu0_nodelay: false
+      imu0_differential: false
+      imu0_relative: true
+      imu0_queue_size: 7
+      imu0_pose_rejection_threshold: 0.8                 # Note the difference in parameter names
+      imu0_twist_rejection_threshold: 0.8                #
+      imu0_linear_acceleration_rejection_threshold: 0.8  #
 
-        use_control: false
-        stamped_control: false
-        control_timeout: 0.2
-        control_config: [true, false, false, false, false, true]
-        acceleration_limits: [1.3, 0.0, 0.0, 0.0, 0.0, 3.4]
-        deceleration_limits: [1.3, 0.0, 0.0, 0.0, 0.0, 4.5]
-        acceleration_gains: [0.8, 0.0, 0.0, 0.0, 0.0, 0.9]
-        deceleration_gains: [1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
-        process_noise_covariance: [0.05,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
-                                   0.0,    0.05,   0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
-                                   0.0,    0.0,    0.06,   0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
-                                   0.0,    0.0,    0.0,    0.03,   0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
-                                   0.0,    0.0,    0.0,    0.0,    0.03,   0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
-                                   0.0,    0.0,    0.0,    0.0,    0.0,    0.06,   0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
-                                   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.025,   0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
-                                   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.025,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
-                                   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.04,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
-                                   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.01,   0.0,    0.0,    0.0,    0.0,    0.0,
-                                   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.01,   0.0,    0.0,    0.0,    0.0,
-                                   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.02,   0.0,    0.0,    0.0,
-                                   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.01,   0.0,    0.0,
-                                   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.01,   0.0,
-                                   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.015]
+      imu0_remove_gravitational_acceleration: true
 
-        initial_estimate_covariance: [1e-9,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,     0.0,    0.0,    0.0,
-                                      0.0,    1e-9,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,     0.0,    0.0,    0.0,
-                                      0.0,    0.0,    1e-9,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,     0.0,    0.0,    0.0,
-                                      0.0,    0.0,    0.0,    1e-9,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,     0.0,    0.0,    0.0,
-                                      0.0,    0.0,    0.0,    0.0,    1e-9,   0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,     0.0,    0.0,    0.0,
-                                      0.0,    0.0,    0.0,    0.0,    0.0,    1e-9,   0.0,    0.0,    0.0,    0.0,     0.0,     0.0,     0.0,    0.0,    0.0,
-                                      0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    1e-9,   0.0,    0.0,    0.0,     0.0,     0.0,     0.0,    0.0,    0.0,
-                                      0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    1e-9,   0.0,    0.0,     0.0,     0.0,     0.0,    0.0,    0.0,
-                                      0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    1e-9,   0.0,     0.0,     0.0,     0.0,    0.0,    0.0,
-                                      0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    1e-9,    0.0,     0.0,     0.0,    0.0,    0.0,
-                                      0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     1e-9,    0.0,     0.0,    0.0,    0.0,
-                                      0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     1e-9,    0.0,    0.0,    0.0,
-                                      0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,     1e-9,   0.0,    0.0,
-                                      0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,     0.0,    1e-9,   0.0,
-                                      0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,     0.0,    0.0,    1e-9]
+      use_control: false
+      stamped_control: false
+      control_timeout: 0.2
+      control_config: [true, false, false, false, false, true]
+      acceleration_limits: [1.3, 0.0, 0.0, 0.0, 0.0, 3.4]
+      deceleration_limits: [1.3, 0.0, 0.0, 0.0, 0.0, 4.5]
+      acceleration_gains: [0.8, 0.0, 0.0, 0.0, 0.0, 0.9]
+      deceleration_gains: [1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+      process_noise_covariance: [0.05,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
+                                  0.0,    0.05,   0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
+                                  0.0,    0.0,    0.06,   0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
+                                  0.0,    0.0,    0.0,    0.03,   0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
+                                  0.0,    0.0,    0.0,    0.0,    0.03,   0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
+                                  0.0,    0.0,    0.0,    0.0,    0.0,    0.06,   0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
+                                  0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.025,   0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
+                                  0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.025,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
+                                  0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.04,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
+                                  0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.01,   0.0,    0.0,    0.0,    0.0,    0.0,
+                                  0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.01,   0.0,    0.0,    0.0,    0.0,
+                                  0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.02,   0.0,    0.0,    0.0,
+                                  0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.01,   0.0,    0.0,
+                                  0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.01,   0.0,
+                                  0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.015]
+
+      initial_estimate_covariance: [1e-9,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,     0.0,    0.0,    0.0,
+                                    0.0,    1e-9,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,     0.0,    0.0,    0.0,
+                                    0.0,    0.0,    1e-9,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,     0.0,    0.0,    0.0,
+                                    0.0,    0.0,    0.0,    1e-9,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,     0.0,    0.0,    0.0,
+                                    0.0,    0.0,    0.0,    0.0,    1e-9,   0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,     0.0,    0.0,    0.0,
+                                    0.0,    0.0,    0.0,    0.0,    0.0,    1e-9,   0.0,    0.0,    0.0,    0.0,     0.0,     0.0,     0.0,    0.0,    0.0,
+                                    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    1e-9,   0.0,    0.0,    0.0,     0.0,     0.0,     0.0,    0.0,    0.0,
+                                    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    1e-9,   0.0,    0.0,     0.0,     0.0,     0.0,    0.0,    0.0,
+                                    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    1e-9,   0.0,     0.0,     0.0,     0.0,    0.0,    0.0,
+                                    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    1e-9,    0.0,     0.0,     0.0,    0.0,    0.0,
+                                    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     1e-9,    0.0,     0.0,    0.0,    0.0,
+                                    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     1e-9,    0.0,    0.0,    0.0,
+                                    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,     1e-9,   0.0,    0.0,
+                                    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,     0.0,    1e-9,   0.0,
+                                    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,     0.0,    0.0,    1e-9]
 
 amcl:
   ros__parameters:
@@ -161,7 +160,7 @@ bt_navigator:
     use_sim_time: True
     global_frame: map
     robot_base_frame: base_link
-    odom_topic: odom  
+    odom_topic: /odom
     bt_loop_duration: 10
     default_server_timeout: 20
     # 'default_nav_through_poses_bt_xml' and 'default_nav_to_pose_bt_xml' are use defaults:
@@ -339,8 +338,8 @@ local_costmap:
         plugin: "nav2_costmap_2d::StaticLayer"
         map_subscribe_transient_local: True
       range_layer:
-        plugin: "nav2_costmap_2d::RangeLayer"
-        topics: ["left_range/Range","right_range/Range"]
+        plugin: "nav2_costmap_2d::RangeSensorLayer"
+        topics: ["/left_range_broad/range","/right_range_broad/range"]
         phi: 1.2
         clear_threshold: 0.2
         mark_thresold:  0.8
@@ -381,13 +380,13 @@ global_costmap:
         cost_scaling_factor: 5.0
         inflation_radius: 0.6
       range_layer:
-        plugin: "nav2_costmap_2d::RangeLayer"
-        topics: ["left_range/Range","right_range/Range"]
+        plugin: "nav2_costmap_2d::RangeSensorLayer"
+        topics: ["/left_range_broad/range","/right_range_broad/range"]
         phi: 1.2
         clear_threshold: 0.2
         mark_thresold:  0.8
         input_sensor_type: 'ALL'
-        always_send_full_costmap: True
+      always_send_full_costmap: True
 
 map_server:
   ros__parameters:
@@ -470,7 +469,7 @@ velocity_smoother:
     use_sim_time: True
     smoothing_frequency: 20.0
     scale_velocities: False
-    feedback: "CLOSED_LOOP"
+    feedback: "OPEN_LOOP"
     max_velocity: [0.26, 0.0, 1.0]
     min_velocity: [-0.26, 0.0, -1.0]
     max_accel: [2.5, 0.0, 3.2]

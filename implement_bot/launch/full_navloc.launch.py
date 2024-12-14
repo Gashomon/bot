@@ -11,8 +11,8 @@ def generate_launch_description():
     pkg_dir = FindPackageShare(package='implement_bot').find('implement_bot')
 
     # Localization and navigation launch file paths
-    localization_launch_file = os.path.join(pkg_dir, 'import', 'modded_localization.launch.py')
-    navigation_launch_file = os.path.join(pkg_dir, 'import', 'modded_navigation.launch.py')
+    localization_launch_file = os.path.join(pkg_dir, 'import', 'modded_localization.py')
+    navigation_launch_file = os.path.join(pkg_dir, 'import', 'modded_navigation.py')
 
     # Path to the custom nav2_params.yaml file
     navloc_params_file_path = os.path.join(pkg_dir, 'config', 'full_navigation_params.yaml')

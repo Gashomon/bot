@@ -32,7 +32,11 @@ Robot Localization -    https://medium.com/@zillur-rahman/how-to-use-the-ros-rob
 IMU Reading -   https://machinelearningsite.com/reading-mpu6050-data-with-raspberry-pi-and-python/
                 https://lastminuteengineers.com/mpu6050-accel-gyro-arduino-tutorial/
                 
+Load Sensor Usage - https://circuitjournal.com/four-wire-load-cell-with-HX711
+
 Touchscreen - https://www.gechic.com/en/ubuntu-multihead-touchscreen-mapping-settings
+
+Python run terminal commands - https://www.python-engineer.com/posts/python-execute-system-command/
 
 Python Pass by Assignment - https://docs.python.org/3/faq/programming.html#how-do-i-write-a-function-with-output-parameters-call-by-reference
 
