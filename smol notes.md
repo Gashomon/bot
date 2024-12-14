@@ -32,7 +32,11 @@ Robot Localization -    https://medium.com/@zillur-rahman/how-to-use-the-ros-rob
 IMU Reading -   https://machinelearningsite.com/reading-mpu6050-data-with-raspberry-pi-and-python/
                 https://lastminuteengineers.com/mpu6050-accel-gyro-arduino-tutorial/
                 
-Load Sensor Usage - https://circuitjournal.com/four-wire-load-cell-with-HX711
+Load Sensor Usage - https://randomnerdtutorials.com/esp32-load-cell-hx711/
+Load Code - https://github.com/j-dohnalek/hx711py
+
+Lock Usage - https://arduinogetstarted.com/tutorials/arduino-solenoid-lock
+Lock Library Code - https://github.com/bogde/HX711/tree/master/src
 
 Touchscreen - https://www.gechic.com/en/ubuntu-multihead-touchscreen-mapping-settings
 
@@ -72,3 +76,5 @@ pip install playsound
 
 ui installs
 pip install pyside6
+
+esp32/arduino installs
