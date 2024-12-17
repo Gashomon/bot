@@ -8,9 +8,10 @@ import lgpio
 from enum import Enum
 
 class GPIOpins(Enum):
-    lockpin = 1
-    loadpin = 2
-    doorpin = 3
+    lockpin = 25
+    loadinpin = 23
+    loadoutpin = 24
+    doorpin = 16
 
 class Modules():
     
@@ -18,14 +19,15 @@ class Modules():
         pass
     
     # set pins to 0 to deactivate
-    def __init__(self, setlock=GPIOpins.lockpin, setload=GPIOpins.loadpin, setdoor=GPIOpins.doorpin, soundenable=True):
+    def __init__(self, setlock=GPIOpins.lockpin, setloadin=GPIOpins.loadinpin, setloadout = GPIOpins.loadoutpin, setdoor=GPIOpins.doorpin, soundenable=True):
          
         self.device = lgpio.gpiochip_open(0)
 
         self.lockpin = setlock
         self.lockstat = True
         
-        self.loadpin = setload
+        self.loadinpin = setloadin
+        self.loadoutpin= setloadout
 
         self.doorpin = setdoor
         
@@ -33,9 +35,9 @@ class Modules():
             self.LOCKENABLE = True
             lgpio.gpio_claim_output(id, self.lockpin)
         
-        if setload:
+        if setloadin and setloadout:
             self.LOADENABLE = True
-            lgpio.gpio_claim_input(id, self.loadpin)
+            self.hx711 = load.init_load(self.device, self.loadinpin, self.loadoutpin)
 
         if setdoor:
             self.DOORENABLE = True
@@ -80,7 +82,7 @@ class Modules():
     def getLoad(self):
         if not self.LOADENABLE:
             return 0
-        return load.readLoadSensor(self.device,self.loadpin)
+        return load.readLoadSensor(sellf.hx711)
 
     def closegpio(self):
-        self.device = lgpio.gpiochip_close(0)
+        lgpio.gpiochip_close(self.device)
