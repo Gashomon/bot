@@ -18,12 +18,12 @@ else:
 # 
 
 pop = {
-            '1':(4.0, 2.5, np.radians(0)),
-            '2':(2.5, 2.5, np.radians(90)),
-            '3':(2.5, 7.0, np.radians(-130.60)),
-            '4':(-3.5, 0.0, np.radians(11.31)),
-            '5':(9.0, 2.5, np.radians(155.56)),
-            '6':(3.5, 5.0, np.radians(-125.00)),
+            '1':(1.0, 0.0, np.radians(0)),
+            '2':(2.0, 0.0, np.radians(0)),
+            '3':(2.5, 1.0, np.radians(0)),
+            # '4':(-3.5, 0.0, np.radians(11.31)),
+            # '5':(9.0, 2.5, np.radians(155.56)),
+            # '6':(3.5, 5.0, np.radians(-125.00)),
             '7':(0.0, 0.0, 0.0)  # Assuming the robot stops facing the original direction
         }
 class HousePatrolNode(Node):  
