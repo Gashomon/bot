@@ -337,7 +337,10 @@ hardware_interface::return_type BotHardwareSystem::read(
   wheel_r_.pos = wheel_r_.calc_enc_angle();
   wheel_r_.vel = (wheel_r_.pos - pos_prev) / delta_seconds;
 
-  comms_.read_imu_sensor(imu_.linear_acceleration_x, imu_.angular_velocity_z);
+  // if(wheel_l_.enc > 90000000 && wheel_r_.enc>= wheel_l_.enc) comms_.reset_encoders(); //developmental feature
+
+  comms_.read_imu_sensor( imu_.linear_acceleration_x, imu_.linear_acceleration_y, imu_.linear_acceleration_z, 
+                          imu_.angular_velocity_x, imu_.angular_velocity_y, imu_.angular_velocity_z);
   comms_.read_range_sensors(range_l_.range, range_r_.range);
 
   // RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Successfully reading!");

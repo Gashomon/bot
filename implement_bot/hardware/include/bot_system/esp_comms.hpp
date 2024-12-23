@@ -104,6 +104,10 @@ public:
     send_msg(ss.str());
   }
 
+  void reset_encoders(){
+    std::string response = send_msg("r\r");
+  }
+
   void read_encoders(int &enc_1, int &enc_2)
   {
     std::string response = send_msg("e\r");
@@ -130,17 +134,40 @@ public:
     sensor_2 = std::atof(token_2.c_str());
   }
 
-    void read_imu_sensor(double &vel_x, double &ang_z)
+    void read_imu_sensor(double &vel_x, double &vel_y, double &vel_z, double &ang_x, double &ang_y, double &ang_z)
   {
     std::string response = send_msg("i\r");
 
     std::string delimiter = " ";
-    size_t del_pos = response.find(delimiter);
-    std::string token_1 = response.substr(0, del_pos);
-    std::string token_2 = response.substr(del_pos + delimiter.length());
+    // size_t del_pos = response.find(delimiter);
+    // std::string token_1 = response.substr(0, del_pos);
+    // std::string token_2 = response.substr(del_pos + delimiter.length());
+
+    std::string subtoken = "";
+    int start, end = -1*delimiter.size();
+    int cnt = 0;
+    do {
+        start = end + delimiter.size();
+        end = response.find(delimiter, start);
+        // cout << s.substr(start, end - start) << endl;
+        subtoken = s.substr(start, end - start);
+
+        if(cnt == 0)      vel_x = std::atof(subtoken.c_str());
+        else if(cnt == 1) vel_y = std::atof(subtoken.c_str());
+        else if(cnt == 2) vel_z = std::atof(subtoken.c_str());
+        else if(cnt == 3) ang_x = std::atof(subtoken.c_str());
+        else if(cnt == 4) ang_y = std::atof(subtoken.c_str());
+        else if(cnt == 5) ang_z = std::atof(subtoken.c_str());
+
+        cnt++;
+    } while (end != -1);
     
-    vel_x = std::atof(token_1.c_str());
-    ang_z = std::atof(token_2.c_str());
+    // vel_x = std::atof(token_1.c_str());
+    // vel_y = std::atof(token_1.c_str());
+    // vel_z = std::atof(token_1.c_str());
+    // ang_x = std::atof(token_2.c_str());
+    // ang_y = std::atof(token_2.c_str());
+    // ang_z = std::atof(token_2.c_str());
   }
 private:
     SerialPort serial_conn_;
