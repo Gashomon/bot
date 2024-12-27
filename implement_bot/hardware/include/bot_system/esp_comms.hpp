@@ -149,8 +149,8 @@ public:
     do {
         start = end + delimiter.size();
         end = response.find(delimiter, start);
-        // cout << s.substr(start, end - start) << endl;
-        subtoken = s.substr(start, end - start);
+        // cout << s.substr(start, end - start) << endl; //need to add std:: if no namespace
+        subtoken = response.substr(start, end - start);
 
         if(cnt == 0)      vel_x = std::atof(subtoken.c_str());
         else if(cnt == 1) vel_y = std::atof(subtoken.c_str());
