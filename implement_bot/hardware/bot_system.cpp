@@ -337,7 +337,7 @@ hardware_interface::return_type BotHardwareSystem::read(
   wheel_r_.pos = wheel_r_.calc_enc_angle();
   wheel_r_.vel = (wheel_r_.pos - pos_prev) / delta_seconds;
 
-  // if(wheel_l_.enc > 90000000 && wheel_r_.enc>= wheel_l_.enc) comms_.reset_encoders(); //developmental feature
+  // if(wheel_l_.enc >= 90000000 || wheel_r_.enc>= 90000000) comms_.reset_encoders(); //developmental feature
 
   comms_.read_imu_sensor( imu_.linear_acceleration_x, imu_.linear_acceleration_y, imu_.linear_acceleration_z, 
                           imu_.angular_velocity_x, imu_.angular_velocity_y, imu_.angular_velocity_z);
@@ -359,6 +359,7 @@ hardware_interface::return_type NewHardwareInterface::BotHardwareSystem::write(
   int motor_l_counts_per_loop = wheel_l_.cmd / wheel_l_.rads_per_count / cfg_.loop_rate;
   int motor_r_counts_per_loop = wheel_r_.cmd / wheel_r_.rads_per_count / cfg_.loop_rate;
   comms_.set_motor_values(motor_l_counts_per_loop, motor_r_counts_per_loop);
+  RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Left wheel: %d Right wheel: %d", motor_l_counts_per_loop, motor_r_counts_per_loop);
   // comms_.run_motor_pwm(20, 20);
   // RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Successfully writing!");
 
