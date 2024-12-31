@@ -4,8 +4,8 @@ from __future__ import print_function
 
 import threading
 
-import roslib; roslib.load_manifest('teleop_twist_keyboard')
-import rospy
+# import roslib; roslib.load_manifest('teleop_twist_keyboard')
+import rclpy
 
 from geometry_msgs.msg import Twist
 from geometry_msgs.msg import TwistStamped
@@ -195,7 +195,7 @@ def restoreTerminalSettings(old_settings):
 def vels(speed, turn):
     return "currently:\tspeed %s\tturn %s " % (speed,turn)
 
-if __name__=="__main__":
+def main():
     settings = saveTerminalSettings()
 
     rospy.init_node('teleop_twist_keyboard')
@@ -263,3 +263,7 @@ if __name__=="__main__":
     finally:
         pub_thread.stop()
         restoreTerminalSettings(settings)
+
+if __name__=="__main__":
+    main()
+    

@@ -359,7 +359,9 @@ hardware_interface::return_type NewHardwareInterface::BotHardwareSystem::write(
   int motor_l_counts_per_loop = wheel_l_.cmd / wheel_l_.rads_per_count / cfg_.loop_rate;
   int motor_r_counts_per_loop = wheel_r_.cmd / wheel_r_.rads_per_count / cfg_.loop_rate;
   comms_.set_motor_values(motor_l_counts_per_loop, motor_r_counts_per_loop);
-  RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Left wheel: %d Right wheel: %d", motor_l_counts_per_loop, motor_r_counts_per_loop);
+  // if (motor_l_counts_per_loop != 0 || motor_r_counts_per_loop != 0){
+  // RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Left wheel: %d Right wheel: %d", motor_l_counts_per_loop, motor_r_counts_per_loop);
+  // }
   // comms_.run_motor_pwm(20, 20);
   // RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Successfully writing!");
 

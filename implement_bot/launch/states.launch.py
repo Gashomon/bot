@@ -66,21 +66,22 @@ def generate_launch_description():
     real_bot_controller = Node(
         package="controller_manager",
         executable="ros2_control_node",
-        parameters=[{'robot_description' :robobo}, controller_yaml_file],
+        parameters=[{'robot_description' :robot_description}, controller_yaml_file],
         output={
           'stdout': 'screen',
           'stderr': 'screen',
           }
      ) 
     
-    delayed_controller_manager = RegisterEventHandler(
-        event_handler=OnProcessStart(
-            target_action=robot_state_publisher,
-            on_start=[real_bot_controller],
-        )
-    )
-    # delayed_controller_manager = TimerAction(period=5.0, actions=[event_delayed_controller_manager])
+    delayed_controller_manager = TimerAction(period=5.0, actions=[real_bot_controller])
 
+    # delayed_controller_manager = RegisterEventHandler(
+    #     event_handler=OnProcessStart(
+    #         target_action=delayed_robot_params,
+    #         on_start=[real_bot_controller],
+    #     )
+    # )
+    
     
     
     # just controller manager

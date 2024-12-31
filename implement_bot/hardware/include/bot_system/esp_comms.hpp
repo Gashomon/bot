@@ -67,11 +67,13 @@ public:
     }
     catch (const LibSerial::ReadTimeout&)
     {
-        std::cerr << "The ReadByte() call has timed out." << std::endl ;
+        std::cerr << "The ReadByte() call has timed out. This is sent." << std::endl ;
+        std::cout << "Sent: " << msg_to_send << " Recv: " << response << std::endl;
     }
 
     if (print_output)
     {
+      std::string msg = msg_to_send.substr(0, msg_to_send.length()-1);
       std::cout << "Sent: " << msg_to_send << " Recv: " << response << std::endl;
     }
 
