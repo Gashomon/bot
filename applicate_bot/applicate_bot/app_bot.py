@@ -14,9 +14,7 @@ def main(args=None):
     nav = Nav.NavigationNode()
     modules = Modules.Modules()
     ui = UI.UserInterface()
-    server = Server.ServerSub(
-
-    )
+    server = Server.ServerSub()
     ui.widget.show()
     bot = Bot.Bot(modules, nav, server ,ui)
     

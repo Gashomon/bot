@@ -20,3 +20,8 @@ def init_load(deviceid, outpin, clkpin,
 def readLoadSensor(hx):
     result = hx.get_raw_data_mean()
     return result
+
+def getLoadinGrams(hx):
+    readings = readLoadSensor(hx)
+    conversionFormula = readings / 200 #enter the conversion rate
+    return conversionFormula

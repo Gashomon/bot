@@ -1,4 +1,5 @@
 from enum import Enum
+import random
 
 longsituationslist = {}
 shortsituationslist = {}
@@ -17,6 +18,7 @@ destinationlist = {
 class TransacType(Enum):
     DELIVER = 1
     FETCH = 2
+    RETRIEVE  = 3
 
 class Transaction():
     sender = ""
@@ -64,11 +66,11 @@ class Bot():
         if shortsituationslist.get(situation) is not None:
             self.modules.playonce(situation)
 
-    def loadlight(self, limit):
+    def loadislighterthan(self, limit):
         load = self.modules.getLoad()
-        if load > limit:
+        if load > limit: #load is heavy
             return False
-        if load < limit:
+        else:
             return True
         
     def getcmd(self):
@@ -91,10 +93,11 @@ class Bot():
     def run(self, transaction):
         if transaction.type == TransacType.DELIVER:
             self.deliver(transaction)
+        if transaction.type == TransacType.FETCH:
+            self.fetch(transaction)
+        if transaction.type == TransacType.RETRIEVE:
+            self.retrieve(transaction)
     
-        
-
-
         while not self.readydrive():
             self.ui.display("Not yet Ready")
         
@@ -126,8 +129,8 @@ class Bot():
         self.lockoff()
 
         while True:
-            while self.dooropen() and self.loadlight():
-                if not self.loadlight():
+            while self.dooropen() or self.loadislighterthan(0.01):
+                if self.loadislighterthan(20000):
                     self.ui.display("Enter items. Close door if finished")
                 else:
                     self.ui.display("Load too heavy")
@@ -156,22 +159,171 @@ class Bot():
         self.lockoff()
 
         while True:
-            while self.dooropen() and self.loadlight(0.0):
+            while self.dooropen() or not self.loadislighterthan(0.01):
                 self.ui.display("Take all items. Close door if finished")
 
             q = "ready to go?"
             if not self.dooropen():
                 if self.ui.check(q):
                     break
+
+    def fetch(self, transaction):
+        t = transaction
+        
+        while not self.readydrive():
+            self.ui.display("Not yet Ready")
+
+        pose = self.nav.create_pose_stamped(t.dest1)
+        self.nav.navigator.goToPose(pose)
+        while not self.nav.navigator.isTaskComplete():
+            self.ui.display("travelling")
+        self.playfor('nothing')
+        
+        q = "r u user?"
+        while not self.ui.check(q):
+            pass
+        
+        while not self.ui.verifyuser(t.password):
+            pass
+        
+        self.lockoff()
+
+        while True:
+            while self.dooropen() or self.loadislighterthan(0.01):
+                if self.loadislighterthan(20000):
+                    self.ui.display("Enter items. Close door if finished")
+                else:
+                    self.ui.display("Load too heavy")
+
+            q = "ready to go?"
+            if not self.dooropen:
+                if self.ui.check(q):
+                    break
+                    
+        while not self.readydrive():
+            self.ui.display("Not yet Ready")
+
+        pose = self.nav.create_pose_stamped(t.dest2)
+        self.nav.navigator.goToPose(pose)
+        while not self.nav.navigator.isTaskComplete():
+            self.ui.display("travelling")
+        self.playfor('nothing')
+
+        q = "r u user?"
+        while not self.ui.check(q):
+            pass
+        
+        while not self.ui.verifyuser(t.password):
+            pass
+
+        self.lockoff()
+
+        while True:
+            while self.dooropen() or not self.loadislighterthan(0.01):
+                self.ui.display("Take all items and Close the door first")
+            
+            while self.dooropen() or self.loadislighterthan(0.01):
+                self.ui.display("Put back all items. Close door if finished") 
+
+            q = "ready to go?"
+            if not self.dooropen():
+                if self.ui.check(q):
+                    break
+    
+        pose = self.nav.create_pose_stamped(t.dest1)
+        self.nav.navigator.goToPose(pose)
+        while not self.nav.navigator.isTaskComplete():
+            self.ui.display("travelling")
+        self.playfor('nothing')
+        
+        q = "r u user?"
+        while not self.ui.check(q):
+            pass
+        
+        while not self.ui.verifyuser(t.password):
+            pass
+        
+        self.lockoff()
+
+        while True:
+            while self.dooropen() and not self.loadislighterthan(0.01):
+                self.ui.display("Take all items. Close door if finished")
+
+            q = "ready to go?"
+            if not self.dooropen():
+                if self.ui.check(q):
+                    break
+
+    def deliver(self, transaction):
+        t = transaction
+        
+        while not self.readydrive():
+            self.ui.display("Not yet Ready")
+
+        pose = self.nav.create_pose_stamped(t.dest2)
+        self.nav.navigator.goToPose(pose)
+        while not self.nav.navigator.isTaskComplete():
+            self.ui.display("travelling")
+        self.playfor('nothing')
+        
+        q = "r u user?"
+        while not self.ui.check(q):
+            pass
+        
+        while not self.ui.verifyuser(t.password):
+            pass
+        
+        self.lockoff()
+
+        while True:
+            while self.dooropen() or self.loadislighterthan(0.01):
+                if self.loadislighterthan(20000):
+                    self.ui.display("Enter items. Close door if finished")
+                else:
+                    self.ui.display("Load too heavy")
+
+            q = "ready to go?"
+            if not self.dooropen:
+                if self.ui.check(q):
+                    break
+                    
+        while not self.readydrive():
+            self.ui.display("Not yet Ready")
+
+        pose = self.nav.create_pose_stamped(t.dest1)
+        self.nav.navigator.goToPose(pose)
+        while not self.nav.navigator.isTaskComplete():
+            self.ui.display("travelling")
+        self.playfor('nothing')
+
+        q = "r u user?"
+        while not self.ui.check(q):
+            pass
+        
+        while not self.ui.verifyuser(t.password):
+            pass
+
+        self.lockoff()
+
+        while True:
+            while self.dooropen() or not self.loadislighterthan(0.01):
+                self.ui.display("Take all items. Close door if finished")
+
+            q = "ready to go?"
+            if not self.dooropen():
+                if self.ui.check(q):
+                    break    
         
     def readydrive(self, limit=100):
         if self.dooropen():
             return False
-        if not self.loadlight(limit):
+        if not self.loadislighterthan(limit):
             return False
         self.lockon()
         return True
 
-        
     def genpass(self):
-        return "1111"
+        password = ""
+        for i in range(4):
+            password = password + random.randint(0,9)
+        return password

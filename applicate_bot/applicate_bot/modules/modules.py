@@ -82,7 +82,7 @@ class Modules():
     def getLoad(self):
         if not self.LOADENABLE:
             return 0
-        return load.readLoadSensor(sellf.hx711)
+        return load.getLoadinGrams(self.hx711)
 
     def closegpio(self):
         lgpio.gpiochip_close(self.device)
