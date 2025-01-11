@@ -1,6 +1,6 @@
-import applicate_bot.modules.load
-import applicate_bot.modules.lock
-import applicate_bot.modules.audio
+import applicate_bot.modules.load as load
+import applicate_bot.modules.lock as lock
+import applicate_bot.modules.audio as audio
 
 import time
 import lgpio

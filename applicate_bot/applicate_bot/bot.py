@@ -254,7 +254,7 @@ class Bot():
                 if self.ui.check(q):
                     break
 
-    def deliver(self, transaction):
+    def retrieve(self, transaction):
         t = transaction
         
         while not self.readydrive():
