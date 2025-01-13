@@ -35,6 +35,7 @@ def main(args=None):
         pass
 
     finally:
-        nav.destory_node()
+        nav.destroy_node()
+        server.destroy_node()
         rclpy.shutdown()
 

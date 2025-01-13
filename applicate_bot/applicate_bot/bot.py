@@ -102,7 +102,7 @@ class Bot():
             self.ui.display("Not yet Ready")
         
         pose = self.nav.create_pose_stamped(destinationlist.get("Home"))
-        self.nav.navigator.goToPose(pose)
+        self.nav.goPose(pose)
         while not self.nav.navigator.isTaskComplete():
             self.ui.display("travelling")
         self.playfor('nothing') 
@@ -114,7 +114,7 @@ class Bot():
             self.ui.display("Not yet Ready")
 
         pose = self.nav.create_pose_stamped(t.dest1)
-        self.nav.navigator.goToPose(pose)
+        self.nav.goPose(pose)
         while not self.nav.navigator.isTaskComplete():
             self.ui.display("travelling")
         self.playfor('nothing')
@@ -144,7 +144,7 @@ class Bot():
             self.ui.display("Not yet Ready")
 
         pose = self.nav.create_pose_stamped(t.dest2)
-        self.nav.navigator.goToPose(pose)
+        self.nav.goPose(pose)
         while not self.nav.navigator.isTaskComplete():
             self.ui.display("travelling")
         self.playfor('nothing')
@@ -174,7 +174,7 @@ class Bot():
             self.ui.display("Not yet Ready")
 
         pose = self.nav.create_pose_stamped(t.dest1)
-        self.nav.navigator.goToPose(pose)
+        self.nav.goPose(pose)
         while not self.nav.navigator.isTaskComplete():
             self.ui.display("travelling")
         self.playfor('nothing')
@@ -204,7 +204,7 @@ class Bot():
             self.ui.display("Not yet Ready")
 
         pose = self.nav.create_pose_stamped(t.dest2)
-        self.nav.navigator.goToPose(pose)
+        self.nav.goPose(pose)
         while not self.nav.navigator.isTaskComplete():
             self.ui.display("travelling")
         self.playfor('nothing')
@@ -231,7 +231,7 @@ class Bot():
                     break
     
         pose = self.nav.create_pose_stamped(t.dest1)
-        self.nav.navigator.goToPose(pose)
+        self.nav.goPose(pose)
         while not self.nav.navigator.isTaskComplete():
             self.ui.display("travelling")
         self.playfor('nothing')
@@ -261,7 +261,7 @@ class Bot():
             self.ui.display("Not yet Ready")
 
         pose = self.nav.create_pose_stamped(t.dest2)
-        self.nav.navigator.goToPose(pose)
+        self.nav.goPose(pose)
         while not self.nav.navigator.isTaskComplete():
             self.ui.display("travelling")
         self.playfor('nothing')
@@ -291,7 +291,7 @@ class Bot():
             self.ui.display("Not yet Ready")
 
         pose = self.nav.create_pose_stamped(t.dest1)
-        self.nav.navigator.goToPose(pose)
+        self.nav.goPose(pose)
         while not self.nav.navigator.isTaskComplete():
             self.ui.display("travelling")
         self.playfor('nothing')

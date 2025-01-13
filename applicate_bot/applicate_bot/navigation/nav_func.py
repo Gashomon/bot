@@ -2,7 +2,7 @@
 import rclpy
 from rclpy.node import Node
 # from nav2_simple_commander.robot_navigator import BasicNavigator
-from applicate_bot.navigation.robot_navigator import BasicNavigator as BasicNavigator
+from applicate_bot.navigation.modded_robot_navigator import BasicNavigator as BasicNavigator
 from geometry_msgs.msg import PoseStamped
 import tf_transformations
 
@@ -61,14 +61,9 @@ class NavigationNode(Node):
             print('wrong points')
         return
     
-    def simplerDrive(self, pose):
+    def goPose(self, pose):
         self.navigator.goToPose(pose)
-        while not self.navigator.isTaskComplete():
-            feedback = self.navigator.getFeedback()
-        result = self.navigator.getResult()
-
-    def goPose(self):
-        pass
+        
     # def complexDrive(self, dest[]) #inputting many points
 
 
