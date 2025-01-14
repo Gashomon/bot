@@ -40,7 +40,8 @@ Lock Library Code - https://github.com/bogde/HX711/tree/master/src
 
 Touchscreen - https://www.gechic.com/en/ubuntu-multihead-touchscreen-mapping-settings
 
-Python run terminal commands - https://www.python-engineer.com/posts/python-execute-system-command/
+Python run terminal commands -  https://www.python-engineer.com/posts/python-execute-system-command/
+                                https://unix.stackexchange.com/questions/238180/execute-shell-commands-in-python
 
 Python Pass by Assignment - https://docs.python.org/3/faq/programming.html#how-do-i-write-a-function-with-output-parameters-call-by-reference
 
