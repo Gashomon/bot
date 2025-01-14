@@ -32,15 +32,15 @@ def generate_launch_description():
 
     # Lidar node configuration file
     lidar_config_path = os.path.join(
-        get_package_share_directory('ldlidar_node'),
-        'params',
+        get_package_share_directory('implement_bot'),
+        'config',
         'ldlidar.yaml'
     )
 
     # Lifecycle manager configuration file
     lc_mgr_config_path = os.path.join(
-        get_package_share_directory('ldlidar_node'),
-        'params',
+        get_package_share_directory('implement_bot'),
+        'config',
         'lifecycle_mgr.yaml'
     )
 

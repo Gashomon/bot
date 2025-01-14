@@ -80,9 +80,7 @@ def generate_launch_description():
     #         target_action=delayed_robot_params,
     #         on_start=[real_bot_controller],
     #     )
-    # )
-    
-    
+    # )    
     
     # just controller manager
     controller_manager = Node(

@@ -1,4 +1,4 @@
-# Main Robot launch file
+# Robot Hardware launch file
 
 # Combined: sensors, states, & localization launch
 
@@ -42,14 +42,14 @@ def generate_launch_description():
         )
 
     # states_publisher launch file
-    states_publisher_path = os.path.join( package_path,'launch','states.launch.py')
+    states_publisher_path = os.path.join(package_path,'launch','states.launch.py')
     states_publisher = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(states_publisher_path),
                 launch_arguments={'use_sim_time': use_sim_time, 'jsp_on': jsp_on}.items()
     )
 
     # sensors_publisher launch file
-    sensors_publisher_path = os.path.join( package_path,'launch','sensors.launch.py')
+    sensors_publisher_path = os.path.join(package_path,'launch','sensors.launch.py')
     sensors_publisher = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(sensors_publisher_path),
                 launch_arguments={'use_sim_time': use_sim_time, 'jsp_on': jsp_on}.items()
@@ -70,7 +70,7 @@ def generate_launch_description():
     # add launch files
     ld.add_action(states_publisher)
     ld.add_action(server_publisher)
-    # ld.add_action(sensors_publisher)
+    ld.add_action(sensors_publisher)
 
     # Launch them all!
     return ld
