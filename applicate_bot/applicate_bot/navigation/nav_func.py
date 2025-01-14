@@ -24,7 +24,6 @@ class NavigationNode(Node):
         # Set initial pose
         initial_pose = self.create_pose_stamped(0.0, 0.0, 0.0)
         self.navigator.setInitialPose(initial_pose)
-        print("pop")
         # Wait for Nav2 to be active
         self.navigator.waitUntilNav2Active()
         
