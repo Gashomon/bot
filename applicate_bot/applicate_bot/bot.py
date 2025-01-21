@@ -33,12 +33,13 @@ class Bot():
     def __init__(self) -> None:
         pass
 
-    def __init__(self, modules, nav, server, ui) -> None:
+    def __init__(self, modules, nav, server, ui, logger) -> None:
         self.EXPERIMENTAL = True
         self.modules = modules
         self.nav = nav
         self.server = server
         self.ui = ui
+        self.logger = logger
         
     def lockon(self):
         self.modules.setlock('on')
@@ -91,6 +92,7 @@ class Bot():
            return self.server.waitforcmd(t)
     
     def run(self, transaction):
+        self.logger.logwrite("robot_begin")
         if transaction.type == TransacType.DELIVER:
             self.deliver(transaction)
         if transaction.type == TransacType.FETCH:
@@ -106,6 +108,7 @@ class Bot():
         while not self.nav.navigator.isTaskComplete():
             self.ui.display("travelling")
         self.playfor('nothing') 
+        self.logger.logwrite("robot_home")
     
     def deliver(self, transaction):
         t = transaction

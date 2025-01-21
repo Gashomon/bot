@@ -3,6 +3,7 @@ import applicate_bot.modules.modules as Modules
 import applicate_bot.navigation.nav_func as Nav
 import applicate_bot.gui.pre_ui.ui_func as UI
 import applicate_bot.comms.command_server as Server
+import applicate_bot.comms.logger as  Logger 
 
 import rclpy
 # from rclpy.Node import Node
@@ -15,8 +16,9 @@ def main(args=None):
     modules = Modules.Modules()
     ui = UI.UserInterface()
     server = Server.ServerSub()
+    logger = Logger.DataLogger()
     ui.widget.show()
-    bot = Bot.Bot(modules, nav, server ,ui)
+    bot = Bot.Bot(modules, nav, server ,ui, logger)
     
     try:
         rclpy.spin(nav)
