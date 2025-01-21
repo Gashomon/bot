@@ -39,7 +39,7 @@ diff_cont:
     
     position_feedback: true 
     open_loop: false 
-    enable_odom_tf: true 
+    enable_odom_tf: false 
     use_stamped_vel: false
     cmd_vel_timeout: 0.5 
     publish_limited_velocity: false
@@ -53,6 +53,7 @@ imu_broad:
   ros__parameters:
     sensor_name: imu
     frame_id: imu_link
+    # update covariances depending on the imu initial readings
     # static_covariance_orientation:
     # static_covariance_angular_velocity:
     # static_covariance_linear_acceleration:

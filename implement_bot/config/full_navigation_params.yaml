@@ -9,7 +9,7 @@ ekf_filter_node:
       transform_timeout: 0.0
       print_diagnostics: true
       debug: false
-      publish_tf: false
+      publish_tf: true
       publish_acceleration: true
       reset_on_time_jump: true
 
@@ -157,7 +157,7 @@ amcl:
     robot_model_type: "nav2_amcl::DifferentialMotionModel"
     save_pose_rate: 0.5
     sigma_hit: 0.2
-    tf_broadcast: True #because ekf is already publishing
+    tf_broadcast: True 
     transform_tolerance: 1.0
     update_min_a: 0.2
     update_min_d: 0.25

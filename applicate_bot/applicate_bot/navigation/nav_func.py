@@ -65,7 +65,6 @@ class NavigationNode(Node):
         
     # def complexDrive(self, dest[]) #inputting many points
 
-
 def main(args=None):
     rclpy.init(args=args)
     node = NavigationNode() 
