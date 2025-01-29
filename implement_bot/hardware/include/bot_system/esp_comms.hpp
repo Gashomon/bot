@@ -74,7 +74,7 @@ public:
     if (print_output)
     {
       std::string msg = msg_to_send.substr(0, msg_to_send.length()-1);
-      std::cout << "Sent: " << msg_to_send << " Recv: " << response << std::endl;
+      // std::cout << "Sent: " << msg_to_send << " Recv: " << response << std::endl;
     }
 
     return response;
