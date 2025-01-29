@@ -6,7 +6,7 @@ from std_msgs.msg import String
 class ServerSub(Node):
 
     def __init__ (self): 
-        super().__init__('minimal_publisher')
+        super().__init__('bot_server')
         self.cmd = None
         self.msg = None
         self.server_listner = self.create_subscription(String, 'server_lstnr', self.server_callback, 10)
@@ -14,6 +14,7 @@ class ServerSub(Node):
     def waitforcmd(self, transaction):
         while self.msg is None:
             pass
+            
         self.cmd = self.msg.split(",") 
         if self.cmd.len() == 5:
             transaction.sender = self.msg[0]

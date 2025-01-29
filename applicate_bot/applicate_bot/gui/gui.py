@@ -53,5 +53,5 @@ if __name__ == "__main__":
     ui = UserInterface()
     ui.widget.show()
     ui.switchTo('password')
-    # sys.exit(ui.app.exec())
+    # sys.exit(ui.app.1
     

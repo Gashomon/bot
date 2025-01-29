@@ -50,6 +50,7 @@ int main(int argc, char *argv[]) {
       cerr << "Can't create a socket! Quitting" << endl;
       return -1;
   }
+  cout << "Socket created..." << endl;
 
   // Bind the ip address and port to a socket
   sockaddr_in hint;
@@ -57,11 +58,15 @@ int main(int argc, char *argv[]) {
   hint.sin_port = htons(6000);
   hint.sin_addr.s_addr = INADDR_ANY;
   inet_pton(AF_INET, "0.0.0.0", &hint.sin_addr);
+  cout << "Socket Binded..." << endl;
+
   // listen to any IP address 
   bind(listening, (sockaddr*)&hint, sizeof(hint));
 
+  cout << "Getting IPs..." << endl;
   // Tell Winsock the socket is for listening
   listen(listening, SOMAXCONN);
+  cout << "Listening to IPs..." << endl;
 
   // Close listening socket
   // close(listening);
@@ -70,13 +75,15 @@ int main(int argc, char *argv[]) {
   char buf[4096];
 
   // Wait for a connection
+  cout << "Waiting..." << endl;
   sockaddr_in client;
   socklen_t clientSize = sizeof(client);
 
   int clientSocket = accept(listening, (sockaddr*)&client, &clientSize);
+  cout << "Client Connected..." << endl;
 
   rclcpp::init(argc, argv);
-
+  cout << "RCL started..." << endl;
   auto node = rclcpp::Node::make_shared("minimal_publisher");
   auto message = std_msgs::msg::String();
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;
@@ -84,6 +91,7 @@ int main(int argc, char *argv[]) {
 
   while (true)
     {
+      cout << "Loop Entered..." << endl;
         memset(buf, 0, 4096);
  
         // Wait for client to send data
