@@ -39,15 +39,15 @@ diff_cont:
     
     position_feedback: true 
     open_loop: false 
-    enable_odom_tf: false 
+    enable_odom_tf: true 
     use_stamped_vel: false
     cmd_vel_timeout: 0.5 
     publish_limited_velocity: false
     # velocity_rolling_window_size: 10 #default
 
-# joint_broad:
-#   ros__parameters:
-#     use_local_topics: true
+joint_broad:
+  ros__parameters:
+    use_local_topics: false
 
 imu_broad:
   ros__parameters:

@@ -1,7 +1,7 @@
 import applicate_bot.predef as Bot
 import applicate_bot.modules.modules as Modules
 import applicate_bot.navigation.nav_func as Nav
-import applicate_bot.gui.pre_ui.ui_func as UI
+import applicate_bot.gui.gui as UI
 import applicate_bot.gui.gui as RG
 import applicate_bot.comms.command_server as Server
 import applicate_bot.comms.logger as  Logger 
@@ -14,8 +14,7 @@ import sys
 
 def main(args=None):
     rclpy.init(args=args)
-    ui = UI.UserInterface()
-    ui.widget.show()
+    ui = UI.ROSUI()
     
     nav = Nav.NavigationNode()
     modules = Modules.Modules()
@@ -24,18 +23,12 @@ def main(args=None):
     
     bot = Bot.Bot(modules, nav, server ,ui, logger)
 
-    just_once = True
     try:
-        # tbot.join()
-        # tsvr.join()
-        # tgui.join()
+        rclpy.spin(nav)
+        rclpy.spin(server)
+        rclpy.spin(ui)
         ct = 0
         while ct < 3:
-            if just_once:
-                rclpy.spin(nav)
-                rclpy.spin(server)
-            just_once = False
-            ui.app.processEvents()
             t = bot.getcmd()
             bot.run(t)
             ct += 1

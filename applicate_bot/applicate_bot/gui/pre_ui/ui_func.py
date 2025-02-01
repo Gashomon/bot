@@ -52,6 +52,6 @@ class UserInterface(MyGUI.GUI):
 if __name__ == "__main__":
     ui = UserInterface()
     ui.widget.show()
-    ui.switchTo('password')
-    # sys.exit(ui.app.exec())
+    # ui.switchTo('password')
+    sys.exit(ui.app.exec())
     
