@@ -1,6 +1,6 @@
 controller_manager:
   ros__parameters:
-    update_rate: 40
+    update_rate: 50
     use_sim_time: false
 
     diff_cont:
@@ -64,8 +64,8 @@ right_range_broad:
     frame_id: right_range_link
     radiation_type: 1
     field_of_view: 0.52 #default
-    min_range: 0.52 #default
-    max_range: 4.0 #default
+    min_range: 0.0 #default
+    max_range: 0.4 #default
 
 left_range_broad:
   ros__parameters:
@@ -73,6 +73,6 @@ left_range_broad:
     frame_id: left_range_link
     radiation_type: 1
     field_of_view: 0.52 #default
-    min_range: 0.52 #default
-    max_range: 4.0 #default
+    min_range: 0.0 #default
+    max_range: 0.4 #default
 

@@ -58,7 +58,7 @@ public:
   {
     serial_conn_.FlushIOBuffers(); // Just in case
     serial_conn_.Write(msg_to_send);
-
+    
     std::string response = "";
     try
     {
@@ -67,9 +67,12 @@ public:
     }
     catch (const LibSerial::ReadTimeout&)
     {
-        std::cerr << "The ReadByte() call has timed out. This is sent." << std::endl ;
-        std::cout << "Sent: " << msg_to_send << " Recv: " << response << std::endl;
+        std::cerr << "The ReadByte() call has timed out. Sent:" << msg_to_send << std::endl;
+        std::cerr << " Recv: " << response << std::endl;
+        serial_conn_.FlushIOBuffers(); 
     }
+    
+    
 
     if (print_output)
     {
