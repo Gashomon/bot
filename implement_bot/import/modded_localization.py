@@ -120,14 +120,14 @@ def generate_launch_description():
     #             "output_location", default_value="~/bot_locs_file.txt"
     #         )
 
-    ekf_localization_cmd = Node(
-                package="robot_localization",
-                executable="ekf_node",
-                name="ekf_filter_node",
-                output="screen",
-                parameters=[configured_params],
-                remappings=[("odometry/filtered", "odometry/local")],
-            )
+    # ekf_localization_cmd = Node(
+    #             package="robot_localization",
+    #             executable="ekf_node",
+    #             name="ekf_filter_node",
+    #             output="screen",
+    #             parameters=[configured_params],
+    #             remappings=[("odometry/filtered", "odometry/local")],
+    #         )
     # robot localization stuffs
     
     load_nodes = GroupAction(
@@ -165,16 +165,16 @@ def generate_launch_description():
                             {'autostart': autostart},
                             {'node_names': lifecycle_nodes}]),
 
-            Node(
-                package="robot_localization",
-                executable="ekf_node",
-                name="ekf_node",
-                output="screen",
-                respawn=use_respawn,
-                respawn_delay=2.0,
-                parameters=[configured_params],
-                remappings=[("odometry/filtered", "ekf/odom")],
-            )
+            # Node(
+            #     package="robot_localization",
+            #     executable="ekf_node",
+            #     name="ekf_node",
+            #     output="screen",
+            #     respawn=use_respawn,
+            #     respawn_delay=2.0,
+            #     parameters=[configured_params],
+            #     remappings=[("odometry/filtered", "ekf/odom")],
+            # )
         ]
     )
 

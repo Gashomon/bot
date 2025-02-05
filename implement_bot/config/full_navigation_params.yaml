@@ -1,111 +1,4 @@
 # Localization YAMLs
-ekf_filter_node:
-    ros__parameters:
-      use_sim_time: False
-      frequency: 30.0
-      sensor_timeout: 1.0
-      two_d_mode: true
-      transform_time_offset: 0.0
-      transform_timeout: 0.0
-      print_diagnostics: true
-      debug: true
-      publish_tf: true
-      publish_acceleration: true
-      reset_on_time_jump: true
-
-      map_frame: map                    # Defaults to "map" if unspecified
-      odom_frame: odom                  # Defaults to "odom" if unspecified
-      base_link_frame: base_link        # Defaults to "base_link" if unspecified
-      world_frame: odom                 # Defaults to the value of odom_frame if unspecified
-        
-      odom0: /diff_cont/odom  #diffcont odom
-      
-      odom0_config: [true, true, true,
-                     true, true, true,
-                     true,  true, true,
-                     true, true, true,
-                     true, true, false]
-
-      odom0_nodelay: false
-      odom0_differential: false
-      odom0_relative: true
-      odom0_queue_size: 5
-      odom0_pose_rejection_threshold: 0.5               
-      odom0_twist_rejection_threshold: 0.5                
-
-      # imu0: imu_sensor #simulated_imu
-      # imu0: imu_broad/imu #real_imu
-
-      # # just needed variables
-      # imu0_config: [true, true, true,
-      #               true, true, true,
-      #               true, true, true,
-      #               true, true, true,
-      #               true, true, true]
-
-      # all available variables
-      # imu0_config: [false, false, false,
-      #               false, false, false,
-      #               false, false, false,
-      #               true,  true,  true,
-      #               true,  true,  true]
-
-      #        [x_pos   , y_pos    , z_pos,
-      #         roll    , pitch    , yaw,
-      #         x_vel   , y_vel    , z_vel,
-      #         roll_vel, pitch_vel, yaw_vel,
-      #         x_accel , y_accel  , z_accel]
-      
-      # imu0_remove_gravitational_acceleration: true #needs to publish orientation also
-      # imu0_nodelay: false
-      # imu0_differential: false
-      # imu0_relative: 10
-      # imu0_queue_size: 10
-      # imu0_pose_rejection_threshold: 0.5                 
-      # imu0_twist_rejection_threshold: 0.5                
-      # imu0_linear_acceleration_rejection_threshold: 0.5  
-      # imu0_remove_gravitational_acceleration: false
-
-      # use_control: true
-      # stamped_control: false
-      # control_timeout: 0.2
-      # control_config: [true, false, false, false, false, true]
-      # acceleration_limits: [1.3, 0.0, 0.0, 0.0, 0.0, 3.4]
-      # deceleration_limits: [1.3, 0.0, 0.0, 0.0, 0.0, 4.5]
-      # acceleration_gains: [0.8, 0.0, 0.0, 0.0, 0.0, 0.9]
-      # deceleration_gains: [1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
-      # process_noise_covariance: [0.05,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
-      #                             0.0,    0.05,   0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
-      #                             0.0,    0.0,    0.06,   0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
-      #                             0.0,    0.0,    0.0,    0.03,   0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
-      #                             0.0,    0.0,    0.0,    0.0,    0.03,   0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
-      #                             0.0,    0.0,    0.0,    0.0,    0.0,    0.06,   0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
-      #                             0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.025,   0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
-      #                             0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.025,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
-      #                             0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.04,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
-      #                             0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.01,   0.0,    0.0,    0.0,    0.0,    0.0,
-      #                             0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.01,   0.0,    0.0,    0.0,    0.0,
-      #                             0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.02,   0.0,    0.0,    0.0,
-      #                             0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.01,   0.0,    0.0,
-      #                             0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.01,   0.0,
-      #                             0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.015]
-
-      # initial_estimate_covariance: [1e-9,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,     0.0,    0.0,    0.0,
-      #                               0.0,    1e-9,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,     0.0,    0.0,    0.0,
-      #                               0.0,    0.0,    1e-9,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,     0.0,    0.0,    0.0,
-      #                               0.0,    0.0,    0.0,    1e-9,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,     0.0,    0.0,    0.0,
-      #                               0.0,    0.0,    0.0,    0.0,    1e-9,   0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,     0.0,    0.0,    0.0,
-      #                               0.0,    0.0,    0.0,    0.0,    0.0,    1e-9,   0.0,    0.0,    0.0,    0.0,     0.0,     0.0,     0.0,    0.0,    0.0,
-      #                               0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    1e-9,   0.0,    0.0,    0.0,     0.0,     0.0,     0.0,    0.0,    0.0,
-      #                               0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    1e-9,   0.0,    0.0,     0.0,     0.0,     0.0,    0.0,    0.0,
-      #                               0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    1e-9,   0.0,     0.0,     0.0,     0.0,    0.0,    0.0,
-      #                               0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    1e-9,    0.0,     0.0,     0.0,    0.0,    0.0,
-      #                               0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     1e-9,    0.0,     0.0,    0.0,    0.0,
-      #                               0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     1e-9,    0.0,    0.0,    0.0,
-      #                               0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,     1e-9,   0.0,    0.0,
-      #                               0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,     0.0,    1e-9,   0.0,
-      #                               0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,     0.0,    0.0,    1e-9]
-
 amcl:
   ros__parameters:
     use_sim_time: False
@@ -225,7 +118,7 @@ bt_navigator_navigate_to_pose_rclcpp_node:
   ros__parameters:
     use_sim_time: False
 
-controller_server:  # Current Progress Checker / Path Follower
+controller_server: # Current Progress Checker / Path Follower
   ros__parameters:
     use_sim_time: False
     odom_topic: "/diff_cont/odom"
@@ -404,14 +297,14 @@ global_costmap:
         inflation_radius: 0.5
       always_send_full_costmap: True
 
-map_server:   # loads the map
+map_server: # loads the map
   ros__parameters:
     use_sim_time: False
     # Overridden in launch by the "map" launch configuration or provided default value.
     # To use in yaml, remove the default "map" value in the tb3_simulation_launch.py file & provide full path to map below.
     yaml_filename: "src/bot/implement_bot/maps/modded_actual.yaml"
 
-map_saver:  # stores a map
+map_saver: # stores a map
   ros__parameters:
     use_sim_time: False
     save_map_timeout: 5.0 
@@ -431,7 +324,7 @@ planner_server: # Uses map and generates Path
       allow_unknown: true
       use_final_approach_orientation: false # decide if last path ends with desired pose
 
-smoother_server:  # Path smoother only
+smoother_server: # Path smoother only
   ros__parameters:
     use_sim_time: False
     smoother_plugins: ["simple_smoother"]
@@ -441,7 +334,7 @@ smoother_server:  # Path smoother only
       max_its: 1000
       do_refinement: True
 
-behavior_server:  # lists all basic drive functions
+behavior_server: # lists all basic drive functions
   ros__parameters:
     costmap_topic: local_costmap/costmap_raw
     footprint_topic: local_costmap/published_footprint
@@ -478,7 +371,7 @@ waypoint_follower: # waypoint special configurations
       enabled: True
       waypoint_pause_duration: 200
 
-velocity_smoother:  # additional velocity control
+velocity_smoother:  #additional velocity control
   ros__parameters:
     use_sim_time: False
     smoothing_frequency: 20.0

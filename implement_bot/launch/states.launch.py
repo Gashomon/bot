@@ -146,6 +146,26 @@ def generate_launch_description():
             on_start=[right_range_spawner, left_range_spawner],
         )
     )
+
+    ekf_params = os.path.join(pkg_path, 'config', 'ekf_params.yaml')
+    ekf = Node(
+        package="robot_localization",
+        executable="ekf_node",
+        name="ekf_node",
+        output="both",
+        respawn = True,
+        respawn_delay=2.0,
+        parameters=[ekf_params],
+        remappings=[("odometry/filtered", "ekf/odom")],
+    )
+
+    delayed_ekf = RegisterEventHandler(
+        event_handler=OnProcessStart(
+            target_action= imu_broad_spawner,
+            on_start=[ekf],
+        )
+    )
+
     # Launch!
     return LaunchDescription([
         DeclareLaunchArgument(
@@ -174,6 +194,7 @@ def generate_launch_description():
         delayed_diff_drive_spawner,
         delayed_joint_broad_spawner,
         delayed_imu_broad_spawner,
-        delayed_range_broad_spawner
+        delayed_range_broad_spawner,
+        delayed_ekf
 
     ])
