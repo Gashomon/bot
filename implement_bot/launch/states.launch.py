@@ -195,6 +195,6 @@ def generate_launch_description():
         delayed_joint_broad_spawner,
         delayed_imu_broad_spawner,
         delayed_range_broad_spawner,
-        delayed_ekf
+        # delayed_ekf
 
     ])

@@ -25,10 +25,10 @@ Lengths are in meters, Mass are in kilograms, Angles are in radians, Values are 
     <xacro:property name="actual_bot_length" value="0.4572"/>
 
     <xacro:property name="actual_chassis_height" value="0.2286"/>
-    <xacro:property name="chassis_mass" value="5.0"/>
+    <xacro:property name="chassis_mass" value="50.0"/>
 
     <xacro:property name="actual_storage_height" value="0.4572"/>
-    <xacro:property name="storage_mass" value="10.0"/>
+    <xacro:property name="storage_mass" value="150.0"/>
 
     <xacro:property name="actual_top_height" value="0.1524"/>
     <xacro:property name="top_mass" value="10.0"/>
