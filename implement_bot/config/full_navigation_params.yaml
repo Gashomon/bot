@@ -51,6 +51,7 @@ amcl:
 bt_navigator: # Main Navigator. Compiles everything else. Lists all major navigation functions/features
   ros__parameters:
     use_sim_time: False
+    bond_heartbeat_period:  1.0  # 0.1 default
     global_frame: map
     robot_base_frame: base_link
     # odom_topic: "/diff_cont/odom"
@@ -118,81 +119,85 @@ bt_navigator_navigate_to_pose_rclcpp_node:
   ros__parameters:
     use_sim_time: False
 
-controller_server: # Current Progress Checker / Path Follower
+controller_server: # Current Progress Checker / Path Follower / Costmap Publisher
   ros__parameters:
     use_sim_time: False
+    bond_heartbeat_period: 5.0
     # odom_topic: "/diff_cont/odom"
     odom_topic: "/ekf/odom"
-    controller_frequency: 1.0
-    min_x_velocity_threshold: 100.0
-    min_y_velocity_threshold: 0.0
-    min_theta_velocity_threshold: 100.0
-    failure_tolerance: 5.0
+    controller_frequency: 10.0
+    min_x_velocity_threshold: 0.0       #if less than this value, auto set to zero 
+    min_y_velocity_threshold: 0.0       #if less than this value, auto set to zero 
+    min_theta_velocity_threshold: 0.0   #if less than this value, auto set to zero 
+    failure_tolerance: 0.0      # positive: timeout, zero: disabled, -1: infinite
     progress_checker_plugin: "progress_checker"
-    goal_checker_plugins: ["general_goal_checker"] # "precise_goal_checker"
+    goal_checker_plugins: ["general_goal_checker"]
     controller_plugins: ["FollowPath"]
     # Progress checker parameters
     progress_checker:
       plugin: "nav2_controller::SimpleProgressChecker"
-      required_movement_radius: 0.5
+      required_movement_radius: 0.1
       movement_time_allowance: 20.0
     # Goal checker parameters
-    #precise_goal_checker:
-    #  plugin: "nav2_controller::SimpleGoalChecker"
-    #  xy_goal_tolerance: 0.25
-    #  yaw_goal_tolerance: 0.25
-    #  stateful: True
     general_goal_checker:
       stateful: True
       plugin: "nav2_controller::SimpleGoalChecker"
       xy_goal_tolerance: 1.0
       yaw_goal_tolerance: 1.0
+      stateful: true
     # DWB parameters
     FollowPath:
       plugin: "dwb_core::DWBLocalPlanner"
-      debug_trajectory_details: True
-      min_vel_x: 200.0
+      # DWB Controller
+      debug_trajectory_details: false
+      transform_tolerance: 1.0
+      PathDist.scale: 32.0
+      GoalDist.scale: 24.0
+      PathAlign.scale: 32.0
+      GoalAlign.scale: 24.0
+      critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "GoalAlign", "PathAlign", "PathDist", "GoalDist", "PreferForward"]
+      # DWB Trajectory Critics
+      BaseObstacle.scale: 1.0
+      PathAlign.scale: 1.0
+      GoalAlign.scale: 1.0
+      RotateToGoal.scale: 1.0
+      Oscillation.scale: 1.0
+
+      PathAlign.forward_point_distance: 5.0
+      GoalAlign.forward_point_distance: 1.0
+
+      RotateToGoal.slowing_factor: 3.0
+      RotateToGoal.lookahead_time: -1.0
+      xy_goal_tolerance: 1.0
+      trans_stopped_velocity: 100.0
+      # Kinematics (all defaults to zero)
+      min_vel_x: 0.0
       min_vel_y: 0.0
-      max_vel_x: 300.0
+      max_vel_x: 0.0
       max_vel_y: 0.0
-      max_vel_theta: 350.0
-      min_speed_xy: 50.0
-      max_speed_xy: 350.0
-      min_speed_theta: 200.0
-      acc_lim_x: 100.0
+      max_vel_theta: 0.0
+      min_speed_xy: 0.0
+      max_speed_xy: 0.0
+      min_speed_theta: 0.0
+      acc_lim_x: 0.0
       acc_lim_y: 0.0
-      acc_lim_theta: 50.0
-      decel_lim_x: -100.0
+      acc_lim_theta: 0.0
+      decel_lim_x: 0.0
       decel_lim_y: 0.0
-      decel_lim_theta: -50.0
+      decel_lim_theta: 0.0
+      # XYTheta Iterator
       vx_samples: 20
-      vy_samples: 5
+      vy_samples: 0
       vtheta_samples: 20
-      # sim_time: 1.7
+      # StandardTrajectoryGenerator
+      sim_time: 3.0
       linear_granularity: 1.0
       angular_granularity: 0.25
-      transform_tolerance: 0.2
-      xy_goal_tolerance: 0.25
-      trans_stopped_velocity: 0.25
-      short_circuit_trajectory_evaluation: True
-      stateful: True
-      critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]
-      BaseObstacle.scale: 0.0
-      PathAlign.scale: 0.0
-      PathAlign.forward_point_distance: 0.0
-      GoalAlign.scale: 0.0
-      GoalAlign.forward_point_distance: 0.0
-      PathDist.scale: 0.0
-      GoalDist.scale: 0.0
-      RotateToGoal.scale: 0.0
-      RotateToGoal.slowing_factor: 0.0
-      RotateToGoal.lookahead_time: 0.0
 
 local_costmap:
   local_costmap:
     ros__parameters:
-      update_frequency: 5.0
-      publish_frequency: 2.0
+      update_frequency: 1.0
       global_frame: odom
       robot_base_frame: base_link
       use_sim_time: False
@@ -203,12 +208,12 @@ local_costmap:
       origin_x: -1.97
       origin_y: -4.24
       map_vis_z: 0.0
-      # plugins: ["static_layer", "voxel_layer", "inflation_layer", "range_layer"]
-      plugins: ["inflation_layer","range_layer", "obstacle_layer"] 
+      plugins: ["static_layer", "obstacle_layer", "inflation_layer", "range_layer"]
+      # plugins: ["inflation_layer","range_layer", "obstacle_layer"] 
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 5.0
-        inflation_radius: 0.5
+        inflation_radius: 0.05
       # voxel_layer:
       #   plugin: "nav2_costmap_2d::VoxelLayer"
       #   enabled: True
@@ -234,18 +239,20 @@ local_costmap:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: True
         observation_sources: scan
+        max_obstacle_height: 100.0 #original 2.0
         scan:
           topic: /ldlidar_node/scan
-          max_obstacle_height: 5.0 #original 2.0
+          max_obstacle_height: 100.0 #original 2.0
           clearing: True
           marking: True
           data_type: "LaserScan"
-          raytrace_max_range: 10.0
+          raytrace_max_range: 5.0
           raytrace_min_range: 0.0
-          obstacle_max_range: 10.0
+          obstacle_max_range: 5.0
           obstacle_min_range: 0.0
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"
+        map_topic: /no_map
         map_subscribe_transient_local: True
       range_layer:
         plugin: "nav2_costmap_2d::RangeSensorLayer"
@@ -261,7 +268,6 @@ global_costmap:
   global_costmap:
     ros__parameters:
       update_frequency: 1.0
-      publish_frequency: 1.0
       global_frame: map
       robot_base_frame: base_link
       use_sim_time: False
@@ -294,7 +300,7 @@ global_costmap:
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 5.0
-        inflation_radius: 0.5
+        inflation_radius: 0.05
       always_send_full_costmap: True
 
 map_server: # loads the map
@@ -314,9 +320,10 @@ map_saver: # stores a map
 
 planner_server: # Uses map and generates Path
   ros__parameters:
-    expected_planner_frequency: 20.0
+    expected_planner_frequency: 10.0
     use_sim_time: False
     planner_plugins: ["GridBased"]
+    bond_heartbeat_period: 1.0
     GridBased:
       plugin: "nav2_navfn_planner/NavfnPlanner"
       tolerance: 0.5
@@ -327,68 +334,91 @@ planner_server: # Uses map and generates Path
 smoother_server: # Path smoother only
   ros__parameters:
     use_sim_time: False
+    bond_heartbeat_period: 1.0
     smoother_plugins: ["simple_smoother"]
     simple_smoother:
       plugin: "nav2_smoother::SimpleSmoother"
       tolerance: 1.0e-10
       max_its: 1000
       do_refinement: True
+      w_data: 0.2
+      w_smooth: 0.3
 
 behavior_server: # lists all basic drive functions
   ros__parameters:
+    use_sim_time: false     #somehow not used
+    bond_heartbeat_peroid: 1.0
+    global_frame: odom
+    robot_base_frame: base_link
+    transform_tolerance: 0.1
     costmap_topic: local_costmap/costmap_raw
     footprint_topic: local_costmap/published_footprint
+    
     cycle_frequency: 5.0
     behavior_plugins: ["spin", "backup", "drive_on_heading", "assisted_teleop", "wait"]
     # behavior_plugins: ["backup", "drive_on_heading", "assisted_teleop", "wait"]
     spin:
       plugin: "nav2_behaviors/Spin"
-      is_recovery: False
+      # is_recovery: False    #not used here
+
     backup:
       plugin: "nav2_behaviors/BackUp"
+      acceleration_limit: 100.0
+      deceleration_limit: -100.0
+      minimum_speed: 100.0
+
     drive_on_heading:
       plugin: "nav2_behaviors/DriveOnHeading"
+      acceleration_limit: 100.0
+      deceleration_limit: -100.0
+      minimum_speed: 100.0
+
     wait:
       plugin: "nav2_behaviors/Wait"
+
     assisted_teleop:
       plugin: "nav2_behaviors/AssistedTeleop"
+    
+    simulate_ahead_time: 3.0  # Time to look ahead of collision (s) (spin, backup, driveon)
+    projection_time: 3.0      # Time to look ahead of collision (s) (assistedteleop, backup, driveon)
+    simulation_time_step: 1.0 # Time step for projections (s) (assistedteleop)
+    # cmd_vel_teleop:           # Topic to listen for teleopmessages (assistedteleop)
 
-    global_frame: odom
-    robot_base_frame: base_link
-    transform_tolerance: 0.1
-    use_sim_time: false
-    simulate_ahead_time: 2.0
     max_rotational_vel: 350.0
     min_rotational_vel: 150.0
     rotational_acc_lim: 50.0
 
+
+
 waypoint_follower: # waypoint special configurations
   ros__parameters:
     use_sim_time: False
-    loop_rate: 20
+    bond_heartbeat_period: 1.0 
+    loop_rate: 10
     stop_on_failure: false
     waypoint_task_executor_plugin: "wait_at_waypoint"
     wait_at_waypoint:
       plugin: "nav2_waypoint_follower::WaitAtWaypoint"
       enabled: True
-      waypoint_pause_duration: 200
+      waypoint_pause_duration: 2000
 
 velocity_smoother:  #additional velocity control
   ros__parameters:
     use_sim_time: False
-    smoothing_frequency: 20.0
+    bond_heartbeat_period: 1.0   
+    smoothing_frequency: 10.0
     scale_velocities: False
     # feedback: "CLOSED_LOOP" # should be close
     feedback: "OPEN_LOOP"
     max_velocity: [300.0, 0.0, 350.0]
     min_velocity: [-300.0, 0.0, -350.0]
-    max_accel: [50.0, 0.0, 25.0]
-    max_decel: [-50.0, 0.0, -25.0]
+    max_accel: [100.0, 0.0, 50.0]
+    max_decel: [-100.0, 0.0, -50.0]
     # odom_topic: "/diff_cont/odom"
     odom_topic: "/ekf/odom"
     odom_duration: 0.1
     deadband_velocity: [100.0, 0.0, 150.0]
-    velocity_timeout: 1.0
+    velocity_timeout: 5.0
 
 robot_state_publisher:
   ros__parameters:

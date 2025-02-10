@@ -36,7 +36,7 @@ ekf_node:
       # odom0_nodelay: false
       # odom0_differential: false
       odom0_relative: true
-      odom0_queue_size: 100
+      odom0_queue_size: 300
       # odom0_pose_rejection_threshold: 5.0               
       # odom0_twist_rejection_threshold: 5.0                
 
@@ -68,7 +68,7 @@ ekf_node:
       # imu0_nodelay: false
       # imu0_differential: true
       imu0_relative: true
-      imu0_queue_size: 100
+      imu0_queue_size: 300
       # imu0_pose_rejection_threshold: 0.5                 
       # imu0_twist_rejection_threshold: 5.0                
       # imu0_linear_acceleration_rejection_threshold: 5.0  
