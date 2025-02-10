@@ -329,14 +329,17 @@ hardware_interface::return_type BotHardwareSystem::read(
     return hardware_interface::return_type::ERROR;
   }
 
-  double pos_prev_l = wheel_l_.pos;
-  double pos_prev_r = wheel_r_.pos;
   comms_.read_encoders(wheel_l_.enc, wheel_r_.enc);
+  
+  // RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "LeftE: %d, RightE: %d", wheel_l_.enc, wheel_r_.enc);
+  // RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "LeftV: %f, RightV: %f", wheel_l_.vel, wheel_r_.vel);
   // if( (wheel_l_.enc >= 10000000 && wheel_l_.enc % wheel_l_.rads_per_count == 0) &&
   //     (wheel_r_.enc >= 10000000 && wheel_r_.enc % wheel_r_.rads_per_count == 0) ){
   //       comms_.reset_encoders();
   // }
 
+  double pos_prev_l = wheel_l_.pos;
+  double pos_prev_r = wheel_r_.pos;
   double delta_seconds = period.seconds();
 
   pos_prev_l = wheel_l_.pos;
@@ -346,12 +349,12 @@ hardware_interface::return_type BotHardwareSystem::read(
   pos_prev_r = wheel_r_.pos;
   wheel_r_.pos = wheel_r_.calc_enc_angle();
   wheel_r_.vel = (wheel_r_.pos - pos_prev_r) / delta_seconds;
-  // RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Left: %d, Right: %d", wheel_l_.enc, wheel_r_.enc);
 
   // if(wheel_l_.enc >= 90000000 || wheel_r_.enc>= 90000000) comms_.reset_encoders(); //developmental feature
 
   comms_.read_imu_sensor( imu_.linear_acceleration_x, imu_.linear_acceleration_y, imu_.linear_acceleration_z, 
                           imu_.angular_velocity_x, imu_.angular_velocity_y, imu_.angular_velocity_z);
+  // RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "x: %f, z: %f", imu_.linear_acceleration_x, imu_.angular_velocity_z);
   comms_.read_range_sensors(range_l_.range, range_r_.range);
 
   // RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Successfully reading!");

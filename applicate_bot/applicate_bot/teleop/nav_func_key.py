@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
-from nav2_simple_commander.robot_navigator import BasicNavigator
+# from nav2_simple_commander.robot_navigator import BasicNavigator
+from applicate_bot.navigation.modded_robot_navigator import BasicNavigator as BasicNavigator
 from geometry_msgs.msg import PoseStamped
 import tf_transformations
 import numpy as np
@@ -19,7 +20,8 @@ else:
 
 pop = {
             '1':(0.0, 0.0, np.radians(0)),
-            '2':(2.0, 0.0, np.radians(0)),
+            '2':(1.0, 0.0, np.radians(0)),
+            '3':(2.0, 0.0, np.radians(0)),
             '3':(2.5, 1.0, np.radians(0)),
             # '4':(-3.5, 0.0, np.radians(11.31)),
             # '5':(9.0, 2.5, np.radians(155.56)),

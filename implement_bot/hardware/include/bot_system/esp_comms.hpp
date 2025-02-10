@@ -69,15 +69,17 @@ public:
     {
         std::cerr << "The ReadByte() call has timed out. Sent:" << msg_to_send << std::endl;
         std::cerr << " Recv: " << response << std::endl;
-        serial_conn_.FlushIOBuffers(); 
-    }
+        // serial_conn_.FlushIOBuffers(); 
+    }    
     
-    
-
     if (print_output)
     {
+      if(msg_to_send == "e\r"){
+        
       std::string msg = msg_to_send.substr(0, msg_to_send.length()-1);
-      // std::cout << "Sent: " << msg_to_send << " Recv: " << response << std::endl;
+      std::cout << "Sent: " << msg_to_send << std::endl;
+      std::cout << " Recv: " << response << std::endl;
+      }
     }
 
     return response;
@@ -124,6 +126,7 @@ public:
 
     enc_1 = std::atoi(token_1.c_str());
     enc_2 = std::atoi(token_2.c_str());
+    // std::cout << "encs:" << response;
   }
 
     void read_range_sensors(double &sensor_1, double &sensor_2)

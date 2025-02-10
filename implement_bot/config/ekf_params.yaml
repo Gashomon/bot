@@ -2,16 +2,22 @@ ekf_node:
     ros__parameters:
       use_sim_time: False
       frequency: 5.0 # needs fixing. causes update rate failure messages even at low Hz
-      sensor_timeout: 0.1
+      sensor_timeout: 1.0
       two_d_mode: true
       transform_time_offset: 0.0
-      transform_timeout: 0.0
+      transform_timeout: 10.0
       print_diagnostics: false
       debug: false
-      publish_tf: false
+      publish_tf: true
       publish_acceleration: true
       reset_on_time_jump: false
-      # predict_to_current_time: true
+      predict_to_current_time: true
+
+      # initial_state: [0.0, 0.0, 0.0,
+      #                 0.0, 0.0, 0.0,
+      #                 0.0, 0.0, 0.0,
+      #                 0.0, 0.0, 0.0,
+      #                 0.0, 0.0, 0.0]
 
       map_frame: map                    # Defaults to "map" if unspecified
       odom_frame: odom                  # Defaults to "odom" if unspecified
@@ -19,20 +25,20 @@ ekf_node:
       world_frame: odom                 # Defaults to the value of odom_frame if unspecified
 
       # odom untested properly. expected to work fine as long as ekf node is fine 
-      # odom0: /diff_cont/odom  #diffcont odom
+      odom0: /diff_cont/odom  #diffcont odom
       
-      # odom0_config: [false, false, false,
-      #                false, false, false,
-      #                true,  false, false,
-      #                false, false, true,
-      #                false, false, false]
+      odom0_config: [false, false, false,
+                     false, false, false,
+                     true,  false, false,
+                     false, false, true,
+                     true, false, false]
 
       # odom0_nodelay: false
       # odom0_differential: false
-      # odom0_relative: true
-      # odom0_queue_size: 500
-      # odom0_pose_rejection_threshold: 0.5               
-      # odom0_twist_rejection_threshold: 0.5                
+      odom0_relative: true
+      odom0_queue_size: 100
+      # odom0_pose_rejection_threshold: 5.0               
+      # odom0_twist_rejection_threshold: 5.0                
 
       # imu needs more tuning. gives too much numbers
       # imu0: imu_sensor #simulated_imu
@@ -42,8 +48,8 @@ ekf_node:
       imu0_config: [false, false, false,
                     false, false, false,
                     false, false, false,
-                    false,  false,  true,
-                    true,  false,  false]
+                    false, false, true,
+                    true, false, false]
 
       # # all available variables
       # imu0_config: [false, false, false,
@@ -60,12 +66,12 @@ ekf_node:
       
       # imu0_remove_gravitational_acceleration: true    # needs to also publish orientation to work
       # imu0_nodelay: false
-      # imu0_differential: false
-      imu0_relative: false
-      imu0_queue_size: 300
+      # imu0_differential: true
+      imu0_relative: true
+      imu0_queue_size: 100
       # imu0_pose_rejection_threshold: 0.5                 
-      # imu0_twist_rejection_threshold: 0.5                
-      # imu0_linear_acceleration_rejection_threshold: 0.5  
+      # imu0_twist_rejection_threshold: 5.0                
+      # imu0_linear_acceleration_rejection_threshold: 5.0  
       # imu0_remove_gravitational_acceleration: false
 
       # use_control: true
@@ -76,6 +82,9 @@ ekf_node:
       # deceleration_limits: [1.3, 0.0, 0.0, 0.0, 0.0, 4.5]
       # acceleration_gains: [0.8, 0.0, 0.0, 0.0, 0.0, 0.9]
       # deceleration_gains: [1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+      # process_noice_covariance: [10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0]
+      # dynamic_process_noise_covariance: true
+      # initial_estimate_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
       # process_noise_covariance: [0.05,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
       #                             0.0,    0.05,   0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
       #                             0.0,    0.0,    0.06,   0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,

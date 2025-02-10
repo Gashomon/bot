@@ -7,16 +7,16 @@
             <plugin>BotHardwareSystem</plugin>
             <param name="left_wheel_name">left_front_wheel_joint</param>
             <param name="right_wheel_name">right_front_wheel_joint</param>
-            <param name="loop_rate">40</param>
+            <param name="loop_rate">100</param>
             <param name="device">/dev/serial/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.2:1.0-port0</param>
             <!-- <param name="device">/dev/serial1</param> -->
             <param name="baud_rate">115200</param>
             <param name="timeout_ms">1000</param>
             <param name="enc_counts_per_rev">60</param>
-            <param name="pid_p">300</param>
+            <param name="pid_p">500</param>
             <param name="pid_d">50</param>
-            <param name="pid_i">100</param>
-            <param name="pid_o">1</param>
+            <param name="pid_i">300</param>
+            <param name="pid_o">0.5</param>
 
             <param name="left_range_name">left_range</param>
             <param name="right_range_name">right_range</param>
