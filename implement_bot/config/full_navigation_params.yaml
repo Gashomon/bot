@@ -125,7 +125,7 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
     bond_heartbeat_period: 5.0
     # odom_topic: "/diff_cont/odom"
     odom_topic: "/ekf/odom"
-    controller_frequency: 10.0
+    controller_frequency: 5.0
     min_x_velocity_threshold: 0.0       #if less than this value, auto set to zero 
     min_y_velocity_threshold: 0.0       #if less than this value, auto set to zero 
     min_theta_velocity_threshold: 0.0   #if less than this value, auto set to zero 
@@ -140,8 +140,8 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
       movement_time_allowance: 20.0
     # Goal checker parameters
     general_goal_checker:
-      stateful: True
       plugin: "nav2_controller::SimpleGoalChecker"
+      stateful: True
       xy_goal_tolerance: 1.0
       yaw_goal_tolerance: 1.0
       stateful: true
@@ -163,28 +163,28 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
       RotateToGoal.scale: 1.0
       Oscillation.scale: 1.0
 
-      PathAlign.forward_point_distance: 5.0
-      GoalAlign.forward_point_distance: 1.0
+      PathAlign.forward_point_distance: 0.1
+      GoalAlign.forward_point_distance: 0.1
 
-      RotateToGoal.slowing_factor: 3.0
+      RotateToGoal.slowing_factor: 1.0
       RotateToGoal.lookahead_time: -1.0
       xy_goal_tolerance: 1.0
       trans_stopped_velocity: 100.0
       # Kinematics (all defaults to zero)
-      min_vel_x: 0.0
+      min_vel_x: 3.0
       min_vel_y: 0.0
-      max_vel_x: 0.0
+      max_vel_x: 5.0
       max_vel_y: 0.0
-      max_vel_theta: 0.0
-      min_speed_xy: 0.0
-      max_speed_xy: 0.0
-      min_speed_theta: 0.0
-      acc_lim_x: 0.0
+      min_speed_theta: 3.0
+      max_vel_theta: 5.0
+      min_speed_xy: 3.0
+      max_speed_xy: 5.0
+      acc_lim_x: 100.0
       acc_lim_y: 0.0
-      acc_lim_theta: 0.0
-      decel_lim_x: 0.0
+      acc_lim_theta: 100.0
+      decel_lim_x: -100.0
       decel_lim_y: 0.0
-      decel_lim_theta: 0.0
+      decel_lim_theta: -100.0
       # XYTheta Iterator
       vx_samples: 20
       vy_samples: 0
@@ -252,7 +252,7 @@ local_costmap:
           obstacle_min_range: 0.0
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"
-        map_topic: /no_map
+        # map_topic: /no_map
         map_subscribe_transient_local: True
       range_layer:
         plugin: "nav2_costmap_2d::RangeSensorLayer"
@@ -320,7 +320,7 @@ map_saver: # stores a map
 
 planner_server: # Uses map and generates Path
   ros__parameters:
-    expected_planner_frequency: 10.0
+    expected_planner_frequency: 2.0
     use_sim_time: False
     planner_plugins: ["GridBased"]
     bond_heartbeat_period: 1.0
@@ -353,8 +353,9 @@ behavior_server: # lists all basic drive functions
     transform_tolerance: 0.1
     costmap_topic: local_costmap/costmap_raw
     footprint_topic: local_costmap/published_footprint
+    action_server_result_timeout: 600
     
-    cycle_frequency: 5.0
+    cycle_frequency: 3.0
     behavior_plugins: ["spin", "backup", "drive_on_heading", "assisted_teleop", "wait"]
     # behavior_plugins: ["backup", "drive_on_heading", "assisted_teleop", "wait"]
     spin:
@@ -363,15 +364,15 @@ behavior_server: # lists all basic drive functions
 
     backup:
       plugin: "nav2_behaviors/BackUp"
-      acceleration_limit: 100.0
-      deceleration_limit: -100.0
-      minimum_speed: 100.0
+      # acceleration_limit: 100.0
+      # deceleration_limit: -100.0
+      # minimum_speed: 100.0
 
     drive_on_heading:
       plugin: "nav2_behaviors/DriveOnHeading"
-      acceleration_limit: 100.0
-      deceleration_limit: -100.0
-      minimum_speed: 100.0
+      # acceleration_limit: 100.0
+      # deceleration_limit: -100.0
+      # minimum_speed: 100.0
 
     wait:
       plugin: "nav2_behaviors/Wait"
@@ -384,9 +385,9 @@ behavior_server: # lists all basic drive functions
     simulation_time_step: 1.0 # Time step for projections (s) (assistedteleop)
     # cmd_vel_teleop:           # Topic to listen for teleopmessages (assistedteleop)
 
-    max_rotational_vel: 350.0
-    min_rotational_vel: 150.0
-    rotational_acc_lim: 50.0
+    # max_rotational_vel: 350.0
+    # min_rotational_vel: 150.0
+    # rotational_acc_lim: 50.0
 
 
 
@@ -417,7 +418,7 @@ velocity_smoother:  #additional velocity control
     # odom_topic: "/diff_cont/odom"
     odom_topic: "/ekf/odom"
     odom_duration: 0.1
-    deadband_velocity: [100.0, 0.0, 150.0]
+    deadband_velocity: [0.0, 0.0, 0.0]
     velocity_timeout: 5.0
 
 robot_state_publisher:

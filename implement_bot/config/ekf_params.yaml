@@ -5,7 +5,7 @@ ekf_node:
       sensor_timeout: 1.0
       two_d_mode: true
       transform_time_offset: 0.0
-      transform_timeout: 10.0
+      transform_timeout: 5.0
       print_diagnostics: false
       debug: false
       publish_tf: true
@@ -24,7 +24,6 @@ ekf_node:
       base_link_frame: base_link        # Defaults to "base_link" if unspecified
       world_frame: odom                 # Defaults to the value of odom_frame if unspecified
 
-      # odom untested properly. expected to work fine as long as ekf node is fine 
       odom0: /diff_cont/odom  #diffcont odom
       
       odom0_config: [false, false, false,
@@ -40,7 +39,6 @@ ekf_node:
       # odom0_pose_rejection_threshold: 5.0               
       # odom0_twist_rejection_threshold: 5.0                
 
-      # imu needs more tuning. gives too much numbers
       # imu0: imu_sensor #simulated_imu
       imu0: imu_broad/imu #real_imu
 

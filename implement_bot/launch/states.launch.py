@@ -181,7 +181,7 @@ def generate_launch_description():
         ),
 
         robot_state_publisher,
-        joint_state_publisher,
+        # joint_state_publisher,
         twist_remaps,
 
         #simulation 
