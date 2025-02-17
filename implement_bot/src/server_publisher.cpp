@@ -55,9 +55,9 @@ int main(int argc, char *argv[]) {
   // Bind the ip address and port to a socket
   sockaddr_in hint;
   hint.sin_family = AF_INET;
-  hint.sin_port = htons(6000);
+  hint.sin_port = htons(8888);
   hint.sin_addr.s_addr = INADDR_ANY;
-  inet_pton(AF_INET, "0.0.0.0", &hint.sin_addr);
+  // inet_pton(AF_INET, "0.0.0.0", &hint.sin_addr);
   cout << "Socket Binded..." << endl;
 
   // listen to any IP address 
@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
   auto message = std_msgs::msg::String();
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;
   publisher_ = node->create_publisher<std_msgs::msg::String>("server_lstnr", 10);
-
+  rclcpp::spin(node);
   while (true)
     {
       cout << "Loop Entered..." << endl;
