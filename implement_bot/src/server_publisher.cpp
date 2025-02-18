@@ -38,9 +38,10 @@ class ServerPub : public rclcpp::Node
 {
   public:
     ServerPub()
-    : Node("bot_server"), count_(0)
+    : Node("bot_server")
     {
       publisher_ = this->create_publisher<std_msgs::msg::String>("server_cmd", 10);
+      auto message = std_msgs::msg::String();
 
       cout << "Beginning..." << endl;
       int listening = socket(AF_INET, SOCK_STREAM, 0);
@@ -48,7 +49,7 @@ class ServerPub : public rclcpp::Node
       if (listening == -1)
       {
           cerr << "Can't create a socket! Quitting" << endl;
-          return -1;
+          rclcpp::shutdown();
       }
       cout << "Socket created..." << endl;
 
@@ -75,16 +76,14 @@ class ServerPub : public rclcpp::Node
       char buf[4096];
 
       // Wait for a connection
-      cout << "Waiting..." << endl;
+      // cout << "Waiting..." << endl;
       sockaddr_in client;
       socklen_t clientSize = sizeof(client);
 
       int clientSocket = accept(listening, (sockaddr*)&client, &clientSize);
-      cout << "Client Connected..." << endl;
+      // cout << "Client Connected..." << endl;
 
-      rclcpp::init(argc, argv);
       cout << "RCL started..." << endl;
-      rclcpp::spin(node);
       while (true)
         {
           cout << "Loop Entered..." << endl;
@@ -95,7 +94,7 @@ class ServerPub : public rclcpp::Node
             if (bytesReceived == -1)
             {
                 cout << "Error in recv(). Quitting" << endl;
-                RCLCPP_INFO(node->get_logger(), "err recv");
+                RCLCPP_INFO(this->get_logger(), "err recv");
                 break;
                 close(clientSocket);
                 sockaddr_in client;
@@ -107,7 +106,7 @@ class ServerPub : public rclcpp::Node
             if (bytesReceived == 0)
             {
                 cout << "Client disconnected " << endl;
-                RCLCPP_INFO(node->get_logger(), "cli dis");
+                RCLCPP_INFO(this->get_logger(), "cli dis");
                 // break;
                 close(clientSocket);
                 sockaddr_in client;
@@ -116,14 +115,17 @@ class ServerPub : public rclcpp::Node
                 clientSocket = accept(listening, (sockaddr*)&client, &clientSize);
             }
             message.data = buf;        
-            RCLCPP_INFO(node->get_logger(), "Publishing: '%s'", message.data.c_str());
+            RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", message.data.c_str());
             // RCLCPP_INFO(node->get_logger(), buf);
             publisher_->publish(message);
             
             // Echo message back to client
-            send(clientSocket, buf, bytesReceived + 1, 0);
+            // send(clientSocket, buf, bytesReceived + 1, 0);
         }
     }
+
+    rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;
+    
 };
 
 int main(int argc, char * argv[])
