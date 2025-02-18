@@ -34,102 +34,102 @@ using namespace std;
 
 using namespace std::chrono_literals;
 
-/* This example creates a subclass of Node and uses std::bind() to register a
- * member function as a callback from the timer. */
-
-#include "rclcpp/rclcpp.hpp"
- 
- 
-int main(int argc, char *argv[]) {
-
-  cout << "Beginning..." << endl;
-  int listening = socket(AF_INET, SOCK_STREAM, 0);
-
-  if (listening == -1)
-  {
-      cerr << "Can't create a socket! Quitting" << endl;
-      return -1;
-  }
-  cout << "Socket created..." << endl;
-
-  // Bind the ip address and port to a socket
-  sockaddr_in hint;
-  hint.sin_family = AF_INET;
-  hint.sin_port = htons(8888);
-  hint.sin_addr.s_addr = INADDR_ANY;
-  // inet_pton(AF_INET, "0.0.0.0", &hint.sin_addr);
-  cout << "Socket Binded..." << endl;
-
-  // listen to any IP address 
-  bind(listening, (sockaddr*)&hint, sizeof(hint));
-
-  cout << "Getting IPs..." << endl;
-  // Tell Winsock the socket is for listening
-  listen(listening, SOMAXCONN);
-  cout << "Listening to IPs..." << endl;
-
-  // Close listening socket
-  // close(listening);
- 
-  // While loop: accept and echo message back to client
-  char buf[4096];
-
-  // Wait for a connection
-  cout << "Waiting..." << endl;
-  sockaddr_in client;
-  socklen_t clientSize = sizeof(client);
-
-  int clientSocket = accept(listening, (sockaddr*)&client, &clientSize);
-  cout << "Client Connected..." << endl;
-
-  rclcpp::init(argc, argv);
-  cout << "RCL started..." << endl;
-  auto node = rclcpp::Node::make_shared("minimal_publisher");
-  auto message = std_msgs::msg::String();
-  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;
-  publisher_ = node->create_publisher<std_msgs::msg::String>("server_lstnr", 10);
-  rclcpp::spin(node);
-  while (true)
+class ServerPub : public rclcpp::Node
+{
+  public:
+    ServerPub()
+    : Node("bot_server"), count_(0)
     {
-      cout << "Loop Entered..." << endl;
-        memset(buf, 0, 4096);
- 
-        // Wait for client to send data
-        int bytesReceived = recv(clientSocket, buf, 4096, 0);
-        if (bytesReceived == -1)
-        {
-            cout << "Error in recv(). Quitting" << endl;
-            RCLCPP_INFO(node->get_logger(), "err recv");
-            break;
-            close(clientSocket);
-            sockaddr_in client;
-            socklen_t clientSize = sizeof(client);
+      publisher_ = this->create_publisher<std_msgs::msg::String>("server_cmd", 10);
 
-            clientSocket = accept(listening, (sockaddr*)&client, &clientSize);
-        }
- 
-        if (bytesReceived == 0)
-        {
-            cout << "Client disconnected " << endl;
-            RCLCPP_INFO(node->get_logger(), "cli dis");
-            // break;
-            close(clientSocket);
-            sockaddr_in client;
-            socklen_t clientSize = sizeof(client);
+      cout << "Beginning..." << endl;
+      int listening = socket(AF_INET, SOCK_STREAM, 0);
 
-            clientSocket = accept(listening, (sockaddr*)&client, &clientSize);
+      if (listening == -1)
+      {
+          cerr << "Can't create a socket! Quitting" << endl;
+          return -1;
+      }
+      cout << "Socket created..." << endl;
+
+      // Bind the ip address and port to a socket
+      sockaddr_in hint;
+      hint.sin_family = AF_INET;
+      hint.sin_port = htons(8888);
+      hint.sin_addr.s_addr = INADDR_ANY;
+      // inet_pton(AF_INET, "0.0.0.0", &hint.sin_addr);
+      cout << "Socket Binded..." << endl;
+
+      // listen to any IP address 
+      bind(listening, (sockaddr*)&hint, sizeof(hint));
+
+      cout << "Getting IPs..." << endl;
+      // Tell Winsock the socket is for listening
+      listen(listening, SOMAXCONN);
+      cout << "Listening to IPs..." << endl;
+
+      // Close listening socket
+      // close(listening);
+    
+      // While loop: accept and echo message back to client
+      char buf[4096];
+
+      // Wait for a connection
+      cout << "Waiting..." << endl;
+      sockaddr_in client;
+      socklen_t clientSize = sizeof(client);
+
+      int clientSocket = accept(listening, (sockaddr*)&client, &clientSize);
+      cout << "Client Connected..." << endl;
+
+      rclcpp::init(argc, argv);
+      cout << "RCL started..." << endl;
+      rclcpp::spin(node);
+      while (true)
+        {
+          cout << "Loop Entered..." << endl;
+            memset(buf, 0, 4096);
+    
+            // Wait for client to send data
+            int bytesReceived = recv(clientSocket, buf, 4096, 0);
+            if (bytesReceived == -1)
+            {
+                cout << "Error in recv(). Quitting" << endl;
+                RCLCPP_INFO(node->get_logger(), "err recv");
+                break;
+                close(clientSocket);
+                sockaddr_in client;
+                socklen_t clientSize = sizeof(client);
+
+                clientSocket = accept(listening, (sockaddr*)&client, &clientSize);
+            }
+    
+            if (bytesReceived == 0)
+            {
+                cout << "Client disconnected " << endl;
+                RCLCPP_INFO(node->get_logger(), "cli dis");
+                // break;
+                close(clientSocket);
+                sockaddr_in client;
+                socklen_t clientSize = sizeof(client);
+
+                clientSocket = accept(listening, (sockaddr*)&client, &clientSize);
+            }
+            message.data = buf;        
+            RCLCPP_INFO(node->get_logger(), "Publishing: '%s'", message.data.c_str());
+            // RCLCPP_INFO(node->get_logger(), buf);
+            publisher_->publish(message);
+            
+            // Echo message back to client
+            send(clientSocket, buf, bytesReceived + 1, 0);
         }
-        message.data = buf;        
-        RCLCPP_INFO(node->get_logger(), "Publishing: '%s'", message.data.c_str());
-        // RCLCPP_INFO(node->get_logger(), buf);
-        publisher_->publish(message);
-         
-        // Echo message back to client
-        send(clientSocket, buf, bytesReceived + 1, 0);
     }
+};
 
-
- 
+int main(int argc, char * argv[])
+{
+  rclcpp::init(argc, argv);
+  rclcpp::spin(std::make_shared<ServerPub>());
   rclcpp::shutdown();
   return 0;
 }

@@ -9,7 +9,7 @@ class ServerSub(Node):
         super().__init__('bot_server')
         self.cmd = None
         self.msg = None
-        self.server_listner = self.create_subscription(String, 'server_lstnr', self.server_callback, 10)
+        self.server_listner = self.create_subscription(String, 'server_cmd', self.server_callback, 10)
     
     def waitforcmd(self, transaction):
         while self.msg is None:
