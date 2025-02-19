@@ -1,14 +1,15 @@
 # import required module
 from playsound import playsound
 
-soundlibpath = '../sound/'
+# soundlibpath = '/audios/'
 audio1 = 'audio.mp3'
 audios = {
     'situation1': 'audio.mp3',
     'nosounderror' : 'nserr.mp3',
     'nothing' : 'nothing.mp3'
 }
-def playfor(situation):
+
+def playfor(situation, soundlibpath):
     if audios.get(situation) is not None:
         playsound(soundlibpath + audios[situation])
     else:

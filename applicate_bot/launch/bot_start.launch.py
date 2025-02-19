@@ -64,7 +64,7 @@ def generate_launch_description():
     # application launch file
     publish_app = Node(
         package = 'applicate_bot',
-        executable = 'nav_key',
+        executable = 'test_final',
         output = 'screen',
         parameters = []
     )
@@ -79,7 +79,7 @@ def generate_launch_description():
     # add launch files
     ld.add_action(publish_bot)
     ld.add_action(publish_navloc)
-    # ld.add_action(publish_app)
+    ld.add_action(publish_app)
 
     # Launch them all!
     return ld

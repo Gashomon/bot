@@ -41,12 +41,14 @@ class Bot():
         self.ui = ui
         self.logger = logger
         
+    # lock stuff
     def lockon(self):
         self.modules.setlock('on')
     
     def lockoff(self):
         self.modules.setlock('off')
     
+    # un-implemented door stuff
     def dooropen(self):
         door = self.modules.getdoorstate()
         if door == 'open':
@@ -60,13 +62,15 @@ class Bot():
             return True
         if lock == 'off':
             return False
-        
+            
+    # sound stuff
     def playfor(self, situation):
         if longsituationslist.get(situation) is not None:
             self.modules.playloop(situation)
         if shortsituationslist.get(situation) is not None:
             self.modules.playonce(situation)
 
+    # load stuff
     def loadislighterthan(self, limit):
         load = self.modules.getLoad()
         if load > limit: #load is heavy
@@ -74,6 +78,7 @@ class Bot():
         else:
             return True
         
+    # server stuff, main waiting code
     def getcmd(self):
         if self.EXPERIMENTAL:
             self.ui.goto("control")
@@ -91,6 +96,7 @@ class Bot():
         else:
            return self.server.waitforcmd(t)
     
+    # drive stuff, main code
     def run(self, transaction):
         self.logger.logwrite("robot_begin")
         if transaction.type == TransacType.DELIVER:
@@ -110,6 +116,7 @@ class Bot():
         self.playfor('nothing') 
         self.logger.logwrite("robot_home")
     
+    # drive options
     def deliver(self, transaction):
         t = transaction
         
@@ -317,6 +324,7 @@ class Bot():
                 if self.ui.check(q):
                     break    
         
+    # mixed lock & load stuff. might be unimplemented. atleast it's here
     def readydrive(self, limit=100):
         if self.dooropen():
             return False
@@ -325,6 +333,7 @@ class Bot():
         self.lockon()
         return True
 
+    # unused gen pass for no server testing
     def genpass(self):
         password = ""
         for i in range(4):

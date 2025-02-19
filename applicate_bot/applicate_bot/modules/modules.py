@@ -19,7 +19,7 @@ class Modules():
         pass
     
     # set pins to 0 to deactivate
-    def __init__(self, setlock=GPIOpins.lockpin, setloadin=GPIOpins.loadinpin, setloadout = GPIOpins.loadoutpin, setdoor=GPIOpins.doorpin, soundenable=True):
+    def __init__(self, soundlibpath, setlock=GPIOpins.lockpin, setloadin=GPIOpins.loadinpin, setloadout = GPIOpins.loadoutpin, setdoor=GPIOpins.doorpin, soundenable=True):
          
         self.device = lgpio.gpiochip_open(0)
 
@@ -30,6 +30,8 @@ class Modules():
         self.loadoutpin= setloadout
 
         self.doorpin = setdoor
+
+        self.soundsfolder = soundlibpath
         
         if setlock:
             self.LOCKENABLE = True
@@ -76,12 +78,12 @@ class Modules():
         pass
     
     def playonce(self, situation):
-        audio.playfor(situation)
+        audio.playfor(situation, self.soundsfolder)
         pass
     
     def playloop(self, situation, duration_count=0, trigger=None):
         while True:
-            audio.playfor(situation)
+            audio.playfor(situation, self.soundsfolder)
         pass
             
 
