@@ -2,7 +2,7 @@ from enum import Enum
 import random
 
 longsituationslist = {}
-shortsituationslist = {}
+# shortsituationslist = {'load'} # unneeded list
 
 destinationlist = {
     'Initial': (0.0, 0.0, 0.0), 
@@ -40,12 +40,16 @@ class Bot():
         self.server = server
         self.ui = ui
         self.logger = logger
+
+        self.playfor('loading')
         
     def lockon(self):
         self.modules.setlock('on')
+        self.playfor('locked')
     
     def lockoff(self):
         self.modules.setlock('off')
+        self.playfor('unlocked')
     
     def dooropen(self):
         door = self.modules.getdoorstate()
@@ -64,12 +68,14 @@ class Bot():
     def playfor(self, situation):
         if longsituationslist.get(situation) is not None:
             self.modules.playloop(situation)
-        if shortsituationslist.get(situation) is not None:
+        else:
+        # if shortsituationslist.get(situation) is not None:
             self.modules.playonce(situation)
 
     def loadislighterthan(self, limit):
         load = self.modules.getLoad()
         if load > limit: #load is heavy
+            self.playfor('heavy')
             return False
         else:
             return True
@@ -87,8 +93,10 @@ class Bot():
             while t is None:
                 pass
             t.password = self.genpass()
+            self.playfor('cmd_got')
             return t
         else:
+            self.playfor('cmd_got')
            return self.server.waitforcmd(t)
     
     def run(self, transaction):
@@ -103,8 +111,9 @@ class Bot():
         while not self.readydrive():
             self.ui.display("Not yet Ready")
         
-        # pose = self.nav.create_pose_stamped(destinationlist.get("Home"))
-        # self.nav.goPose(pose)
+        pose = self.nav.create_pose_stamped(destinationlist.get("Home"))
+        self.nav.goPose(pose)
+        self.playfor('running')
         while not self.nav.navigator.isTaskComplete():
             self.ui.display("travelling")
         self.playfor('nothing') 
@@ -115,42 +124,52 @@ class Bot():
 
         pose = self.nav.create_pose_stamped(t.dest1)
         self.nav.goPose(pose)
+        self.playfor('running')
         while not self.nav.navigator.isTaskComplete():
             self.ui.display("travelling")
         
+        self.playfor('arrived')
         q = "r u user?"
         while not self.ui.check(q):
             pass
         
+        self.playfor('password')
         while not self.ui.verifyuser(t.password):
             pass
         
         self.lockoff()
-
+        self.playfor('put_in')
         while True:
             while not self.loadislighterthan(20000):
                 self.ui.display("Load too heavy")
+                self.playfor('heavy')
 
             q = "ready to go?"
+            self.playfor('leaving')
             if self.ui.check(q):
                 break
 
         pose = self.nav.create_pose_stamped(t.dest2)
         self.nav.goPose(pose)
+        self.playfor('runinng')
         while not self.nav.navigator.isTaskComplete():
             self.ui.display("travelling")
 
+        self.playfor('arrived')
         q = "r u user?"
         while not self.ui.check(q):
             pass
         
+        self.playfor('password')
         while not self.ui.verifyuser(t.password):
             pass
 
         self.lockoff()
 
+        self.playfor('remove_item')
         while True:
             q = "ready to go?"
+            self.playfor('leaving')
             if self.ui.check(q):
                 break
 
@@ -272,6 +291,7 @@ class Bot():
             return False
         if not self.loadislighterthan(limit):
             return False
+        self.playfor('locked')
         self.lockon()
         return True
 
