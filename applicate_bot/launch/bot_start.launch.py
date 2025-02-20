@@ -64,7 +64,7 @@ def generate_launch_description():
     # application launch file
     publish_app = Node(
         package = 'applicate_bot',
-        executable = 'test',
+        executable = 'appbot',
         output = 'screen',
         parameters = []
     )

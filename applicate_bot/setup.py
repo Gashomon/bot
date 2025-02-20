@@ -32,8 +32,7 @@ setup(
             'loggys = applicate_bot.comms.logger:main',
             'botcont = applicate_bot.bot_control:main',
             'sample_gui = applicate_bot.gui.pre_ui.MyGUI:main',
-            'appbot = applicate_bot.app_bot:main',
-            'test = applicate_bot.final_test:main'
+            'appbot = applicate_bot.app_bot:main'
         ],
     },
 )
