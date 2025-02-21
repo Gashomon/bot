@@ -175,7 +175,7 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
       min_vel_y: 0.0
       max_vel_x: 5.0
       max_vel_y: 0.0
-      min_speed_theta: 3.0
+      min_speed_theta: 0.0
       max_vel_theta: 5.0
       min_speed_xy: 3.0
       max_speed_xy: 5.0
