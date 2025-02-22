@@ -18,9 +18,6 @@ def generate_launch_description():
     navloc_params_file_path = os.path.join(pkg_dir, 'config', 'full_navigation_params.yaml')
     config_path = os.path.join(pkg_dir, 'config')
     map_path = os.path.join(pkg_dir, 'maps')
-    use_composition = LaunchConfiguration('use_composition')
-    map_file_path = LaunchConfiguration('map_file_path')
-    use_sim_time = LaunchConfiguration('use_sim_time')
 
     # Declare launch arguments
     declare_map_file_path_cmd = DeclareLaunchArgument(
@@ -33,29 +30,21 @@ def generate_launch_description():
         default_value='false',
         description='Use simulation time if true')
 
-    declare_use_composition_cmd = DeclareLaunchArgument(
-        'use_composition',
-        default_value='True',
-        description='Whether to use composed bringup',
-    )
-
     # Include the localization launch file with custom nav2 parameters
     start_localization_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(localization_launch_file),
         launch_arguments={
             'map': os.path.join(map_path, 'modded_actual.yaml'),
-            'params_file': navloc_params_file_path,
-            'use_composition': use_composition,
+            'params_file': navloc_params_file_path
         }.items()
-    )    
+    )
 
     # Include the navigation launch file with custom nav2 parameters
     start_navigation_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(navigation_launch_file),
         launch_arguments={
             'map_subscribe_transient_local': 'true',
-            'params_file': navloc_params_file_path,
-            'use_composition': use_composition,
+            'params_file': navloc_params_file_path
         }.items()
     )
 
@@ -65,10 +54,9 @@ def generate_launch_description():
     # Declare the launch options
     ld.add_action(declare_map_file_path_cmd)
     ld.add_action(declare_use_sim_time_cmd)
-    ld.add_action(declare_use_composition_cmd)
 
     # Add actions
-    ld.add_action(start_localization_cmd)
+    # ld.add_action(start_localization_cmd)
     ld.add_action(start_navigation_cmd)
 
     return ld
