@@ -272,9 +272,12 @@ hardware_interface::CallbackReturn BotHardwareSystem::on_configure(
     RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Oops ...reconnecting comms...");
     comms_.disconnect();
   }
-  comms_.connect(cfg_.device, cfg_.baud_rate, cfg_.timeout_ms);
+  while(!comms_.connected())
+  {
+    comms_.connect(cfg_.device, cfg_.baud_rate, cfg_.timeout_ms);
+    RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Connecting comms...!");
+  }
   RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Successfully configured!");
-
   return hardware_interface::CallbackReturn::SUCCESS;
 }
 
@@ -298,14 +301,17 @@ hardware_interface::CallbackReturn BotHardwareSystem::on_activate(
   RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Activating ...please wait...");
   if (!comms_.connected())
   {
-    RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "notconn");
+    RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "notconnected..");
     return hardware_interface::CallbackReturn::ERROR;
   }
+  comms_.send_empty_msg();
   if (cfg_.pid_p > 0)
   {
     comms_.set_pid_values(cfg_.pid_p,cfg_.pid_d,cfg_.pid_i,cfg_.pid_o);
+    RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Updating PID..");
   }
   comms_.reset_encoders();
+  RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Encoders resetted!");
   RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Successfully activated!");
 
   return hardware_interface::CallbackReturn::SUCCESS;
@@ -325,7 +331,7 @@ hardware_interface::return_type BotHardwareSystem::read(
 {
   if (!comms_.connected())
   {
-    RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "notconn");
+    RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "notconnected");
     return hardware_interface::return_type::ERROR;
   }
 
@@ -367,7 +373,7 @@ hardware_interface::return_type NewHardwareInterface::BotHardwareSystem::write(
 {
   if (!comms_.connected())
   {
-    RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "notconn");
+    RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "notconnected");
     return hardware_interface::return_type::ERROR;
   }
 
