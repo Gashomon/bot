@@ -1,10 +1,10 @@
 ekf_node:
     ros__parameters:
       use_sim_time: False
-      frequency: 60.0 # needs fixing. causes update rate failure messages even at low Hz
-      sensor_timeout: 0.5
+      frequency: 90.0 # needs fixing. causes update rate failure messages even at low Hz
+      sensor_timeout: 0.05
       two_d_mode: true
-      transform_time_offset: 0.0
+      transform_time_offset: 0.5
       transform_timeout: 0.0
       print_diagnostics: false
       debug: false

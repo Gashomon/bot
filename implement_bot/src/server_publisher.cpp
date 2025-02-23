@@ -28,6 +28,7 @@
 #include <string.h>
 #include <string>
 
+#include <signal.h> // for ctrl + C
 
 using namespace std;
 // mspm
@@ -121,10 +122,23 @@ class ServerPub : public rclcpp::Node
             
             // Echo message back to client
             // send(clientSocket, buf, bytesReceived + 1, 0);
+            // if
+
+            // Register signal and signal handler
+            signal(SIGINT, signal_callback_handler);
         }
     }
 
+      void static signal_callback_handler(int signum) {
+        // cout << "server shutting down..." << signum << endl;
+        // RCLCPP_INFO(this->get_logger(), "server shutting down...");
+        // Terminate program
+        // exit(signum);
+        rclcpp::shutdown();
+      }
+
     rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;
+
     
 };
 

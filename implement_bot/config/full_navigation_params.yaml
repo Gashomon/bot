@@ -125,12 +125,12 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
     # bond_heartbeat_period: 5.0
     # odom_topic: "/diff_cont/odom"
     odom_topic: "/ekf/odom"
-    controller_frequency: 5.0
+    controller_frequency: 20.0
     min_x_velocity_threshold: 0.0       #if less than this value, auto set to zero 
     min_y_velocity_threshold: 0.0       #if less than this value, auto set to zero 
     min_theta_velocity_threshold: 0.0   #if less than this value, auto set to zero 
     failure_tolerance: 0.0      # positive: timeout, zero: disabled, -1: infinite
-    progress_checker_plugin: "progress_checker"
+    progress_checker_plugins: "progress_checker"
     goal_checker_plugins: ["general_goal_checker"]
     controller_plugins: ["FollowPath"]
     # Progress checker parameters
@@ -142,9 +142,8 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
     general_goal_checker:
       plugin: "nav2_controller::SimpleGoalChecker"
       stateful: True
-      xy_goal_tolerance: 1.0
-      yaw_goal_tolerance: 1.0
-      stateful: true
+      xy_goal_tolerance: 0.2
+      yaw_goal_tolerance: 0.2
     # DWB parameters
     FollowPath:
       plugin: "dwb_core::DWBLocalPlanner"
@@ -171,13 +170,13 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
       xy_goal_tolerance: 1.0
       trans_stopped_velocity: 100.0
       # Kinematics (all defaults to zero)
-      min_vel_x: 3.0
+      min_vel_x: 0.0
       min_vel_y: 0.0
       max_vel_x: 5.0
       max_vel_y: 0.0
       min_speed_theta: 0.0
       max_vel_theta: 5.0
-      min_speed_xy: 3.0
+      min_speed_xy: 0.0
       max_speed_xy: 5.0
       acc_lim_x: 100.0
       acc_lim_y: 0.0
@@ -197,7 +196,7 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
 local_costmap:
   local_costmap:
     ros__parameters:
-      update_frequency: 1.0
+      update_frequency: 0.5
       global_frame: odom
       robot_base_frame: base_link
       use_sim_time: False

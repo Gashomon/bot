@@ -5,6 +5,7 @@
 #include <sstream>
 #include <cstdlib>
 #include <libserial/SerialPort.h>
+// #include <libserial/SerialStream.h> //test
 #include <iostream>
 
 using namespace LibSerial;
@@ -53,6 +54,11 @@ public:
     return serial_conn_.IsOpen();
   }
 
+  void clearbuffs()
+  {
+    serial_conn_.FlushIOBuffers();
+  }
+
 
   std::string send_msg(const std::string &msg_to_send, bool print_output = false)
   {
@@ -67,9 +73,10 @@ public:
     }
     catch (const LibSerial::ReadTimeout&)
     {
-        std::cerr << "The ReadByte() call has timed out. Sent:" << msg_to_send << std::endl;
+        std::cerr << "The ReadByte() call has timed out." << std::endl;
+        std::cerr << "Sent:" << msg_to_send << std::endl;
         std::cerr << " Recv: " << response << std::endl;
-        // serial_conn_.FlushIOBuffers(); 
+        serial_conn_.FlushIOBuffers(); 
     }    
     
     if (print_output)

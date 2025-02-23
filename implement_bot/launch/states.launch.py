@@ -152,7 +152,7 @@ def generate_launch_description():
         package="robot_localization",
         executable="ekf_node",
         name="ekf_node",
-        output="both",
+        output="log",
         respawn = True,
         respawn_delay=2.0,
         parameters=[ekf_params],

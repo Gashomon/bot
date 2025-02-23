@@ -97,7 +97,7 @@ class Bot():
             return t
         else:
             self.playfor('cmd_got')
-           return self.server.waitforcmd(t)
+            return self.server.waitforcmd(t)
     
     def run(self, transaction):
         self.logger.logwrite("robot_begin")
