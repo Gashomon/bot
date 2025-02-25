@@ -13,9 +13,9 @@
             <param name="baud_rate">115200</param>
             <param name="timeout_ms">0</param>
             <param name="enc_counts_per_rev">60</param>
-            <param name="pid_p">10</param>
-            <param name="pid_d">1</param>
-            <param name="pid_i">5</param>
+            <param name="pid_p">20</param>
+            <param name="pid_d">10</param>
+            <param name="pid_i">10</param>
             <param name="pid_o">100</param>
 
             <param name="left_range_name">left_range</param>

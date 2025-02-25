@@ -40,11 +40,17 @@ class HousePatrolNode(Node):
         # Wait for Nav2 to be active
         # self.navigator.waitUntilNav2Active()
 
+        #
+        # Forward = +x
+        # Right = -y
+        # Back = -x
+        # left = +y
+        
         # Set waypoints and start navigation
         waypoints = [
+            self.create_pose_stamped(0.3, 0.0, np.radians(0)), 
             self.create_pose_stamped(1.0, 0.0, np.radians(0)),
-            self.create_pose_stamped(2.0, 0.0, np.radians(0)),
-            self.create_pose_stamped(2.5, 7.0, np.radians(0)),
+            self.create_pose_stamped(0.2, 0.3, np.radians(0)),
             self.create_pose_stamped(-3.5, 0.0, np.radians(11.31)),
             self.create_pose_stamped(9.0, 2.5, np.radians(155.56)),
             self.create_pose_stamped(3.5, 5.0, np.radians(-125.00)),

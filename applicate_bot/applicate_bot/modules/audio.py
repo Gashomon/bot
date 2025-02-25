@@ -1,7 +1,7 @@
 # import required module
 from playsound import playsound
 
-soundlibpath = '../sounds/'
+soundlibpath = '/home/pi/bot/src/bot/applicate_bot/applicate_bot/modules/sounds/'
 audio1 = 'audio.mp3'
 audios = {
     'loading': 'loading.mp3', #super optional
@@ -13,14 +13,14 @@ audios = {
     'heavy': 'heavy.mp3',
     'finish' : 'finish.mp3',
     # 'nothing' : 'nothing.mp3' # not in list, play nothing
-    'error': '',
-    'arrived': '',
-    'locked': '',
-    'unlocked': '',
-    'open': '',
-    'clode': '',
-    'remove_item': '',
-    'leaving': ''
+    # 'error': '',
+    # 'arrived': '',
+    # 'locked': '',
+    # 'unlocked': '',
+    # 'open': '',
+    # 'clode': '',
+    # 'remove_item': '',
+    # 'leaving': ''
     
 }
 def playfor(soundlibpath, situation):

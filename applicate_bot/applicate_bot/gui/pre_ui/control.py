@@ -138,7 +138,6 @@ class Ui_MainWindow(object):
 
         self.stackedWidget.setCurrentIndex(2)
 
-
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
 

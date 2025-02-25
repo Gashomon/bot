@@ -11,18 +11,18 @@ class ServerSub(Node):
         self.msg = None
         self.server_listner = self.create_subscription(String, 'server_cmd', self.server_callback, 10)
     
-    def waitforcmd(self, transaction):
+    def waitforcmd(self):
         while self.msg is None:
             pass
             
         self.cmd = self.msg.split(",") 
-        if self.cmd.len() == 5:
-            transaction.sender = self.msg[0]
-            transaction.receiver  = self.msg[1]
-            transaction.password  = self.msg[2]
-            transaction.type  = self.msg[3]
-            transaction.dest1  = self.msg[4]
-            transaction.dest2  = self.msg[5]
+        if self.cmd.len() == 6:
+            transaction.sender = self.cmd[0]
+            transaction.receiver  = self.cmd[1]
+            transaction.password  = self.cmd[2]
+            transaction.type  = self.cmd[3]
+            transaction.dest1  = self.cmd[4]
+            transaction.dest2  = self.cmd[5]
             return transaction
         
 

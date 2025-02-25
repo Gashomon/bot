@@ -169,7 +169,7 @@ class DataLogger(Node):
 
     # logger function
     def logwrite(self, msg):
-            self.msg = String
+            self.msg = String()
             self.msg.data = msg
             self.logger.publish(msg)
             self.get_logger().info('[botlogger]: "%s"' % msg.data)

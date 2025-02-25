@@ -1,5 +1,6 @@
 from enum import Enum
 import random
+import time
 
 longsituationslist = {}
 # shortsituationslist = {'load'} # unneeded list
@@ -8,17 +9,17 @@ destinationlist = {
     'Initial': (0.0, 0.0, 0.0), 
     'Home': (0.0, 0.0, 0.0), 
     'Dean': (1.0, 0.0, 0.0), 
-    'CE'  : (2.0, 0.0, 0.0),
-    'EE' : (0.0, 1.0, 0.0),
-    'CpE'  : (0.0, 2.0, 0.0),
-    'ME'  : (-1.0, 0.0, 0,0),
-    'ECE'  : (0.0, -1.0, 0.0)
+    'CE'  : (0.3, 0.0, 0.0),
+    'EE' : (0.3, 0.0, 0.0),
+    'CpE'  : (0.3, 0.0, 0.0),
+    'ME'  : (0.3, 0.0, 0,0),
+    'ECE'  : (0.3, 0.0, 0.0)
 }
 
 class TransacType(Enum):
-    DELIVER = 1
-    FETCH = 2
-    RETRIEVE = 3
+    DELIVER = '1'
+    FETCH = '2'
+    RETRIEVE = '3'
 
 class Transaction():
     sender = ""
@@ -40,6 +41,7 @@ class Bot():
         self.server = server
         self.ui = ui
         self.logger = logger
+        # self.ui.control.label_2.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p align=\"center\"><span style=\" font-size:18pt;\">p Londow</span></p><p align=\"center\"><span style=\" font-size:18pt;\"><br/></span></p></body></html>", None))
 
         self.playfor('loading')
         
@@ -82,7 +84,7 @@ class Bot():
         
     def getcmd(self):
         if self.EXPERIMENTAL:
-            self.ui.goto("control")
+            self.ui.goto("control") 
             t = Transaction()
             self.ui.control.pushButton_5.clicked.connect(
                 lambda: self.ui.sendcmd(t, 'del'))
@@ -92,12 +94,21 @@ class Bot():
                 lambda: self.ui.sendcmd(t, 'ret'))
             while t is None:
                 pass
+            
+            t.sender = ""
+            t.receiver = ""
+            t.password = "1111"
+            t.type = '1'
+            t.dest1 = 'dean'
+            t.dest2 = 'cpe'
             t.password = self.genpass()
             self.playfor('cmd_got')
             return t
         else:
+            t = self.server.waitforcmd(t)
             self.playfor('cmd_got')
-            return self.server.waitforcmd(t)
+            return t
+        pass
     
     def run(self, transaction):
         self.logger.logwrite("robot_begin")
@@ -112,6 +123,8 @@ class Bot():
             self.ui.display("Not yet Ready")
         
         pose = self.nav.create_pose_stamped(destinationlist.get("Home"))
+        self.ui.display("OTW. step aside. 3 secs")
+        time.sleep(3)
         self.nav.goPose(pose)
         self.playfor('running')
         while not self.nav.navigator.isTaskComplete():
@@ -123,6 +136,8 @@ class Bot():
         t = transaction
 
         pose = self.nav.create_pose_stamped(t.dest1)
+        self.ui.display("OTW. step aside. 3 secs")
+        time.sleep(3)
         self.nav.goPose(pose)
         self.playfor('running')
         while not self.nav.navigator.isTaskComplete():
@@ -144,12 +159,14 @@ class Bot():
                 self.ui.display("Load too heavy")
                 self.playfor('heavy')
 
-            q = "ready to go?"
+            q = "ready to go? close door"
             self.playfor('leaving')
             if self.ui.check(q):
                 break
 
         pose = self.nav.create_pose_stamped(t.dest2)
+        self.ui.display("OTW. step aside. 3 secs")
+        time.sleep(3)
         self.nav.goPose(pose)
         self.playfor('runinng')
         while not self.nav.navigator.isTaskComplete():
@@ -177,6 +194,8 @@ class Bot():
         t = transaction
 
         pose = self.nav.create_pose_stamped(t.dest1)
+        self.ui.display("OTW. step aside. 3 secs")
+        time.sleep(3)
         self.nav.goPose(pose)
         while not self.nav.navigator.isTaskComplete():
             self.ui.display("travelling")
@@ -199,6 +218,8 @@ class Bot():
                 break
 
         pose = self.nav.create_pose_stamped(t.dest2)
+        self.ui.display("OTW. step aside. 3 secs")
+        time.sleep(3)
         self.nav.goPose(pose)
         while not self.nav.navigator.isTaskComplete():
             self.ui.display("travelling")
@@ -219,6 +240,8 @@ class Bot():
                 break
     
         pose = self.nav.create_pose_stamped(t.dest1)
+        self.ui.display("OTW. step aside. 3 secs")
+        time.sleep(3)
         self.nav.goPose(pose)
         while not self.nav.navigator.isTaskComplete():
             self.ui.display("travelling")
@@ -242,6 +265,8 @@ class Bot():
         t = transaction
 
         pose = self.nav.create_pose_stamped(t.dest2)
+        self.ui.display("OTW. step aside. 3 secs")
+        time.sleep(3)
         self.nav.goPose(pose)
         while not self.nav.navigator.isTaskComplete():
             self.ui.display("travelling")
@@ -267,6 +292,8 @@ class Bot():
             self.ui.display("Not yet Ready")
 
         pose = self.nav.create_pose_stamped(t.dest1)
+        self.ui.display("OTW. step aside. 3 secs")
+        time.sleep(3)
         self.nav.goPose(pose)
         while not self.nav.navigator.isTaskComplete():
             self.ui.display("travelling")
@@ -287,10 +314,10 @@ class Bot():
                 break    
         
     def readydrive(self, limit=100):
-        if self.dooropen():
-            return False
-        if not self.loadislighterthan(limit):
-            return False
+        # if self.dooropen():
+        #     return False
+        # if not self.loadislighterthan(limit):
+        #     return False
         self.playfor('locked')
         self.lockon()
         return True

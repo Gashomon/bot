@@ -6,8 +6,7 @@ import applicate_bot.bot.final_test as Bot
 
 import applicate_bot.modules.modules as Modules
 import applicate_bot.navigation.nav_func as Nav
-import applicate_bot.gui.gui as UI
-import applicate_bot.gui.gui as RG
+import applicate_bot.gui.guiros as UI
 import applicate_bot.comms.command_server as Server
 import applicate_bot.comms.logger as  Logger 
 
@@ -19,7 +18,7 @@ import sys
 
 def main(args=None):
     rclpy.init(args=args)
-    ui = UI.ROSUI()
+    ui = UI.UserInterface()
     
     nav = Nav.NavigationNode()
     modules = Modules.Modules()
@@ -27,25 +26,24 @@ def main(args=None):
     logger = Logger.DataLogger()
     
     bot = Bot.Bot(modules, nav, server ,ui, logger)
+    ui.goto('password')
 
-    try:
-        rclpy.spin(nav)
-        rclpy.spin(server)
-        rclpy.spin(ui)
-        ct = 0
-        while ct < 3:
-            t = bot.getcmd()
-            bot.run(t)
-            ct += 1
-        
-    except:
-        pass
+    while rclpy.ok():
+        try:
+            rclpy.spin(nav)
+            rclpy.spin(server)
+            rclpy.spin(ui)
+            ui.update()
+            # ct = 0
+            # while ct < 3:
+            #     t = bot.getcmd()
+            #     bot.run(t)
+            #     ct += 1
+            
+        except:
+            pass
 
-    else:
-        pass
-
-    finally:
-        nav.destroy_node()
-        server.destroy_node()
-        rclpy.shutdown()
+    nav.destroy_node()
+    server.destroy_node()
+    rclpy.shutdown()
 

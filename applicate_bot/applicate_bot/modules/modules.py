@@ -27,7 +27,7 @@ class Modules():
         pass
     
     # set pins to 0 to deactivate
-    def __init__(self, setlock=GPIOpins.lockpin, setloadin=GPIOpins.loadinpin, setloadout = GPIOpins.loadoutpin, setdoor=GPIOpins.doorpin, soundenable=True, soundpath='sounds/'):
+    def __init__(self, setlock= -1, setloadin= -1, setloadout = -1, setdoor= -1, soundenable=True, soundpath=''):
          
         self.device = lgpio.gpiochip_open(0)
 
@@ -41,19 +41,19 @@ class Modules():
 
         self.soundlibpath = soundpath
         
-        if self.setlock>0:
+        if self.lockpin > 0:
             self.LOCKENABLE = True
-            lgpio.gpio_claim_output(self.device, self.setlock)
+            lgpio.gpio_claim_output(self.device, self.lockpin)
         else:
             self.LOCKENABLE = False
         
-        if self.setloadin>0 and self.setloadout>0:
+        if self.loadinpin > 0 and self.loadoutpin > 0:
             self.LOADENABLE = True
-            self.hx711 = load.init_load(self.device, self.setloadin, self.setloadout)
+            self.hx711 = load.init_load(self.device, self.loadinpin, self.loadoutpin)
         else:
             self.LOADENABLE = False
 
-        if self.setdoor>0:
+        if self.doorpin > 0:
             self.DOORENABLE = True
             # lgpio.gpio_claim_input(self.device, 16)
         else:

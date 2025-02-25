@@ -25,8 +25,8 @@ class ControlUI(QMainWindow, ctrlUi):
         super(ControlUI,self).__init__()
         self.setupUi(self)
 
-        self.pushButton_2.clicked.connect(self.fetch)
-        self.pushButton_3.clicked.connect(self.deliver)
+        self.pushButton_2.clicked.connect(self.deliver)
+        self.pushButton_3.clicked.connect(self.fetch)
         self.pushButton_4.clicked.connect(self.retrieve)
         
         self.stackedWidget.hide()
@@ -34,6 +34,7 @@ class ControlUI(QMainWindow, ctrlUi):
     def fetch(self):
         self.stackedWidget.setCurrentIndex(0)
         self.stackedWidget.show()
+        
     def deliver(self):
         self.stackedWidget.setCurrentIndex(1)
         self.stackedWidget.show()
@@ -94,7 +95,6 @@ class ConfirmUI(QMainWindow, confUi):
         super(ConfirmUI,self).__init__()
         self.setupUi(self)
 
-    
     def confirm(self, quesText, b1Func, b2Func, b1Text='YES', b2Text='NO'):
         self.label_2.setText(quesText)
         self.pushButton.setText(b1Text)

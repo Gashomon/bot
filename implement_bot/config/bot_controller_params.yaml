@@ -31,7 +31,7 @@ diff_cont:
     left_wheel_radius_multiplier: 1.0 #default
     right_wheel_radius_multiplier: 1.0 #default
 
-    publish_rate: 100.0 #Hz
+    publish_rate: 16.0 #Hz
     odom_frame_id: odom
     base_frame_id: base_link 
     pose_covariance_diagonal: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0] #default
@@ -83,16 +83,16 @@ right_range_broad:
     sensor_name: right_range
     frame_id: right_range_link
     radiation_type: 0
-    field_of_view: 0.52 #default
+    field_of_view:  1.0 #0.52 #default
     min_range: 0.0 #default
-    max_range: 0.4 #default
+    max_range: 5.0 #default
 
 left_range_broad:
   ros__parameters:
     sensor_name: left_range
     frame_id: left_range_link
     radiation_type: 0
-    field_of_view: 0.52 #default
+    field_of_view: 1.0 #0.52 #default
     min_range: 0.0 #default
-    max_range: 0.4 #default
+    max_range: 5.0 #default
 
