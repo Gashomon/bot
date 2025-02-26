@@ -278,7 +278,7 @@ class BasicNavigator(Node):
         goal_msg.target = Point(x=float(dist))
         goal_msg.speed = speed
         goal_msg.time_allowance = Duration(sec=time_allowance)
-        goal_msg.disable_collision_checks = disable_collision_checks
+        # goal_msg.disable_collision_checks = disable_collision_checks
 
         self.info(f'Drive {goal_msg.target.x} m on heading at {goal_msg.speed} m/s....')
         send_goal_future = self.drive_on_heading_client.send_goal_async(

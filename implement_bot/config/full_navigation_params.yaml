@@ -31,7 +31,7 @@ amcl:
     save_pose_rate: 0.5
     sigma_hit: 0.2
     tf_broadcast: True 
-    transform_tolerance: 0.5
+    transform_tolerance: 5.0
     update_min_a: 0.2
     update_min_d: 0.25
     z_hit: 0.5
@@ -207,7 +207,7 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
 local_costmap:
   local_costmap:
     ros__parameters:
-      update_frequency: 1.0
+      update_frequency: 5.0
       global_frame: odom
       robot_base_frame: base_link
       use_sim_time: False
@@ -223,8 +223,8 @@ local_costmap:
       # plugins: ["inflation_layer","range_layer", "obstacle_layer"] 
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        cost_scaling_factor: 5.0
-        inflation_radius: 0.25
+        cost_scaling_factor: 10.0
+        inflation_radius: 0.5
       # voxel_layer:
       #   plugin: "nav2_costmap_2d::VoxelLayer"
       #   enabled: True
@@ -254,7 +254,7 @@ local_costmap:
         scan:
           topic: /ldlidar_node/scan
           max_obstacle_height: 100.0 #original 2.0
-          expected_update_rate: 100.0
+          # expected_update_rate: 100.0
           clearing: True
           marking: True
           data_type: "LaserScan"
@@ -279,7 +279,7 @@ local_costmap:
 global_costmap:
   global_costmap:
     ros__parameters:
-      update_frequency: 0.5
+      update_frequency: 1.0
       global_frame: map
       robot_base_frame: base_link
       use_sim_time: False

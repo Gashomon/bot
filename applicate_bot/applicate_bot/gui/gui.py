@@ -21,21 +21,22 @@ class UserInterface(MyGUI.GUI):
     
     def sendcmd(self, transaction, type):
         if type == 'del':
-            dest1 = self.control.comboBox_6.currentText
-            dest2 = self.control.comboBox_7.currentText
+            dest1 = self.control.comboBox_6.currentText()
+            dest2 = self.control.comboBox_7.currentText()
             ttype = 1
         if type == 'fet':
-            dest1 = self.control.comboBox_4.currentText
-            dest2 = self.control.comboBox_5.currentText
+            dest1 = self.control.comboBox_4.currentText()
+            dest2 = self.control.comboBox_5.currentText()
             ttype = 2
         if type == 'ret':
-            dest1 = self.control.comboBox_6.currentText
-            dest2 = self.control.comboBox_7.currentText
+            dest1 = self.control.comboBox_6.currentText()
+            dest2 = self.control.comboBox_7.currentText()
             ttype = 3
 
         transaction.dest1 = dest1
         transaction.dest2 = dest2
         transaction.type = ttype
+        # print(" dest 1 is " + dest1)
         return transaction
 
     def check(self, question, lvar):

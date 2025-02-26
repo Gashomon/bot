@@ -102,7 +102,7 @@
         </xacro:if>
         <xacro:property name="wheel_turn_y" value="${pi/2}"/>
         <joint name="${pos_x}_motor_joint" type="fixed">
-            <parent link="chassis_link"/>
+            <parent link="base_link"/>
             <child link="${pos_x}_caster_link"/>
             <xacro:scaled_origin_rpy x="${-(actual_bot_length/2 - actual_wheel_radius*2)}" y="${wheel_x}"  z="0" roll="0" pitch="${wheel_turn_x}" yaw="${wheel_turn_y}"/>
             <axis xyz="${axis} 0 0"/>

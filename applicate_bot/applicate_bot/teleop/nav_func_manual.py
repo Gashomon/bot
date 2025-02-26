@@ -34,11 +34,11 @@ class HousePatrolNode(Node):
         self.navigator = BasicNavigator()
 
         # Set initial pose
-        initial_pose = self.create_pose_stamped(0.0, 0.0, 0.0)
-        self.navigator.setInitialPose(initial_pose)
+        # initial_pose = self.create_pose_stamped(0.0, 0.0, 0.0)
+        # self.navigator.setInitialPose(initial_pose)
 
         # Wait for Nav2 to be active
-        self.navigator.waitUntilNav2Active()
+        # self.navigator.waitUntilNav2Active()
 
         #
         # Forward = +x
@@ -48,7 +48,7 @@ class HousePatrolNode(Node):
         
         # Set waypoints and start navigation
         waypoints = [
-            self.create_pose_stamped(0.05, 0.0, np.radians(0)), 
+            self.create_pose_stamped(0.3, 0.0, np.radians(0)), 
             self.create_pose_stamped(1.0, 0.0, np.radians(0)),
             self.create_pose_stamped(0.2, 0.3, np.radians(0)),
             self.create_pose_stamped(-3.5, 0.0, np.radians(11.31)),
@@ -113,8 +113,9 @@ class HousePatrolNode(Node):
         while(1):
             key = self.get_key(settings, key_timeout)
             if key in pop.keys():
-                dest = [self.create_pose_stamped(pop[key][0], pop[key][1], pop[key][2])]
-                self.follow_waypoints(dest)
+                # dest = [self.create_pose_stamped(pop[key][0], pop[key][1], pop[key][2])]
+                # self.follow_waypoints(dest)
+                self.navigator.driveOnHeading(speed=0.020)
                 self.get_logger().info('Finished! Press some keys...\n')
             else:
                 # self.get_logger().info('Press some keys...\n')

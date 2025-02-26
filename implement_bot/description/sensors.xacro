@@ -23,7 +23,7 @@
 
     <!-- Lidar Joint to Base Link -->
     <joint name="lidar_link_joint" type="fixed">
-        <parent link="chassis_link"/>
+        <parent link="base_link"/>
         <child link="ldlidar_link"/>
         <origin xyz="0.0 0.0 ${(scale_val* (actual_chassis_height + actual_storage_height + actual_top_height)) + 0.02 -0.7}" rpy="0.0 0.0 0.0"/>
         <!-- <origin xyz="0.0 0.0 ${(scale_val* (actual_chassis_height) + 0.02)}" rpy="0.0 0.0 0.0"/> -->
@@ -56,19 +56,18 @@
             <xacro:property name="offset_x" value="${-(actual_bot_width/3)}"/>
         </xacro:if>
         <joint name="${pos_x}_range_joint" type="fixed">
-            <parent link="chassis_link"/>
+            <parent link="base_link"/>
             <child link="${pos_x}_range_link"/>
             <xacro:scaled_origin_rpy x="${(actual_bot_length/2) + smol_offset}" y="${offset_x + 0.02}"  z="${actual_wheel_radius}" roll="0" pitch="0" yaw="0"/>
             <axis xyz="0 0 0"/>
         </joint>
 
-        
     </xacro:macro>
 
     <!-- left IR sensor -->
-    <!-- <xacro:range_link_joint pos_x="left"/> -->
+    <xacro:range_link_joint pos_x="left"/>
     <!-- right IR sensor -->
-    <!-- <xacro:range_link_joint pos_x="right"/> -->
+    <xacro:range_link_joint pos_x="right"/>
 
     <!-- IMU Link -->
     <link name="imu_link">
@@ -91,7 +90,7 @@
 
     <!-- IMU joint to base link -->
     <joint name="imu_link_joint" type="fixed">
-        <parent link="chassis_link"/>
+        <parent link="base_link"/>
         <child link="imu_link"/>
         <origin xyz="0.0 0.0 ${scale_val* 0.0}" rpy="0.0 0.0 0.0"/>
     </joint>
