@@ -14,8 +14,8 @@ slam_toolbox:
     map_frame: map
     # base_frame: base_footprint
     
-    scan_topic: gazebo/scan # simulated lidar
-    # scan_topic: ldLidar/LaserScan # real lidar
+    # scan_topic: gazebo/scan # simulated lidar
+    scan_topic: ldLidar_node/scan # real lidar
     
     use_map_saver: true
     # mode: mapping  #default

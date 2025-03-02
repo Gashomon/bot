@@ -2,42 +2,43 @@
 amcl:
   ros__parameters:
     use_sim_time: False
-    alpha1: 0.2
-    alpha2: 0.2
-    alpha3: 0.2
-    alpha4: 0.2
-    alpha5: 0.2
-    base_frame_id: "base_link"
+    # trust scores on..
+    alpha1: 0.2 # rotation pose by rotating
+    alpha2: 0.5 # rotation pose by forward/backward
+    alpha3: 0.2 # position by forward/backward 
+    alpha4: 0.2 # position by rotating
+    alpha5: 0.2 # omni model shit
+    base_frame_id: "base_link" # default footprint
     beam_skip_distance: 0.5
     beam_skip_error_threshold: 0.9
     beam_skip_threshold: 0.3
     do_beamskip: false
     global_frame_id: "map"
-    lambda_short: 0.1
-    laser_likelihood_max_dist: 5.0
-    laser_max_range: 100.0
+    lambda_short: 0.1 # tolerance to shorter objects
+    laser_likelihood_max_dist: 2.0 #obstacle detection range
+    laser_max_range: 10.0 # max distance to consider to map
     laser_min_range: -1.0
     laser_model_type: "likelihood_field"
-    max_beams: 60
-    max_particles: 2000
-    min_particles: 500
+    max_beams: 50 # number of beams to use. default 60
+    max_particles: 1800 # number of max particles for localization. default 2000
+    min_particles: 450 # number of min particles for localization. default 500
     odom_frame_id: "odom"
-    pf_err: 0.05
-    pf_z: 0.99
+    pf_err: 0.05 # filter removal due to errors. default 0.05
+    pf_z: 0.9 # filter to hold particles. default 0.99
     recovery_alpha_fast: 0.0
     recovery_alpha_slow: 0.0
-    resample_interval: 1
+    resample_interval: 1 # update rate every movement.
     robot_model_type: "nav2_amcl::DifferentialMotionModel"
-    save_pose_rate: 0.5
-    sigma_hit: 0.2
+    save_pose_rate: 0.25 # Hz for updating for pose parameter server
+    sigma_hit: 0.2 # checker to match sensor readings. Higher = more tolerant
     tf_broadcast: True 
-    transform_tolerance: 5.0
-    update_min_a: 0.2
-    update_min_d: 0.25
-    z_hit: 0.5
-    z_max: 0.05
-    z_rand: 0.5
-    z_short: 0.05
+    transform_tolerance: 1.0 # duration for the transforms to be valid
+    update_min_a: 0.1 # update rate in radians for rotating. default 0.25
+    update_min_d: 0.1 # update rate in meters for moving. default 0.25
+    z_hit: 0.001 # trust that sensor readings are perfect to map. default  0.5
+    z_max: 0.1 # trust that max sensor reads are correct. default 0.05
+    z_rand: 1.0 # trust on sensor readings that deosn't make sense on map
+    z_short: 0.05 # trust on sensor
     scan_topic: /ldlidar_node/scan
     # added initial pose
     set_initial_pose: true
@@ -56,8 +57,11 @@ bt_navigator: # Main Navigator. Compiles everything else. Lists all major naviga
     robot_base_frame: base_link
     # odom_topic: "/diff_cont/odom"
     odom_topic: "/ekf/odom"
-    bt_loop_duration: 500
-    default_server_timeout: 1000
+    bt_loop_duration: 100 # ms for bt to think . default 10
+    default_server_timeout: 100 # ms to wait for a server response. default 20. overwritten if specified in server
+    wait_for_service_timeout: 1000 # ms to wait for a service response. default 1000. overwritten if specified in service
+    action_server_result_timeout: 600 # seconds to wait for action server to finish. default 900. overwritten if specified in server
+    transform tolerance: 0.3 # how long until transforms are invalid. default 0.1
     # 'default_nav_through_poses_bt_xml' and 'default_nav_to_pose_bt_xml' are use defaults:
     # nav2_bt_navigator/navigate_to_pose_w_replanning_and_recovery.xml
     # nav2_bt_navigator/navigate_through_poses_w_replanning_and_recovery.xml
@@ -125,91 +129,135 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
     # bond_heartbeat_period: 5.0
     # odom_topic: "/diff_cont/odom"
     odom_topic: "/ekf/odom"
-    controller_frequency: 1.0
-    min_x_velocity_threshold: 0.0       #if less than this value, auto set to zero 
-    min_y_velocity_threshold: 0.0       #if less than this value, auto set to zero 
-    min_theta_velocity_threshold: 0.0   #if less than this value, auto set to zero 
-    failure_tolerance: 0.0      # positive: timeout, zero: disabled, -1: infinite
+    controller_frequency: 2.0 # speed of controller
+    # costmap_update_timeout: 0.5 # waiting time for costmaps. default 0.3. notdoc
+    min_x_velocity_threshold: 0.0001       #if less than this value, read as zero 
+    min_y_velocity_threshold: 0.5       #if less than this value, read as zero 
+    min_theta_velocity_threshold: 0.0001   #if less than this value, read as zero 
+    failure_tolerance: 0.5      # give up param (seconds). positive: timeout, zero: disabled, -1: infinite
     publish_zero_velocity: true
-    progress_checker_plugins: "progress_checker"
+    progress_checker_plugin: "progress_checker"
     goal_checker_plugins: ["general_goal_checker"]
     controller_plugins: ["FollowPath"]
     # Progress checker parameters
     progress_checker:
       plugin: "nav2_controller::SimpleProgressChecker"
-      required_movement_radius: 0.5
-      movement_time_allowance: 10.0
+      required_movement_radius: 0.2 # need to atleast move in meters. default 0.5
+      movement_time_allowance: 3.0 # time to take most to move in seconds. default 10.0
     # Goal checker parameters
     general_goal_checker:
       plugin: "nav2_controller::SimpleGoalChecker"
       stateful: True
-      xy_goal_tolerance: 0.2
-      yaw_goal_tolerance: 0.2
+      xy_goal_tolerance: 0.4 # error in meters on the actual goal
+      yaw_goal_tolerance: 2.0 # error in radians on the actual goal
+    # Rotate Shim Controller
+    Follow:Path:  
+      plugin: "nav2_rotation_shim_controller::RotationShimController"
+      primary_controller: "reg_pure_pursuit"
+      angular_dist_threshold: 0.785 # radians
+      forward_sampling_distance: 0.3 # meters
+      angular_disengage_threshold: 0.3925 # rad/s
+      rotate_to_heading_angular_vel: 1.8
+      max_angular_accel: 3.0
+      simulate_ahead_time: 2.0
+      rotate_to_goal_heading: false
+      closed_loop: false # default true
+      
+      reg_pure_pursuit:
+        plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
+        desired_linear_vel: 0.35
+        lookahead_dist: 1.5
+        min_lookahead_dist: 0.3
+        max_lookahead_dist: 0.9
+        lookahead_time: 1.5
+        rotate_to_heading_angular_vel: 1.0S
+        transform_tolerance: 0.5
+        use_velocity_scaled_lookahead_dist: true
+        min_approach_linear_velocity: 0.05
+        approach_velocity_scaling_dist: 0.6
+        use_collision_detection: true
+        max_allowed_time_to_collision_up_to_carrot: 1.8
+        use_regulated_linear_velocity_scaling: true
+        use_fixed_curvature_lookahead: false
+        curvature_lookahead_dist: 0.25
+        use_cost_regulated_linear_velocity_scaling: true
+        regulated_linear_scaling_min_radius: 1.0
+        regulated_linear_scaling_min_speed: 0.3
+        use_rotate_to_heading: true
+        allow_reversing: false
+        rotate_to_heading_min_angle: 0.785
+        max_angular_accel: 3.2
+        max_robot_pose_search_dist: 5.0
+        use_cancel_deceleration: true # default false
+        cancel_deceleration: 3.2 
+      
     # DWB parameters
-    FollowPath:
-      plugin: "dwb_core::DWBLocalPlanner"
-      # DWB Controller
-      debug_trajectory_details: false
-      transform_tolerance: 1.0
-      # PathDist.scale: 32.0
-      # GoalDist.scale: 24.0
-      # PathAlign.scale: 32.0
-      # GoalAlign.scale: 24.0
-      critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "GoalAlign", "PathAlign", "PathDist", "GoalDist", "PreferForward", "ObstacleFootprint"]
-      # DWB Trajectory Critics
-      BaseObstacle.scale: 40.0
-      ObstacleFootprint.scale: 50.0 
+    # FollowPath:
+    #   plugin: "dwb_core::DWBLocalPlanner"
+    #   # DWB Controller
+    #   debug_trajectory_details: false
+    #   transform_tolerance: 1.0
+    #   # PathDist.scale: 32.0
+    #   # GoalDist.scale: 24.0
+    #   # PathAlign.scale: 32.0
+    #   # GoalAlign.scale: 24.0
+    #   critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "GoalAlign", "PathAlign", "PathDist", "GoalDist", "PreferForward", "ObstacleFootprint"]
+    #   # DWB Trajectory Critics
+    #   BaseObstacle.scale: 40.0
+    #   ObstacleFootprint.scale: 50.0 
 
-      PathAlign.scale: 20.0
-      GoalAlign.scale: 20.0
-      PathDist.scale: 32.0
-      GoalDist.scale: 24.0      
-      PathAlign.forward_point_distance: 1.0
-      GoalAlign.forward_point_distance: 1.0
+    #   PathAlign.scale: 20.0
+    #   GoalAlign.scale: 20.0
+    #   PathDist.scale: 32.0
+    #   GoalDist.scale: 24.0      
+    #   PathAlign.forward_point_distance: 1.0
+    #   GoalAlign.forward_point_distance: 1.0
 
-      RotateToGoal.scale: 1.0
-      RotateToGoal.slowing_factor: 1.0
-      RotateToGoal.lookahead_time: -1.0
+    #   RotateToGoal.scale: 1.0
+    #   RotateToGoal.slowing_factor: 1.0
+    #   RotateToGoal.lookahead_time: -1.0
 
-      xy_goal_tolerance: 0.0
-      trans_stopped_velocity: 0.1
+    #   xy_goal_tolerance: 0.0
+    #   trans_stopped_velocity: 0.1
       
-      Oscillation.scale: 1.0
-      PreferForwardCritic.scale: 10.0
-      PreferForwardCritic.penalty: 2.0
+    #   Oscillation.scale: 1.0
+    #   PreferForwardCritic.scale: 10.0
+    #   PreferForwardCritic.penalty: 2.0
       
-      # Kinematics (all defaults to zero)
-      min_vel_x: 0.0
-      min_vel_y: 0.0
-      max_vel_x: 5.0
-      max_vel_y: 0.0
-      min_speed_theta: 0.0
-      max_vel_theta: 5.0
-      min_speed_xy: 0.0
-      max_speed_xy: 5.0
-      acc_lim_x: 10.0
-      acc_lim_y: 0.0
-      acc_lim_theta: 10.0
-      decel_lim_x: -10.0
-      decel_lim_y: 0.0
-      decel_lim_theta: -10.0
+    #   # Kinematics (all defaults to zero)
+    #   min_vel_x: 0.0
+    #   min_vel_y: 0.0
+    #   max_vel_x: 5.0
+    #   max_vel_y: 0.0
+    #   min_speed_theta: 0.0
+    #   max_vel_theta: 5.0
+    #   min_speed_xy: 0.0
+    #   max_speed_xy: 5.0
+    #   acc_lim_x: 10.0
+    #   acc_lim_y: 0.0
+    #   acc_lim_theta: 10.0
+    #   decel_lim_x: -10.0
+    #   decel_lim_y: 0.0
+    #   decel_lim_theta: -10.0
 
-      # XYTheta Iterator
-      vx_samples: 20
-      vy_samples: 0
-      vtheta_samples: 20
+    #   # XYTheta Iterator
+    #   vx_samples: 20
+    #   vy_samples: 0
+    #   vtheta_samples: 20
 
-      # StandardTrajectoryGenerator & LimitedAccelGenerator
-      sim_time: 1.0
-      linear_granularity: 0.5
-      angular_granularity: 0.25
+    #   # StandardTrajectoryGenerator & LimitedAccelGenerator
+    #   sim_time: 1.0
+    #   linear_granularity: 0.5
+    #   angular_granularity: 0.25
 
 local_costmap:
   local_costmap:
     ros__parameters:
       update_frequency: 5.0
+      publish_frequency: 5.0
       global_frame: odom
       robot_base_frame: base_link
+      rolling_window: true
       use_sim_time: False
       resolution: 0.5
       robot_radius: 0.3233
@@ -218,13 +266,9 @@ local_costmap:
       origin_x: -1.97
       origin_y: -4.24
       map_vis_z: 0.0
-      # plugins: ["static_layer", "obstacle_layer", "inflation_layer", "range_layer"]
-      plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
-      # plugins: ["inflation_layer","range_layer", "obstacle_layer"] 
-      inflation_layer:
-        plugin: "nav2_costmap_2d::InflationLayer"
-        cost_scaling_factor: 10.0
-        inflation_radius: 0.5
+      plugins: ["obstacle_layer","range_layer", "inflation_layer", ]
+      # plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
+      # plugins: ["inflation_layer","range_layer", "obstacle_layer"]
       # voxel_layer:
       #   plugin: "nav2_costmap_2d::VoxelLayer"
       #   enabled: True
@@ -250,36 +294,41 @@ local_costmap:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: True
         observation_sources: scan
-        max_obstacle_height: 100.0 #original 2.0
+        max_obstacle_height: 5.0 #original 2.0
         scan:
           topic: /ldlidar_node/scan
-          max_obstacle_height: 100.0 #original 2.0
+          max_obstacle_height: 5.0 #original 2.0
           # expected_update_rate: 100.0
           clearing: True
           marking: True
           data_type: "LaserScan"
-          raytrace_max_range: 5.0
+          raytrace_max_range: 10.0
           raytrace_min_range: 0.0
           obstacle_max_range: 5.0
           obstacle_min_range: 0.0
-      static_layer:
-        plugin: "nav2_costmap_2d::StaticLayer"
-        # map_topic: /no_map
-        map_subscribe_transient_local: True
-      # range_layer:
-      #   plugin: "nav2_costmap_2d::RangeSensorLayer"
-      #   topics: ["/left_range_broad/range","/right_range_broad/range"]
-      #   phi: 1.2
-      #   clear_threshold: 0.8
-      #   clear_on_max_reading: False
-      #   mark_thresold:  0.2
-      #   input_sensor_type: 'VARIABLE'
+      # static_layer:
+      #   plugin: "nav2_costmap_2d::StaticLayer"
+      #   # map_topic: /no_map
+      #   map_subscribe_transient_local: True
+      range_layer:
+        plugin: "nav2_costmap_2d::RangeSensorLayer"
+        topics: ["/left_range_broad/range","/right_range_broad/range"]
+        phi: 1.2
+        clear_threshold: 0.8
+        clear_on_max_reading: False
+        mark_thresold:  0.2
+        input_sensor_type: 'ALL'
+      inflation_layer:
+        plugin: "nav2_costmap_2d::InflationLayer"
+        cost_scaling_factor: 10.0
+        inflation_radius: 1.0
       always_send_full_costmap: True
 
 global_costmap:
   global_costmap:
     ros__parameters:
-      update_frequency: 1.0
+      update_frequency: 2.0
+      publish_frequency: 2.0
       global_frame: map
       robot_base_frame: base_link
       use_sim_time: False
@@ -288,31 +337,39 @@ global_costmap:
       height: 10
       origin_x: -1.97
       origin_y: -4.24
-      resolution: 0.1
+      resolution: 0.5
       track_unknown_space: true
-      # plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
-      plugins: ["static_layer", "inflation_layer"]
-      # obstacle_layer:
-      #   plugin: "nav2_costmap_2d::ObstacleLayer"
-      #   enabled: True
-      #   observation_sources: scan
-      #   scan:
-      #     topic: /ldlidar_node/scan
-      #     max_obstacle_height: 5.0 #original 2.0
-      #     clearing: True
-      #     marking: True
-      #     data_type: "LaserScan"
-      #     raytrace_max_range: 3.0
-      #     raytrace_min_range: 0.0
-      #     obstacle_max_range: 5.0
-      #     obstacle_min_range: 0.0
+      plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
+      # plugins: ["static_layer", "inflation_layer"]
+      filters: ["keepout_filter"]
+      obstacle_layer:
+        plugin: "nav2_costmap_2d::ObstacleLayer"
+        enabled: True
+        observation_sources: scan
+        max_obstacle_height: 5.0 #original 2.0
+        scan:
+          topic: /ldlidar_node/scan
+          max_obstacle_height: 5.0 #original 2.0
+          # expected_update_rate: 100.0
+          clearing: True
+          marking: True
+          data_type: "LaserScan"
+          raytrace_max_range: 10.0
+          raytrace_min_range: 0.0
+          obstacle_max_range: 5.0
+          obstacle_min_range: 0.0
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"
         map_subscribe_transient_local: True
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 5.0
-        inflation_radius: 0.25
+        inflation_radius: 0.5
+      keepout_filter:
+        plugin: "nav2_costmap_2d::KeepoutFilter"
+        enabled: True
+        filter_info_topic: "/map_filter"
+        transform_tolerance: 0.1
       always_send_full_costmap: True
 
 map_server: # loads the map
@@ -320,7 +377,19 @@ map_server: # loads the map
     use_sim_time: False
     # Overridden in launch by the "map" launch configuration or provided default value.
     # To use in yaml, remove the default "map" value in the tb3_simulation_launch.py file & provide full path to map below.
-    yaml_filename: "src/bot/implement_bot/maps/modded_actual.yaml"
+    # yaml_filename: "src/bot/implement_bot/maps/modded_actual.yaml"
+    yaml_filename: "src/bot/implement_bot/maps/keepout_map.yaml"
+    topic_name: "map"
+    frame_id: "map"
+    
+keepout_filter:
+  ros__parameters:
+    use_sim_true: False
+    type: 0
+    filter_info_topic: "/map_filter"
+    mask_topic: "map"
+    base: 0.0
+    multiplier: 1.0
 
 map_saver: # stores a map
   ros__parameters:
@@ -332,7 +401,7 @@ map_saver: # stores a map
 
 planner_server: # Uses map and generates Path
   ros__parameters:
-    expected_planner_frequency: 2.0
+    expected_planner_frequency: 20.0
     use_sim_time: False
     planner_plugins: ["GridBased"]
     # bond_heartbeat_period: 1.0
@@ -360,14 +429,14 @@ behavior_server: # lists all basic drive functions
   ros__parameters:
     use_sim_time: false     #somehow not used
     # bond_heartbeat_peroid: 1.0
-    global_frame: odom
+    # global_frame: odom
     robot_base_frame: base_link
     transform_tolerance: 0.1
-    costmap_topic: local_costmap/costmap_raw
-    footprint_topic: local_costmap/published_footprint
-    action_server_result_timeout: 600
+    # costmap_topic: local_costmap/costmap_raw
+    # footprint_topic: local_costmap/published_footprint
+    # action_server_result_timeout: 600
     
-    cycle_frequency: 3.0
+    cycle_frequency: 10.0
     behavior_plugins: ["spin", "backup", "drive_on_heading", "assisted_teleop", "wait"]
     # behavior_plugins: ["backup", "drive_on_heading", "assisted_teleop", "wait"]
     spin:
@@ -392,8 +461,8 @@ behavior_server: # lists all basic drive functions
     assisted_teleop:
       plugin: "nav2_behaviors/AssistedTeleop"
     
-    simulate_ahead_time: 3.0  # Time to look ahead of collision (s) (spin, backup, driveon)
-    projection_time: 3.0      # Time to look ahead of collision (s) (assistedteleop, backup, driveon)
+    simulate_ahead_time: 0.8  # Time to look ahead of collision (s) (spin, backup, driveon)
+    projection_time: 0.8      # Time to look ahead of collision (s) (assistedteleop, backup, driveon)
     simulation_time_step: 1.0 # Time step for projections (s) (assistedteleop)
     # cmd_vel_teleop:           # Topic to listen for teleopmessages (assistedteleop)
 
@@ -405,7 +474,7 @@ waypoint_follower: # waypoint special configurations
   ros__parameters:
     use_sim_time: False
     # bond_heartbeat_period: 1.0 
-    loop_rate: 10
+    loop_rate: 2
     stop_on_failure: false
     waypoint_task_executor_plugin: "wait_at_waypoint"
     wait_at_waypoint:
@@ -421,15 +490,56 @@ velocity_smoother:  #additional velocity control
     scale_velocities: False
     # feedback: "CLOSED_LOOP" # should be close
     feedback: "OPEN_LOOP"
-    max_velocity: [300.0, 0.0, 350.0]
-    min_velocity: [-300.0, 0.0, -350.0]
-    max_accel: [100.0, 0.0, 50.0]
-    max_decel: [-100.0, 0.0, -50.0]
+    max_velocity:  [0.5, 0.0, 2.5]
+    min_velocity: [-0.5, 0.0, -2.5]
+    max_accel: [2.5, 0.0, 3.2]
+    max_decel: [-2.5, 0.0, -3.2]
     # odom_topic: "/diff_cont/odom"
     odom_topic: "/ekf/odom"
     odom_duration: 0.1
     deadband_velocity: [0.0, 0.0, 0.0]
     velocity_timeout: 5.0
+
+collision_monitor:
+  ros__parameters:
+    base_frame_id: "base_link"
+    odom_frame_id: "odom"
+    cmd_vel_in_topic: "cmd_vel_nvs"
+    cmd_vel_out_topic: "cmd_vel_nav"
+    state_topic: "collision_monitor_state"
+    transform_tolerance: 0.5
+    source_timeout: 5.0
+    base_shift_correction: False
+    stop_pub_timeout: 2.0
+    enable_stamped_cmd_vel: True  # False for Jazzy or older
+    use_realtime_priority: false
+    polygons: ["PolygonStop", "PolygonSlow"]
+    PolygonSlow:
+      type: "polygon"
+      points: "[[1.0, 1.0], [1.0, -1.0], [-0.5, -1.0], [-0.5, 1.0]]"
+      action_type: "slowdown"
+      min_points: 4  # max_points: 3 for Humble
+      slowdown_ratio: 0.3
+      visualize: True
+      polygon_pub_topic: "polygon_slowdown"
+      enabled: True
+    PolygonStop:
+      type: "polygon"
+      points: "[[0.5, 0.5], [0.5, -0.5], [-0.5, -0.5], [-0.5, 0.5]]"
+      action_type: "limit"
+      min_points: 4  # max_points: 3 for Humble
+      linear_limit: 0.4
+      angular_limit: 0.5
+      visualize: True
+      polygon_pub_topic: "polygon_stop"
+      enabled: True
+    observation_sources: ["scan"]
+    scan:
+      source_timeout: 0.2
+      type: "scan"
+      topic: "/ldlidar_node/scan"
+      enabled: True
+
 
 robot_state_publisher:
   ros__parameters:

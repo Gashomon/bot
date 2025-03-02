@@ -1,17 +1,17 @@
 ekf_node:
     ros__parameters:
       use_sim_time: False
-      frequency: 10.0 # needs fixing. causes update rate failure messages even at low Hz
-      sensor_timeout: 0.0
+      frequency: 30.0 # needs fixing. causes update rate failure messages even at low Hz
+      sensor_timeout: 0.034
       two_d_mode: true
       transform_time_offset: 0.0
-      transform_timeout: 0.0
+      transform_timeout: 0.15
       print_diagnostics: false
       debug: false
       publish_tf: true
       publish_acceleration: true
       reset_on_time_jump: false
-      predict_to_current_time: true
+      # predict_to_current_time: true
 
       # initial_state: [0.0, 0.0, 0.0,
       #                 0.0, 0.0, 0.0,
@@ -28,14 +28,14 @@ ekf_node:
       
       odom0_config: [false, false, false,
                      false, false, false,
-                     true,  false, false,
+                     true,  true, false,
                      false, false, true,
-                     true, false, false]
+                     false, false, false]
 
       # odom0_nodelay: false
       # odom0_differential: false
       odom0_relative: true
-      odom0_queue_size: 500
+      odom0_queue_size: 100
       # odom0_pose_rejection_threshold: 5.0               
       # odom0_twist_rejection_threshold: 5.0                
 
@@ -66,7 +66,7 @@ ekf_node:
       # imu0_nodelay: false
       # imu0_differential: true
       imu0_relative: true
-      imu0_queue_size: 500
+      imu0_queue_size: 100
       # imu0_pose_rejection_threshold: 0.5                 
       # imu0_twist_rejection_threshold: 5.0                
       # imu0_linear_acceleration_rejection_threshold: 5.0  
@@ -81,7 +81,7 @@ ekf_node:
       # acceleration_gains: [0.8, 0.0, 0.0, 0.0, 0.0, 0.9]
       # deceleration_gains: [1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
       # process_noice_covariance: [10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0]
-      dynamic_process_noise_covariance: true
+      # dynamic_process_noise_covariance: true  
       # process_noice_covariance: [0.0, 0.0, 0.0, #pos
       #                               0.0, 0.0, 0.0, #ori
       #                               0.0, 0.0, 0.0, #velpos

@@ -34,7 +34,8 @@ setup(
             'botcont = applicate_bot.bot_control:main',
             'sample_gui = applicate_bot.gui.pre_ui.MyGUI:main',
             'appbot = applicate_bot.app_bot:main',
-            'test = applicate_bot.bot.test_simple:main'
+            'test = applicate_bot.bot.test_simple:main',
+            'bot  = applicate_bot.bot.simplebot:main'
         ],
     },
 )

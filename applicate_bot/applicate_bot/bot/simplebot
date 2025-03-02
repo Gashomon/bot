@@ -3,9 +3,7 @@ import random
 import time
 
 from applicate_bot.modules.modules import Modules as Modules
-# import applicate_bot.navigation.nav_func as Nav
 from applicate_bot.navigation.modded_robot_navigator import BasicNavigator as Navigator
-# import applicate_bot.gui.guiros as UI
 from applicate_bot.gui.gui import UserInterface as UI
 from applicate_bot.comms.command_server import ServerSub as Server
 from applicate_bot.comms.logger import DataLogger as Logger 
@@ -20,7 +18,6 @@ import numpy as np
 from std_msgs.msg import String
 
 longsituationslist = {}
-# shortsituationslist = {'load'} # unneeded list
 
 destinationlist = {
     'Initial': (0.0, 0.0, 0.0),
@@ -296,131 +293,6 @@ class Bot(Node):
 
         return False
 
-    def fetch(self, transaction):
-        # TODO remove weight checking
-        t = transaction
-
-        pose = self.create_pose_stamped(t.dest1)
-        self.ui.display("OTW. step aside. 3 secs")
-        time.sleep(3)
-        self.goPose(pose)
-        while not self.navigator.isTaskComplete():
-            self.ui.display("travelling")
-        
-        q = "r u user?"
-        while not self.ui.check(q):
-            pass
-        
-        while not self.ui.verifyuser(t.password):
-            pass
-        
-        self.lockoff()
-
-        while True:
-            while not self.loadislighterthan(20000):
-                self.ui.display("Load too heavy")
-
-            q = "ready to go?"
-            if self.ui.check(q):
-                break
-
-        pose = self.create_pose_stamped(t.dest2)
-        self.ui.display("OTW. step aside. 3 secs")
-        time.sleep(3)
-        self.goPose(pose)
-        while not self.navigator.isTaskComplete():
-            self.ui.display("travelling")
-
-        q = "r u user?"
-        while not self.ui.check(q):
-            pass
-        
-        while not self.ui.verifyuser(t.password):
-            pass
-
-        self.lockoff()
-
-        while True:
-
-            q = "ready to go?"
-            if self.ui.check(q):
-                break
-    
-        pose = self.create_pose_stamped(t.dest1)
-        self.ui.display("OTW. step aside. 3 secs")
-        time.sleep(3)
-        self.goPose(pose)
-        while not self.navigator.isTaskComplete():
-            self.ui.display("travelling")
-        
-        q = "r u user?"
-        while not self.ui.check(q):
-            pass
-        
-        while not self.ui.verifyuser(t.password):
-            pass
-        
-        self.lockoff()
-
-        while True:
-
-            q = "ready to go?"
-            if self.ui.check(q):
-                break
-
-    def retrieve(self, transaction):
-        # TODO remove weight checking
-        t = transaction
-
-        pose = self.create_pose_stamped(t.dest2)
-        self.ui.display("OTW. step aside. 3 secs")
-        time.sleep(3)
-        self.goPose(pose)
-        while not self.navigator.isTaskComplete():
-            self.ui.display("travelling")
-        
-        q = "r u user?"
-        while not self.ui.check(q):
-            pass
-        
-        while not self.ui.verifyuser(t.password):
-            pass
-        
-        self.lockoff()
-
-        while True:
-            while not self.loadislighterthan(20000):
-                self.ui.display("Load too heavy")
-
-            q = "ready to go?"
-            if self.ui.check(q):
-                break
-                    
-        while not self.readydrive():
-            self.ui.display("Not yet Ready")
-
-        pose = self.create_pose_stamped(t.dest1)
-        self.ui.display("OTW. step aside. 3 secs")
-        time.sleep(3)
-        self.goPose(pose)
-        while not self.navigator.isTaskComplete():
-            self.ui.display("travelling")
-
-        q = "r u user?"
-        while not self.ui.check(q):
-            pass
-        
-        while not self.ui.verifyuser(t.password):
-            pass
-
-        self.lockoff()
-
-        while True:
-
-            q = "ready to go?"
-            if self.ui.check(q):
-                break    
-        
     def genpass(self):
         password = ""
         for i in range(4):

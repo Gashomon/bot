@@ -2,11 +2,11 @@ twist_mux:
   ros__parameters:
     use_stamped: False
     topics:
-      smoothed:
-        topic: cmd_vel_nvs
+      navigation_collision_applied:
+        topic: cmd_vel_nav
         timeout: 0.1
         priority: 20
-      navigation:
+      basic:
         topic: cmd_vel
         timeout: 0.10
         priority: 10

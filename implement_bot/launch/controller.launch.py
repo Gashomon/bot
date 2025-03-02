@@ -47,22 +47,13 @@ def generate_launch_description():
         condition = IfCondition(jsp_on)
         )
 
-    twist_params = os.path.join(pkg_path, 'config', 'twist_mux.yaml')
-    twist_remaps = Node(
-        package="twist_mux",
-        executable="twist_mux",
-        parameters=[twist_params, {use_sim_time:True}],
-        remappings=[('/cmd_vel_out', '/diff_cont/cmd_vel_unstamped')]
-    )
-        
     # real robot controller manager
     controller_yaml_file = os.path.join(
         get_package_share_directory('implement_bot'),
         'config',
         'bot_controller_params.yaml'
     )
-
-    robobo = Command(['ros2 param get --hide-type /robot_state_publisher robot_description'])
+    
     real_bot_controller = Node(
         package="controller_manager",
         executable="ros2_control_node",
@@ -75,19 +66,6 @@ def generate_launch_description():
     
     delayed_controller_manager = TimerAction(period=5.0, actions=[real_bot_controller])
 
-    # delayed_controller_manager = RegisterEventHandler(
-    #     event_handler=OnProcessStart(
-    #         target_action=delayed_robot_params,
-    #         on_start=[real_bot_controller],
-    #     )
-    # )    
-    
-    # just controller manager
-    controller_manager = Node(
-        package="controller_manager",
-        executable="ros2_control_node",
-     ) 
-    
     #added ROS2 control spawners 
     diff_drive_spawner = Node(
         package="controller_manager",
@@ -146,26 +124,7 @@ def generate_launch_description():
             on_start=[right_range_spawner, left_range_spawner],
         )
     )
-
-    ekf_params = os.path.join(pkg_path, 'config', 'ekf_params.yaml')
-    ekf = Node(
-        package="robot_localization",
-        executable="ekf_node",
-        name="ekf_node",
-        output="log",
-        respawn = True,
-        respawn_delay=2.0,
-        parameters=[ekf_params],
-        remappings=[("odometry/filtered", "ekf/odom")],
-    )
-
-    delayed_ekf = RegisterEventHandler(
-        event_handler=OnProcessStart(
-            target_action= imu_broad_spawner,
-            on_start=[ekf],
-        )
-    )
-
+    
     # Launch!
     return LaunchDescription([
         DeclareLaunchArgument(
@@ -173,28 +132,14 @@ def generate_launch_description():
             default_value = 'false',
             description = 'Use sim time if true'
         ),
-        DeclareLaunchArgument(
-            'jsp_on',
-            default_value = 'false',
-            choices = ['true', 'false'],
-            description = 'Actviate joint state publisher'
-        ),
-
+        
         robot_state_publisher,
-        # joint_state_publisher,
-        twist_remaps,
-
-        #simulation 
-        # controller_manager,
-        # diff_drive_spawner,
-        # joint_broad_spawner
 
         # real bot
         delayed_controller_manager,
         delayed_diff_drive_spawner,
         delayed_joint_broad_spawner,
         delayed_imu_broad_spawner,
-        delayed_range_broad_spawner,
-        delayed_ekf
+        delayed_range_broad_spawner
 
     ])

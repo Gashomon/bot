@@ -26,6 +26,7 @@ def generate_launch_description():
     # Launch arguments
     declare_node_name_cmd = DeclareLaunchArgument(
         'node_name',
+        # default_value='ldlidar_node',
         default_value='ldlidar_node',
         description='Name of the node'
     )

@@ -3,7 +3,7 @@ from PySide6 import QtWidgets
 from PySide6.QtWidgets import QMainWindow, QApplication
 from PySide6.QtUiTools import QUiLoader
 
-import applicate_bot.gui.pre_ui.MyGUI as MyGUI
+import applicate_bot.gui.real_ui.MyGUI as MyGUI
 
 PAGES = {
     'main': 0,
@@ -12,6 +12,7 @@ PAGES = {
     'password' : 3,
     'confirm' : 4
 }
+
 class UserInterface(MyGUI.GUI):
     def __init__(self):     
         super(MyGUI.GUI, self).__init__()
@@ -19,24 +20,22 @@ class UserInterface(MyGUI.GUI):
     def goto(self, page):
         self.widget.setCurrentIndex(PAGES.get(page))
     
-    def sendcmd(self, transaction, type):
-        if type == 'del':
-            dest1 = self.control.comboBox_6.currentText()
-            dest2 = self.control.comboBox_7.currentText()
+    def sendcmd(self, transaction):
+        type = self.control.label.text()
+        ttype = 0
+        if type == 'Delivery Mode':
             ttype = 1
-        if type == 'fet':
-            dest1 = self.control.comboBox_4.currentText()
-            dest2 = self.control.comboBox_5.currentText()
+        if type == 'Fetch Mode':
             ttype = 2
-        if type == 'ret':
-            dest1 = self.control.comboBox_6.currentText()
-            dest2 = self.control.comboBox_7.currentText()
+        if type == 'Retrieve Mode':
             ttype = 3
 
+        # dest1 = self.control.comboBox_4.currentText()
+        dest1 = "Home"
+        dest2 = self.control.comboBox_5.currentText()
         transaction.dest1 = dest1
         transaction.dest2 = dest2
         transaction.type = ttype
-        # print(" dest 1 is " + dest1)
         return transaction
 
     def check(self, question, lvar):
@@ -73,6 +72,14 @@ class UserInterface(MyGUI.GUI):
         self.status.label.setText(mainT)
         self.status.label_2.setText(subT)
         self.goto('status')
+
+    def disableRun(self):
+        self.control.pushButton_5.setDisabled(True)
+        self.control.pushButton_5.setStyleSheet("background-color: #4d4c4c; color: white; border-radius: 10px;")
+
+    def enableRun(self):
+        self.control.pushButton_5.setDisabled(False)
+        self.control.pushButton_5.setStyleSheet("background-color: #3867d6; color: white; border-radius: 10px;")
 
 if __name__ == "__main__":
     ui = UserInterface()
