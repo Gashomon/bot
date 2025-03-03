@@ -98,15 +98,15 @@ class Bot(Node):
         value = self.modules.getLoad()
         # set value to label if ever
         if value > 10000:
-            #set colors
+            #set colors #eb4034
             #set heavy
             pass
         elif value > 5000:
-            #set colors
+            #set colors #9beb34
             #set medium
             pass
         else:
-            #set colors
+            #set colors #34eb80
             #set ok
             pass
         pass
@@ -131,26 +131,9 @@ class Bot(Node):
         pose.pose.orientation.z = q_z
         pose.pose.orientation.w = q_w
         return pose
-
-    def follow_waypoints(self, waypoints):
-        self.navigator.followWaypoints(waypoints)
-        while not self.navigator.isTaskComplete():
-            feedback = self.getFeedback()
-            self.get_logger().info('Navigation Feedback: %s' % feedback)
-        result = self.navigator.getResult()
-        self.get_logger().info('Navigation Result: %s' % result)
-    
-    def simpleDrive(self, destinations, dest): #only destination points
-        if destinations.get(dest) is not None:
-            station = [
-                self.create_pose_stamped(destinations[dest][0], destinations[dest][1], destinations[dest][2])  
-            ]
-            self.follow_waypoints(station)
-        else:
-            print('wrong points')
-        return
     
     def goPose(self, pose):
+        # TODO merge pose stamp creation here
         self.navigator.goToPose(pose)
 
     # MODULES STUFF
@@ -179,6 +162,8 @@ class Bot(Node):
         self.ui.goto("control") 
 
         t = Transaction()
+        self.ui.control.receiver_name.setText("Enter Receiver's Name")
+        self.ui.control.sender_name.setText("Enter Sender's Name")
         self.ui.control.pushButton_5.clicked.connect(
             lambda: self.ui.sendcmd(t))
         while t.dest1 is None or t.dest2 is None:
@@ -222,21 +207,21 @@ class Bot(Node):
             if ex[0] is False:
                 return True
 
-        self.ui.display("Robot is Leaving in 5 seconds. Please step aside.")
+        self.ui.display(mainT ="Robot is Leaving in 5 seconds. Please step aside.")
         time.sleep(5)
         self.playfor('leaving')
         
         self.lockon()
 
         #turn off screen
-        self.ui.display("travelling")
+        # self.ui.display("travelling")
 
         tp = destinationlist.get(t.dest2)
         pose = self.create_pose_stamped(tp[0], tp[1], tp[2])
-        self.goPose(pose)
+        # self.goPose(pose)
 
-        while not self.navigator.isTaskComplete():
-            self.run_updates()
+        # while not self.navigator.isTaskComplete():
+        #     self.run_updates()
             
         #turn on screen
 
@@ -255,16 +240,17 @@ class Bot(Node):
         while ex[0] is not True:
             self.run_updates()
             if ex[0] is False:
-                self.ui.display(msg1 = "Please notify whomever has the passcode")
+                print('not user daw')
+                self.ui.display(mainT = "Please notify whomever has the passcode")
                 time.sleep(1)
-                self.ui.display(msg1 = "Please notify whomever has the passcode.")
+                self.ui.display(mainT = "Please notify whomever has the passcode.")
                 time.sleep(1)
-                self.ui.display(msg1 = "Please notify whomever has the passcode..")
+                self.ui.display(mainT = "Please notify whomever has the passcode..")
                 time.sleep(1)
-                self.ui.display(msg1 = "Please notify whomever has the passcode...")
+                self.ui.display(mainT = "Please notify whomever has the passcode...")
                 time.sleep(1)
                 ex = [None]
-                self.ui.check(q, ex)
+                self.ui.goto('confirm')
         
         self.playfor('password')
         self.ui.verifyuser(t.password)
@@ -279,17 +265,17 @@ class Bot(Node):
         self.lockon()
         
         #turn off screen
-        self.ui.display("travelling")
+        # self.ui.display("travelling")
 
-        tp = destinationlist.get("Home")
-        pose = self.create_pose_stamped(tp[0], tp[1], tp[2])
-        self.goPose(pose)
+        # tp = destinationlist.get("Home")
+        # pose = self.create_pose_stamped(tp[0], tp[1], tp[2])
+        # self.goPose(pose)
 
-        while not self.navigator.isTaskComplete():
-            self.run_updates()
+        # while not self.navigator.isTaskComplete():
+        #     self.run_updates()
             
         self.playfor('nothing') 
-        self.logger.logwrite("robot_home")
+        self.log("robot_home")
 
         return False
 

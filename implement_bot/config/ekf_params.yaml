@@ -4,7 +4,7 @@ ekf_node:
       frequency: 30.0 # needs fixing. causes update rate failure messages even at low Hz
       sensor_timeout: 0.034
       two_d_mode: true
-      transform_time_offset: 0.0
+      transform_time_offset: 0.1
       transform_timeout: 0.15
       print_diagnostics: false
       debug: false

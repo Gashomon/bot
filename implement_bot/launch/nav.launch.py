@@ -47,7 +47,9 @@ def generate_launch_description():
                        'behavior_server',
                        'bt_navigator',
                        'waypoint_follower',
-                       'velocity_smoother']
+                       'velocity_smoother',
+                       'collision_monitor'
+                    ]
 
     # Map fully qualified names to relative ones so the node's namespace can be prepended.
     # In case of the transforms (tf), currently, there doesn't seem to be a better alternative
@@ -86,16 +88,16 @@ def generate_launch_description():
 
     declare_params_file_cmd = DeclareLaunchArgument(
         'params_file',
-        default_value=os.path.join(pkg_dir, 'config', 'nav_params.yaml'),
+        default_value=os.path.join(pkg_dir, 'config', 'full_navigation_params.yaml'),
         description='Full path to the ROS2 parameters file to use for all launched nodes')
 
     declare_autostart_cmd = DeclareLaunchArgument(
-        'autostart', default_value='true',
+        'autostart', default_value='True',
         description='Automatically startup the nav2 stack')
 
     # not working argument
     declare_use_composition_cmd = DeclareLaunchArgument(
-        'use_composition', default_value='true',
+        'use_composition', default_value='False',
         description='Use composed bringup if True')
 
     declare_container_name_cmd = DeclareLaunchArgument(
@@ -224,6 +226,7 @@ def generate_launch_description():
             LoadComposableNodes(
                 target_container=container_name_full,
                 composable_node_descriptions=[
+                    
                     ComposableNode(
                         package='nav2_controller',
                         plugin='nav2_controller::ControllerServer',
@@ -306,7 +309,7 @@ def generate_launch_description():
     ld.add_action(declare_use_respawn_cmd)
     ld.add_action(declare_log_level_cmd)
     # Add the actions to launch all of the navigation nodes
-    # ld.add_action(load_nodes)
-    ld.add_action(load_composable_nodes)
+    ld.add_action(load_nodes)
+    # ld.add_action(load_composable_nodes)
 
     return ld

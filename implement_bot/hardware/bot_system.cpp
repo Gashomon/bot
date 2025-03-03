@@ -369,7 +369,7 @@ hardware_interface::return_type BotHardwareSystem::read(
   comms_.read_imu_sensor( imu_.linear_acceleration_x, imu_.linear_acceleration_y, imu_.linear_acceleration_z, 
                           imu_.angular_velocity_x, imu_.angular_velocity_y, imu_.angular_velocity_z);
   // RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "x: %f, z: %f", imu_.linear_acceleration_x, imu_.angular_velocity_z);
-  // comms_.read_range_sensors(range_l_.range, range_r_.range);
+  comms_.read_range_sensors(range_l_.range, range_r_.range);
 
   // RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Successfully reading!");
 

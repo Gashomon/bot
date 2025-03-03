@@ -65,6 +65,54 @@
         <xacro:scaled_origin x="${bot_pos_x}" y="${bot_pos_y}" z="${bot_pos_z}"/>
     </joint>
 
+    <link name="load_link">
+        <visual>
+            <geometry>
+                <mesh filename="package://implement_bot/description/meshes/model-load_part.dae" scale="${scale}"/>
+            </geometry>
+            <xacro:scaled_origin x="0.0" y="0.0" z="0.0"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://implement_bot/description/meshes/model-load_part.dae" scale="${scale}"/>
+            </geometry>
+            <xacro:scaled_origin x="0.0" y="0.0" z="0.0"/>
+        </collision>
+        <xacro:inertial_box mass="${storage_mass}" x="${actual_bot_width}" y="${actual_bot_length}" z="${actual_storage_height}">
+            <xacro:scaled_origin_rpy x="0" y="0"  z="0" roll="0" pitch="0" yaw="0"/>
+        </xacro:inertial_box>
+    </link>
+
+    <joint name="load_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="load_link"/>
+        <xacro:scaled_origin x="${bot_pos_x}" y="${bot_pos_y}" z="${bot_pos_z}"/>
+    </joint>
+
+    <link name="top_link">
+        <visual>
+            <geometry>
+                <mesh filename="package://implement_bot/description/meshes/model-top_part.dae" scale="${scale}"/>
+            </geometry>
+            <xacro:scaled_origin x="0.0" y="0.0" z="0.0"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://implement_bot/description/meshes/model-top_part.dae" scale="${scale}"/>
+            </geometry>
+            <xacro:scaled_origin x="0.0" y="0.0" z="0.0"/>
+        </collision>
+        <xacro:inertial_box mass="${top_mass}" x="${actual_bot_width}" y="${actual_bot_length}" z="${actual_top_height}">
+            <xacro:scaled_origin_rpy x="0" y="0"  z="0" roll="0" pitch="0" yaw="0"/>
+        </xacro:inertial_box>
+    </link>
+
+    <joint name="top_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="top_link"/>
+        <xacro:scaled_origin x="${bot_pos_x}" y="${bot_pos_y}" z="${bot_pos_z}"/>
+    </joint>
+    
     <!-- Caster link-joints -->
     <xacro:macro name="caster_link_joint" params="pos_x axis">
         <link name="${pos_x}_caster_link">
@@ -94,10 +142,11 @@
             <xacro:property name="wheel_turn_x" value="${pi}"/>
         </xacro:if>
         <xacro:property name="wheel_turn_y" value="${pi/2}"/>
+
         <joint name="${pos_x}_caster_joint" type="fixed">
             <parent link="base_link"/>
             <child link="${pos_x}_caster_link"/>
-            <xacro:scaled_origin_rpy x="${-(actual_bot_length/2 - actual_wheel_radius*2)}" y="${wheel_x}"  z="0" roll="0" pitch="${wheel_turn_x}" yaw="${wheel_turn_y}"/>
+            <xacro:scaled_origin_rpy x="${-(actual_bot_length/2 - actual_wheel_radius*2)}" y="${wheel_x}"  z="${bot_pos_z}" roll="0" pitch="${wheel_turn_x}" yaw="${wheel_turn_y}"/>
             <axis xyz="${axis} 0 0"/>
         </joint>
 
@@ -159,7 +208,7 @@
         <joint name="${pos_x}_${pos_y}_wheel_joint" type="continuous">
             <parent link="base_link"/>
             <child link="${pos_x}_${pos_y}_wheel_link"/>
-            <xacro:scaled_origin_rpy x="${wheel_x}" y="${wheel_y}"  z="${actual_wheel_radius/2}" roll="0" pitch="${wheel_turn_x}" yaw="${wheel_turn_y}"/>
+            <xacro:scaled_origin_rpy x="${wheel_x}" y="${wheel_y}"  z="${bot_pos_z + (actual_wheel_radius/2)}" roll="0" pitch="${wheel_turn_x}" yaw="${wheel_turn_y}"/>
             <axis xyz="${axis} 0 0"/>
             <mimic joint="${pos_x}_motor_joint"/>
         </joint>

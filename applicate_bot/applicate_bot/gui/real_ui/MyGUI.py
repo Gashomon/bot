@@ -3,18 +3,18 @@ from PySide6 import QtWidgets
 from PySide6.QtWidgets import QMainWindow, QApplication
 from PySide6.QtUiTools import QUiLoader
 
-# from applicate_bot.gui.real_ui.main import Ui_MainWindow as mainUi
-# from applicate_bot.gui.real_ui.control import Ui_MainWindow as ctrlUi
-# from applicate_bot.gui.real_ui.password import Ui_MainWindow as passUi
-# from applicate_bot.gui.real_ui.status import Ui_MainWindow as statUi
-# from applicate_bot.gui.pre_ui.confirm import Ui_MainWindow as confUi
+from applicate_bot.gui.real_ui.main import Ui_MainWindow as mainUi
+from applicate_bot.gui.real_ui.control import Ui_MainWindow as ctrlUi
+from applicate_bot.gui.real_ui.password import Ui_MainWindow as passUi
+from applicate_bot.gui.real_ui.status import Ui_MainWindow as statUi
+from applicate_bot.gui.pre_ui.confirm import Ui_MainWindow as confUi
 
 # TODO change directory to properly load
-from main import Ui_MainWindow as mainUi
-from control import Ui_MainWindow as ctrlUi
-from password import Ui_MainWindow as passUi
-from status import Ui_MainWindow as statUi
-from confirm import Ui_MainWindow as confUi
+# from main import Ui_MainWindow as mainUi
+# from control import Ui_MainWindow as ctrlUi
+# from password import Ui_MainWindow as passUi
+# from status import Ui_MainWindow as statUi
+# from confirm import Ui_MainWindow as confUi
 
 loader = QUiLoader()
 
@@ -38,6 +38,8 @@ class ControlUI(QMainWindow, ctrlUi):
 
         self.pushButton_2.hide()
         self.pushButton_4.hide()
+        self.comboBox_6.hide()
+        self.label_4.hide()
         self.stackedWidget.hide()
 
 

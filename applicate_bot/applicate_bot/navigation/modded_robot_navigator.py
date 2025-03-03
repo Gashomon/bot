@@ -278,7 +278,7 @@ class BasicNavigator(Node):
         goal_msg.target = Point(x=float(dist))
         goal_msg.speed = speed
         goal_msg.time_allowance = Duration(sec=time_allowance)
-        # goal_msg.disable_collision_checks = disable_collision_checks
+        goal_msg.disable_collision_checks = disable_collision_checks
 
         self.info(f'Drive {goal_msg.target.x} m on heading at {goal_msg.speed} m/s....')
         send_goal_future = self.drive_on_heading_client.send_goal_async(
@@ -295,7 +295,7 @@ class BasicNavigator(Node):
         return True
 
     def assistedTeleop(self, time_allowance=30):
-        self.debug("Wainting for 'assisted_teleop' action server")
+        self.debug("Waiting for 'assisted_teleop' action server")
         while not self.assisted_teleop_client.wait_for_server(timeout_sec=1.0):
             self.info("'assisted_teleop' action server not available, waiting...")
         goal_msg = AssistedTeleop.Goal()
@@ -451,7 +451,9 @@ class BasicNavigator(Node):
 
         goal_msg = ComputePathThroughPoses.Goal()
         goal_msg.start = start
-        goal_msg.goals = goals
+        goal_msg.goals.header.frame_id = 'map'
+        goal_msg.goals.header.stamp = self.get_clock().now().to_msg()
+        goal_msg.goals.poses = goals
         goal_msg.planner_id = planner_id
         goal_msg.use_start = use_start
 

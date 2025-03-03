@@ -42,7 +42,7 @@ def generate_launch_description():
     use_respawn = LaunchConfiguration('use_respawn')
     log_level = LaunchConfiguration('log_level')
 
-    lifecycle_nodes = ['map_server', 'amcl']
+    lifecycle_nodes = ['map_server', 'mask_server', 'keepout_filter', 'amcl']
 
     # robot_localization variables
     rl_params_file = os.path.join(
@@ -80,6 +80,7 @@ def generate_launch_description():
 
     declare_map_yaml_cmd = DeclareLaunchArgument(
         'map',
+        default_value='bot/src/bot/implement_bot/maps/fixed_map.yaml',
         description='Full path to map yaml file to load')
 
     declare_use_sim_time_cmd = DeclareLaunchArgument(
@@ -127,6 +128,16 @@ def generate_launch_description():
                 remappings=remappings),
             Node(
                 package='nav2_map_server',
+                executable='map_server',
+                name='mask_server',
+                output='screen',
+                respawn=use_respawn,
+                respawn_delay=2.0,
+                parameters=[configured_params],
+                arguments=['--ros-args', '--log-level', log_level],
+                remappings=remappings),
+            Node(
+                package='nav2_map_server',
                 executable='costmap_filter_info_server',
                 name='keepout_filter',
                 output='screen',
@@ -135,6 +146,7 @@ def generate_launch_description():
                 parameters=[configured_params],
                 arguments=['--ros-args', '--log-level', log_level],
                 remappings=remappings),
+
             Node(
                 package='nav2_amcl',
                 executable='amcl',
@@ -168,6 +180,20 @@ def generate_launch_description():
                 package='nav2_map_server',
                 plugin='nav2_map_server::MapServer',
                 name='map_server',
+                parameters=[configured_params],
+                remappings=remappings),
+
+            ComposableNode(
+                package='nav2_map_server',
+                plugin='nav2_map_server::MapServer',
+                name='mask_server',
+                parameters=[configured_params],
+                remappings=remappings),
+            
+            ComposableNode(
+                package='nav2_map_server',
+                plugin='nav2_map_server::costmap_filter_info_server',
+                name='keepout_filter',
                 parameters=[configured_params],
                 remappings=remappings),
 

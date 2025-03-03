@@ -3,29 +3,38 @@ from playsound import playsound
 
 soundlibpath = '/home/pi/bot/src/bot/applicate_bot/applicate_bot/modules/sounds/'
 audio1 = 'audio.mp3'
+# Boss Janear, pagawa ng mga mp3 files nito po. maiiksing salita lang mga 2 to 3 seconds, 5 max po.
+# kahit text to speech nalang po or kung anong balak mo. english o tagalog, kayo bahala
+# yung may (OP), optional. di ko pa magagamit yon, pero maigi narin kung meron po.
+# lahat ito ay hindi man paulit ulit na asabihin na naka loop. isang beses lang tas may agawin na yung robot
 audios = {
-    'loading': 'loading.mp3', #super optional
-    'activated' : 'activated.mp3',
-    'cmd_got': 'cmd_got.mp3',
-    'running' : 'running.mp3',
-    'password': 'password.mp3',
-    'put_item' : 'put_item.mp3',
-    'heavy': 'heavy.mp3',
-    'finish' : 'finish.mp3',
-    # 'nothing' : 'nothing.mp3' # not in list, play nothing
-    # 'error': '',
-    # 'arrived': '',
-    # 'locked': '',
-    # 'unlocked': '',
-    # 'open': '',
-    # 'clode': '',
-    # 'remove_item': '',
-    # 'leaving': ''
-    
+    'loading': '', # pagka simula ng robot
+    'activated' : '', # pag ready na yung robot
+    'cmd_got': '', # pag tapos na ilagay yung utos
+    'password': '', # pag a-enter yung passowrd
+    'wrong_pw': '', # pag mali yung passowrd
+    'put_item' : '', # pag alagay yung gamit
+    'heavy': '', # pag mabigat yung nalagay
+    'arrived': '', # pag naka rating na sa destination maliban sa base/home nya
+    'locked': '', # pag a-lock yung robot
+    'unlocked': '', # pag a-buksan yung robot
+    'remove_item': '', # pag sasabihan na tagtagin yung gamit
+    'leaving': '' # pag aalis na yung robot
+
+    'error': '', # (OP) pag may mali na di natin alam
+    'running' : '', # (OP) pag umaandar na yung robot
+    'finish' : '', # (OP) pag tapos na yung delivery at naka uwi na sya
+    'nothing' : '' # (OP) not in list, play nothing
+    'open': '', # (OP) pag bukas yung robot
+    'close': '', # (OP) pag sarado yung robot
 }
+
 def playfor(soundlibpath, situation):
     if audios.get(situation) is not None:
-        playsound(soundlibpath + audios[situation])
+        try:
+            playsound(soundlibpath + audios[situation])
+        except:
+            print("cant play sound for " + situation)
     # else:
     #     playsound(soundlibpath + audios["nosounderror"])
     pass

@@ -2,8 +2,8 @@
 
 # import applicate_bot.bot.bot as Bot
 # import applicate_bot.bot.predef as Bot
-# import applicate_bot.bot.final_test as Bot
-import applicate_bot.bot.simplebot as Bot
+import applicate_bot.bot.final_test as Bot
+# import applicate_bot.bot.simplebot as Bot
 
 import applicate_bot.modules.modules as Modules
 import applicate_bot.navigation.nav_func as Nav

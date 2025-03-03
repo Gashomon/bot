@@ -32,7 +32,7 @@ class UserInterface(MyGUI.GUI):
 
         # dest1 = self.control.comboBox_4.currentText()
         dest1 = "Home"
-        dest2 = self.control.comboBox_5.currentText()
+        dest2 = self.control.comboBox_7.currentText()
         transaction.dest1 = dest1
         transaction.dest2 = dest2
         transaction.type = ttype
@@ -56,11 +56,12 @@ class UserInterface(MyGUI.GUI):
 
     def verifyuser(self, password):
         self.goto('password')
+        self.ui.password.label_3.setText("Enter PassCode. Clear First")
         pasc=[None]
-        self.password.pushButton_11.clicked.connect(lambda: self.passhold(password, pasc))
+        self.password.pushButtons[10].clicked.connect(lambda: self.passhold(password, pasc))
 
         while not pasc[0]:
-            ui.app.processEvents()
+            self.app.processEvents()
     
     def passhold(self, passcode, var):
         if self.password.verify(passcode):

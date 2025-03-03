@@ -155,7 +155,8 @@ class Ui_MainWindow(object):
         self.label_4.setText(_translate("MainWindow", "Current Location"))
         self.label_5.setText(_translate("MainWindow", "Destination"))
         # TODO:: add more locations
-        self.comboBox_7.setItemText(0, _translate("MainWindow", "Dean"))
+        # Destination = 7, Current = 6
+        self.comboBox_7.setItemText(0, _translate("MainWindow", "Home"))
         self.comboBox_7.setItemText(1, _translate("MainWindow", "Dean"))
         self.comboBox_7.setItemText(2, _translate("MainWindow", "Dean"))
         self.comboBox_6.setItemText(0, _translate("MainWindow", "Dean"))
