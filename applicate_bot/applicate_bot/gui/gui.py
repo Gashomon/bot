@@ -3,7 +3,10 @@ from PySide6 import QtWidgets
 from PySide6.QtWidgets import QMainWindow, QApplication
 from PySide6.QtUiTools import QUiLoader
 
-import applicate_bot.gui.real_ui.MyGUI as MyGUI
+# import applicate_bot.gui.real_ui.MyGUI as MyGUI
+
+import real_ui.MyGUI as MyGUI
+import time
 
 PAGES = {
     'main': 0,
@@ -40,11 +43,12 @@ class UserInterface(MyGUI.GUI):
 
     def check(self, question, lvar):
         self.goto('confirm')
-        self.confirm.label_2.setText(question)
+        self.confirm.label.setText(question)
+        self.confirm.label.setStyleSheet("font-weight: bold; font-size: 40px; background:none;")
         # self.confirm.confirm(question, lambda:True, lambda:False)
         # self.confirm.confirm(question, ex:=lambda:True, ex:=lambda:False)
-        self.confirm.pushButton.clicked.connect(lambda:self.rtn1(lvar))
-        self.confirm.pushButton_2.clicked.connect(lambda:self.rtn2(lvar))
+        self.confirm.yes_button.clicked.connect(lambda:self.rtn1(lvar))
+        self.confirm.no_button.clicked.connect(lambda:self.rtn2(lvar))
     
     def rtn1(self, msg):
         # print("True")
@@ -56,7 +60,8 @@ class UserInterface(MyGUI.GUI):
 
     def verifyuser(self, password):
         self.goto('password')
-        self.ui.password.label_3.setText("Enter PassCode. Clear First")
+        self.password.label_3.setText("Enter PassCode. Clear First")
+        self.password.label_3.setText("Enter PassCode. Clear First")
         pasc=[None]
         self.password.pushButtons[10].clicked.connect(lambda: self.passhold(password, pasc))
 
@@ -70,8 +75,12 @@ class UserInterface(MyGUI.GUI):
             var[0] = False
 
     def display(self, mainT='', subT=''):
-        self.status.label.setText(mainT)
-        self.status.label_2.setText(subT)
+        self.status.label1.setText(mainT)
+        self.status.label1.adjustSize()
+        self.status.label1.setStyleSheet("font-weight: bold; font-size: 50px; background:none;")
+        self.status.label2.setText(subT)
+        self.status.label2.adjustSize()
+        self.status.label2.setStyleSheet("font-size: 25px; background:none;")
         self.goto('status')
 
     def disableRun(self):
@@ -85,7 +94,10 @@ class UserInterface(MyGUI.GUI):
 if __name__ == "__main__":
     ui = UserInterface()
     ui.widget.show()
-    ui.goto('password')
+    ui.display(mainT='Hello', subT='hi')
+    # ui.app.processEvents()
+    # ui.goto('password')
+    # ui.goto("confirm")
 
     # while ui.ex is None:
     #     # print(ui.check("pop?"))
@@ -110,9 +122,32 @@ if __name__ == "__main__":
     #     print("ui is " + str(l[0]))
     
     # Test for Password
-    ui.verifyuser('1111')
+    # ui.verifyuser('1111')
 
     # exit loop indicators
+   
+    q = "Are you Receiver?"
+    ex = [None]
+    ui.check(q, ex)
+    while ex[0] is not True:        
+        ui.app.processEvents()
+        if ex[0] is False:
+            print('not user daw')
+            ui.display(mainT = "Please notify whomever\n has the passcode")
+            ui.app.processEvents()
+            time.sleep(1)
+            ui.display(mainT = "Please notify whomever\n has the passcode.")
+            ui.app.processEvents()
+            time.sleep(1)
+            ui.display(mainT = "Please notify whomever\n has the passcode..")
+            ui.app.processEvents()
+            time.sleep(1)
+            ui.display(mainT = "Please notify whomever\n has the passcode...")
+            ui.app.processEvents()
+            time.sleep(1)
+            ex[0] = None
+            ui.goto('confirm')
+            ui.app.processEvents()
     print("ecit")
     sys.exit(ui.app.exec())
     

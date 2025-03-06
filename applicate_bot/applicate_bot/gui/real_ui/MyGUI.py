@@ -3,18 +3,18 @@ from PySide6 import QtWidgets
 from PySide6.QtWidgets import QMainWindow, QApplication
 from PySide6.QtUiTools import QUiLoader
 
-from applicate_bot.gui.real_ui.main import Ui_MainWindow as mainUi
-from applicate_bot.gui.real_ui.control import Ui_MainWindow as ctrlUi
-from applicate_bot.gui.real_ui.password import Ui_MainWindow as passUi
-from applicate_bot.gui.real_ui.status import Ui_MainWindow as statUi
-from applicate_bot.gui.pre_ui.confirm import Ui_MainWindow as confUi
+# from applicate_bot.gui.real_ui.main import Ui_MainWindow as mainUi
+# from applicate_bot.gui.real_ui.control import Ui_MainWindow as ctrlUi
+# from applicate_bot.gui.real_ui.password import Ui_MainWindow as passUi
+# from applicate_bot.gui.real_ui.status import Ui_MainWindow as statUi
+# from applicate_bot.gui.real_ui.confirm import Ui_MainWindow as confUi
 
 # TODO change directory to properly load
-# from main import Ui_MainWindow as mainUi
-# from control import Ui_MainWindow as ctrlUi
-# from password import Ui_MainWindow as passUi
-# from status import Ui_MainWindow as statUi
-# from confirm import Ui_MainWindow as confUi
+from real_ui.main import Ui_MainWindow as mainUi
+from real_ui.control import Ui_MainWindow as ctrlUi
+from real_ui.password import Ui_MainWindow as passUi
+from real_ui.status import Ui_MainWindow as statUi
+from real_ui.confirm import Ui_MainWindow as confUi
 
 loader = QUiLoader()
 
@@ -42,6 +42,10 @@ class ControlUI(QMainWindow, ctrlUi):
         self.label_4.hide()
         self.stackedWidget.hide()
 
+    def resetControl(self):
+        self.label_sender.setText("")
+        self.label_receiver.setText("")
+        self.comboBox_6.setCurrentIndex(0)
 
     def fetch(self):
         if(self.stackedWidget.isHidden() or not self.label.text() == "Fetch Mode"):
@@ -96,14 +100,12 @@ class ControlUI(QMainWindow, ctrlUi):
 
     def updateWeight(self):
         pass
+
 class StatusUI(QMainWindow, statUi):
     def __init__(self):
         super(StatusUI,self).__init__()
         self.setupUi(self)
-    def display(self, text):
-        GUI.widget.setCurrentIndex(2)
-        self.label_2.setText(text)
-
+        
 class PasswordUI(QMainWindow, passUi):
     def __init__(self):
         super(PasswordUI,self).__init__()
@@ -150,6 +152,7 @@ class ConfirmUI(QMainWindow, confUi):
 
     def confirm(self, quesText, b1Func, b2Func, b1Text='YES', b2Text='NO'):
         self.label_2.setText(quesText)
+        self.label_2.setStyleSheet("font-weight: bold; font-size: 50px; background:none;")
         self.pushButton.setText(b1Text)
         self.pushButton_2.setText(b2Text)
         self.pushButton.clicked.connect(b1Func)

@@ -1,53 +1,59 @@
-# -*- coding: utf-8 -*-
+import sys
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout
+from PySide6.QtGui import QFont
 
-################################################################################
-## Form generated from reading UI file 'status.ui'
-##
-## Created by: Qt User Interface Compiler version 6.6.3
-##
-## WARNING! All changes made in this file will be lost when recompiling UI file!
-################################################################################
-
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-    QMetaObject, QObject, QPoint, QRect,
-    QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-    QFont, QFontDatabase, QGradient, QIcon,
-    QImage, QKeySequence, QLinearGradient, QPainter,
-    QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QLabel, QMainWindow, QMenuBar,
-    QSizePolicy, QStatusBar, QWidget)
+from PySide6 import QtCore, QtWidgets, QtGui
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
-        if not MainWindow.objectName():
-            MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(800, 600)
-        self.centralwidget = QWidget(MainWindow)
-        self.centralwidget.setObjectName(u"centralwidget")
-        self.label_2 = QLabel(self.centralwidget)
-        self.label_2.setObjectName(u"label_2")
-        self.label_2.setGeometry(QRect(260, 250, 341, 171))
-        self.label = QLabel(self.centralwidget)
-        self.label.setObjectName(u"label")
-        self.label.setGeometry(QRect(340, 90, 151, 61))
+        MainWindow.setObjectName("MainWindow")
+        MainWindow.resize(960, 540)  # Updated window size
+        self.centralwidget = QtWidgets.QWidget(MainWindow)
+        self.centralwidget.setObjectName("centralwidget")
+        
+        self.centralwidget.setWindowTitle("(0_0) NOVA CARRIER")
+        self.centralwidget.resize(960, 540)
+        # Set background color to light green gradient
+        self.centralwidget.setStyleSheet("background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 lightgreen, stop:1 white);")
+        
+        main_layout = QtWidgets.QVBoxLayout()
+        main_layout.setAlignment(QtCore.Qt.AlignCenter)
+        
+        self.label1 = QLabel(self.centralwidget)
+        self.label2 = QLabel(self.centralwidget)
+        self.label1.setText("MAIN text")
+        self.label2.setText("SOME Text")
+
+        font = QFont()
+        font.setPointSize(25)  
+        self.label1.setFont(font)
+        self.label2.setFont(font)
+
+        self.label1.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.label2.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        layout = QVBoxLayout()
+        layout.setSpacing(80)
+        layout.addWidget(self.label1)
+        layout.addWidget(self.label2)
+        
+        main_layout.addLayout(layout)
+        main_layout.setGeometry(QtCore.QRect(380, 40, 123, 61))
+
         MainWindow.setCentralWidget(self.centralwidget)
-        self.menubar = QMenuBar(MainWindow)
-        self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 800, 22))
-        MainWindow.setMenuBar(self.menubar)
-        self.statusbar = QStatusBar(MainWindow)
-        self.statusbar.setObjectName(u"statusbar")
-        MainWindow.setStatusBar(self.statusbar)
-
-        self.retranslateUi(MainWindow)
-
-        QMetaObject.connectSlotsByName(MainWindow)
-    # setupUi
+        self.centralwidget.setLayout(main_layout)
+        self.retranslateUi(self.centralwidget)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.label_2.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p align=\"center\"><span style=\" font-size:48pt;\">Some Text</span></p></body></html>", None))
-        self.label.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p align=\"center\"><span style=\" font-size:12pt;\">Status Window</span></p><p align=\"center\"><br/></p><p align=\"center\"><br/></p></body></html>", None))
-    # retranslateUi
+        _translate = QtCore.QCoreApplication.translate
+        MainWindow.setWindowTitle(_translate("MainWindow", "Status Window"))
 
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec())

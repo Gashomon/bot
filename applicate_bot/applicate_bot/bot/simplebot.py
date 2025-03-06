@@ -10,6 +10,7 @@ from applicate_bot.comms.logger import DataLogger as Logger
 
 import rclpy
 from rclpy.node import Node
+from rclpy.duration import Duration
 import sys
 
 from geometry_msgs.msg import PoseStamped
@@ -117,24 +118,35 @@ class Bot(Node):
             self.waitforcmd()
             print("going back")
 
-    # NAVIGATOR STUFF
-    def create_pose_stamped(self, position_x, position_y, orientation_z):
-        q_x, q_y, q_z, q_w = tf_transformations.quaternion_from_euler(0.0, 0.0, orientation_z)
-        pose = PoseStamped()
-        pose.header.frame_id = 'map'
-        pose.header.stamp = self.navigator.get_clock().now().to_msg()
-        pose.pose.position.x = position_x
-        pose.pose.position.y = position_y
-        pose.pose.position.z = 0.0
-        pose.pose.orientation.x = q_x
-        pose.pose.orientation.y = q_y
-        pose.pose.orientation.z = q_z
-        pose.pose.orientation.w = q_w
-        return pose
-    
-    def goPose(self, pose):
+    # NAVIGATOR STUFF    
+    def goPose(self, pos_x, pos_y, orie_z, orie_w):
         # TODO merge pose stamp creation here
-        self.navigator.goToPose(pose)
+        goal_pose = PoseStamped()
+        goal_pose.header.frame_id = 'map'
+        goal_pose.header.stamp = self.navigator.get_clock().now().to_msg()
+        goal_pose.pose.position.x = pos_x
+        goal_pose.pose.position.y = pos_y
+        goal_pose.pose.orientation.w = orie_z
+        goal_pose.pose.orientation.z = orie_w
+        self.navigator.goToPose(goal_pose)
+
+        i = 0
+        while not self.navigator.isTaskComplete():
+            i = i + 1
+            feedback = self.navigator.getFeedback()
+            if feedback and i % 3 == 0:
+                self.get_logger().info('Navigation Feedback: %s' % feedback)
+                self.get_logger().info(
+                    'Estimated time of arrival: '
+                    + '{0:.0f}'.format(
+                        Duration.from_msg(feedback.estimated_time_remaining).nanoseconds
+                        / 1e9
+                    )
+                    + ' seconds.'
+            
+                )
+        result = self.navigator.getResult()
+        self.get_logger().info('Navigation Result: %s' % result)
 
     # MODULES STUFF
     def lockon(self):
@@ -162,8 +174,8 @@ class Bot(Node):
         self.ui.goto("control") 
 
         t = Transaction()
-        self.ui.control.receiver_name.setText("Enter Receiver's Name")
-        self.ui.control.sender_name.setText("Enter Sender's Name")
+        # self.ui.control.receiver_name.setText("Enter Receiver's Name")
+        # self.ui.control.sender_name.setText("Enter Sender's Name")
         self.ui.control.pushButton_5.clicked.connect(
             lambda: self.ui.sendcmd(t))
         while t.dest1 is None or t.dest2 is None:
@@ -242,15 +254,20 @@ class Bot(Node):
             if ex[0] is False:
                 print('not user daw')
                 self.ui.display(mainT = "Please notify whomever has the passcode")
+                self.run_updates()
                 time.sleep(1)
                 self.ui.display(mainT = "Please notify whomever has the passcode.")
+                self.run_updates()
                 time.sleep(1)
                 self.ui.display(mainT = "Please notify whomever has the passcode..")
+                self.run_updates()
                 time.sleep(1)
                 self.ui.display(mainT = "Please notify whomever has the passcode...")
+                self.run_updates()
                 time.sleep(1)
                 ex = [None]
                 self.ui.goto('confirm')
+                self.run_updates()
         
         self.playfor('password')
         self.ui.verifyuser(t.password)

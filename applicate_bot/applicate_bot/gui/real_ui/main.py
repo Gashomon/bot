@@ -4,7 +4,7 @@ from PySide6 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(960, 320)  # Updated window size to 960x320
+        MainWindow.resize(960, 540)  # Updated window size to 960x320
 
         # Central widget and setting the lighter gradient background
         self.centralwidget = QtWidgets.QWidget(MainWindow)
