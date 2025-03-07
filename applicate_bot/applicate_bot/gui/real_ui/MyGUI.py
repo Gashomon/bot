@@ -38,8 +38,8 @@ class ControlUI(QMainWindow, ctrlUi):
 
         self.pushButton_2.hide()
         self.pushButton_4.hide()
-        self.comboBox_6.hide()
-        self.label_4.hide()
+        # self.comboBox_6.hide()
+        # self.label_4.hide()
         self.stackedWidget.hide()
 
     def resetControl(self):

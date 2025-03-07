@@ -91,10 +91,35 @@ class UserInterface(MyGUI.GUI):
         self.control.pushButton_5.setDisabled(False)
         self.control.pushButton_5.setStyleSheet("background-color: #3867d6; color: white; border-radius: 10px;")
 
+    def displayWeight(self, value):
+        # weight = str(value)
+        # self.control.weight_status_label.setText("Weight: " + weight + " kg")
+        if value > 10000:
+            #set colors #eb4034
+            #set heavy
+            self.control.weight_status_label.setText(f"Weight: {(value / 1000):.2f} kg - Overloaded!")
+            self.control.weight_status_label.setStyleSheet("color: red;")
+            pass
+        elif value > 5000:
+            #set colors #9beb34
+            #set medium
+            self.control.weight_status_label.setText(f"Weight: {(value / 1000):.2f} kg - Normal")
+            self.control.weight_status_label.setStyleSheet("color: orange;")
+            pass
+        else:
+            #set colors #34eb80
+            #set ok
+            self.control.weight_status_label.setText(f"Weight: {(value / 1000):.2f} kg - Normal")
+            self.control.weight_status_label.setStyleSheet("color: green;")
+            pass
+        ui.app.processEvents()
+        pass
 if __name__ == "__main__":
     ui = UserInterface()
     ui.widget.show()
-    ui.display(mainT='Hello', subT='hi')
+    # ui.display(mainT='Hello', subT='hi')
+    ui.goto('control')
+    ui.displayWeight(1010)
     # ui.app.processEvents()
     # ui.goto('password')
     # ui.goto("confirm")
@@ -126,28 +151,28 @@ if __name__ == "__main__":
 
     # exit loop indicators
    
-    q = "Are you Receiver?"
-    ex = [None]
-    ui.check(q, ex)
-    while ex[0] is not True:        
-        ui.app.processEvents()
-        if ex[0] is False:
-            print('not user daw')
-            ui.display(mainT = "Please notify whomever\n has the passcode")
-            ui.app.processEvents()
-            time.sleep(1)
-            ui.display(mainT = "Please notify whomever\n has the passcode.")
-            ui.app.processEvents()
-            time.sleep(1)
-            ui.display(mainT = "Please notify whomever\n has the passcode..")
-            ui.app.processEvents()
-            time.sleep(1)
-            ui.display(mainT = "Please notify whomever\n has the passcode...")
-            ui.app.processEvents()
-            time.sleep(1)
-            ex[0] = None
-            ui.goto('confirm')
-            ui.app.processEvents()
-    print("ecit")
+    # q = "Are you Receiver?"
+    # ex = [None]
+    # ui.check(q, ex)
+    # while ex[0] is not True:        
+    #     ui.app.processEvents()
+    #     if ex[0] is False:
+    #         print('not user daw')
+    #         ui.display(mainT = "Please notify whomever\n has the passcode")
+    #         ui.app.processEvents()
+    #         time.sleep(1)
+    #         ui.display(mainT = "Please notify whomever\n has the passcode.")
+    #         ui.app.processEvents()
+    #         time.sleep(1)
+    #         ui.display(mainT = "Please notify whomever\n has the passcode..")
+    #         ui.app.processEvents()
+    #         time.sleep(1)
+    #         ui.display(mainT = "Please notify whomever\n has the passcode...")
+    #         ui.app.processEvents()
+    #         time.sleep(1)
+    #         ex[0] = None
+    #         ui.goto('confirm')
+    #         ui.app.processEvents()
+    # print("ecit")
     sys.exit(ui.app.exec())
     

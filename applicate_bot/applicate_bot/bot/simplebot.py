@@ -98,19 +98,7 @@ class Bot(Node):
     def updateWeight(self):
         value = self.modules.getLoad()
         # set value to label if ever
-        if value > 10000:
-            #set colors #eb4034
-            #set heavy
-            pass
-        elif value > 5000:
-            #set colors #9beb34
-            #set medium
-            pass
-        else:
-            #set colors #34eb80
-            #set ok
-            pass
-        pass
+        self.ui.displayWeight(value)
 
     def foreverlooping(self):
         while rclpy.ok():
