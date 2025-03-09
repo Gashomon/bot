@@ -30,7 +30,7 @@ pop = {
         }
 class HousePatrolNode(Node):  
     def __init__(self):
-        super().__init__('house_patrol') 
+        super().__init__('manual_navigator') 
         self.navigator = BasicNavigator()
 
         # Set initial pose
@@ -115,8 +115,13 @@ class HousePatrolNode(Node):
             if key in pop.keys():
                 # dest = [self.create_pose_stamped(pop[key][0], pop[key][1], pop[key][2])]
                 # self.follow_waypoints(dest)
-                self.navigator.driveOnHeading(speed=0.020)
-                self.get_logger().info('Finished! Press some keys...\n')
+                if key == '1':
+                    self.get_logger().info('driving....\n')
+                    self.navigator.driveOnHeading(speed=0.020)
+                if key == '2':
+                    self.get_logger().info('spinning....\n')
+                    self.navigator.spin(spin_dist=0.6)
+                    self.get_logger().info('Finished! Press some keys...\n')
             else:
                 # self.get_logger().info('Press some keys...\n')
                 if (key == '\x03'):

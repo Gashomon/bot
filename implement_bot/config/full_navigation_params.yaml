@@ -3,11 +3,11 @@ amcl:
   ros__parameters:
     use_sim_time: False
     # trust scores on..
-    alpha1: 0.2 # rotation pose by rotating
-    alpha2: 0.5 # rotation pose by forward/backward
-    alpha3: 0.2 # position by forward/backward 
+    alpha1: 0.5 # rotation pose by rotating
+    alpha2: 0.2 # rotation pose by forward/backward
+    alpha3: 0.5 # position by forward/backward 
     alpha4: 0.2 # position by rotating
-    alpha5: 0.2 # omni model shit
+    alpha5: 0.0 # omni model shit
     base_frame_id: "base_link" # default footprint
     beam_skip_distance: 0.5
     beam_skip_error_threshold: 0.9
@@ -29,10 +29,10 @@ amcl:
     recovery_alpha_slow: 0.0
     resample_interval: 1 # update rate every movement.
     robot_model_type: "nav2_amcl::DifferentialMotionModel"
-    save_pose_rate: 0.25 # Hz for updating for pose parameter server
+    save_pose_rate: 0.5 # Hz for updating for pose parameter server
     sigma_hit: 0.2 # checker to match sensor readings. Higher = more tolerant
     tf_broadcast: True 
-    transform_tolerance: 0.0 # duration for the transforms to be valid
+    transform_tolerance: 1.0 # duration for the transforms to be valid
     update_min_a: 0.1 # update rate in radians for rotating. default 0.25
     update_min_d: 0.1 # update rate in meters for moving. default 0.25
     z_hit: 0.001 # trust that sensor readings are perfect to map. default  0.5
@@ -162,11 +162,11 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
       rotate_to_goal_heading: false
       closed_loop: false # default true
 
-      primary_controller.lookahead_dist: 1.5
+      primary_controller.lookahead_dist: 1.0
       primary_controller.desired_linear_vel: 0.35
       primary_controller.min_lookahead_dist: 0.3
       primary_controller.max_lookahead_dist: 0.9
-      primary_controller.lookahead_time: 1.5
+      primary_controller.lookahead_time: 1.0
       primary_controller.rotate_to_heading_angular_vel: 1.0S
       primary_controller.transform_tolerance: 0.5
       primary_controller.use_velocity_scaled_lookahead_dist: true
@@ -198,8 +198,8 @@ local_costmap:
       use_sim_time: False
       resolution: 0.1
       robot_radius: 0.3233
-      width: 4
-      height: 4
+      width: 5
+      height: 5
       # origin_x: -1.97
       # origin_y: -4.24
       map_vis_z: 0.0
@@ -231,7 +231,7 @@ local_costmap:
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 7.0
-        inflation_radius: 0.75
+        inflation_radius: 0.5
       always_send_full_costmap: True
 
 global_costmap:
@@ -242,8 +242,8 @@ global_costmap:
       robot_base_frame: base_link
       use_sim_time: False
       robot_radius: 0.18
-      width: 10
-      height: 10
+      width: 20
+      height: 20
       resolution: 0.25
       track_unknown_space: true
       plugins: ["static_layer", "obstacle_layer", "keepout_filter", "inflation_layer"]
@@ -261,7 +261,7 @@ global_costmap:
           data_type: "LaserScan"
           raytrace_max_range: 10.0
           raytrace_min_range: 0.0
-          obstacle_max_range: 5.0
+          obstacle_max_range: 10.0
           obstacle_min_range: 0.0
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"
@@ -269,7 +269,7 @@ global_costmap:
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 7.0
-        inflation_radius: 0.75
+        inflation_radius: 0.5
       keepout_filter:
         plugin: "nav2_costmap_2d::KeepoutFilter"
         enabled: True
@@ -346,6 +346,7 @@ behavior_server: # lists all basic drive functions
     transform_tolerance: 0.1    
     cycle_frequency: 10.0
     behavior_plugins: ["spin", "backup", "drive_on_heading", "assisted_teleop", "wait"]
+    
     spin:
       plugin: "nav2_behaviors/Spin"
 
@@ -379,7 +380,7 @@ behavior_server: # lists all basic drive functions
 waypoint_follower: # waypoint special configurations
   ros__parameters:
     use_sim_time: False
-    loop_rate: 2
+    # loop_rate: 2
     stop_on_failure: false
     waypoint_task_executor_plugin: "wait_at_waypoint"
     wait_at_waypoint:
@@ -419,14 +420,14 @@ collision_monitor:
     polygons: ["PolygonStop", "PolygonSlow"]
     PolygonStop:
       type: "polygon"
-      points: [0.4,0.6,0.4,-0.6,0.0,-0.6,0.0,0.6]
+      points: [0.4,0.4,0.4,-0.4,-0.4,-0.4,-0.4,0.4]
       action_type: "stop"
       min_points: 4  # max_points: 3 for Humble
       visualize: True
       polygon_pub_topic: "polygon_stop"
     PolygonSlow:
       type: "polygon"
-      points: [0.6,0.8,0.6,-0.8,0.0,-0.8,0.0,0.8]
+      points: [0.8,0.8,0.8,-0.8,-0.8,-0.8,-0.8,0.8]
       action_type: "slowdown"
       min_points: 4  # max_points: 3 for Humble
       slowdown_ratio: 0.3

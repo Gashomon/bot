@@ -80,7 +80,7 @@ def generate_launch_description():
 
     declare_map_yaml_cmd = DeclareLaunchArgument(
         'map',
-        default_value='bot/src/bot/implement_bot/maps/fixed_map.yaml',
+        default_value='bot/src/bot/implement_bot/maps/empty.yaml',
         description='Full path to map yaml file to load')
 
     declare_use_sim_time_cmd = DeclareLaunchArgument(

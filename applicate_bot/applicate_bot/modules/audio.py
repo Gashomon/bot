@@ -12,10 +12,10 @@ audios = {
     'activated'     :   'Activated.mp3',            # pag ready na yung robot
     'cmd_got'       :   '', # pag tapos na ilagay yung utos
     'password'      :   'Password.mp3',             # pag a-enter yung passowrd
-    'wrong_pw'      :   'Password_incorrect .mp3',  # pag mali yung passowrd
+    'wrong_pw'      :   'Password_incorrect.mp3',  # pag mali yung passowrd
     'put_item'      :   'Putting_an_item.mp3',      # pag alagay yung gamit
     'heavy'         :   'Heavy.mp3',                # pag mabigat yung nalagay
-    'arrived'       :   'Item_arrived',             # pag naka rating na sa destination maliban sa base/home nya
+    'arrived'       :   'Item_arrived.mp3',             # pag naka rating na sa destination maliban sa base/home nya
     'locked'        :   'Storage_lock.mp3',         # pag a-lock yung robot
     'unlocked'      :   'Storage_unlocked.mp3',     # pag a-buksan yung robot
     'remove_item'   :   'Remove_item.mp3',          # pag sasabihan na tagtagin yung gamit

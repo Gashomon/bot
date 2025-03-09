@@ -1,6 +1,6 @@
 controller_manager:
   ros__parameters:
-    update_rate: 40
+    update_rate: 50
     use_sim_time: false
 
     diff_cont:
@@ -31,7 +31,7 @@ diff_cont:
     left_wheel_radius_multiplier: 1.0 #default
     right_wheel_radius_multiplier: 1.0 #default
 
-    publish_rate: 40.0 #Hz
+    publish_rate: 50.0 #Hz
     odom_frame_id: odom
     base_frame_id: base_link
     #  base_frame_id: base_footprint

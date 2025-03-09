@@ -3,9 +3,9 @@ from PySide6 import QtWidgets
 from PySide6.QtWidgets import QMainWindow, QApplication
 from PySide6.QtUiTools import QUiLoader
 
-# import applicate_bot.gui.real_ui.MyGUI as MyGUI
+import applicate_bot.gui.real_ui.MyGUI as MyGUI
 
-import real_ui.MyGUI as MyGUI
+# import real_ui.MyGUI as MyGUI
 import time
 
 PAGES = {
@@ -35,10 +35,12 @@ class UserInterface(MyGUI.GUI):
 
         # dest1 = self.control.comboBox_4.currentText()
         dest1 = "Home"
-        dest2 = self.control.comboBox_7.currentText()
+        dest2 = self.control.comboBox_6.currentText()
         transaction.dest1 = dest1
         transaction.dest2 = dest2
         transaction.type = ttype
+        transaction.sender = self.control.sender_name.text()
+        transaction.receiver = self.control.receiver_name.text()
         return transaction
 
     def check(self, question, lvar):
@@ -74,13 +76,13 @@ class UserInterface(MyGUI.GUI):
         else:
             var[0] = False
 
-    def display(self, mainT='', subT=''):
+    def display(self, mainT='', subT='', main_ft=50, sub_ft=25):
         self.status.label1.setText(mainT)
         self.status.label1.adjustSize()
-        self.status.label1.setStyleSheet("font-weight: bold; font-size: 50px; background:none;")
+        self.status.label1.setStyleSheet(f"font-weight: bold; font-size: {str(main_ft)}; background:none;")
         self.status.label2.setText(subT)
         self.status.label2.adjustSize()
-        self.status.label2.setStyleSheet("font-size: 25px; background:none;")
+        self.status.label2.setStyleSheet(f"font-size: {str(sub_ft)}px; background:none;")
         self.goto('status')
 
     def disableRun(self):
@@ -112,7 +114,7 @@ class UserInterface(MyGUI.GUI):
             self.control.weight_status_label.setText(f"Weight: {(value / 1000):.2f} kg - Normal")
             self.control.weight_status_label.setStyleSheet("color: green;")
             pass
-        ui.app.processEvents()
+        self.app.processEvents()
         pass
 if __name__ == "__main__":
     ui = UserInterface()

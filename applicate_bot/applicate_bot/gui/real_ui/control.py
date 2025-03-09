@@ -44,14 +44,12 @@ class Ui_MainWindow(object):
         self.pushButton_3.setGeometry(QtCore.QRect(100, 100, 111, 71))
         self.pushButton_3.setObjectName("pushButton_3")
         self.pushButton_3.setStyleSheet("background-color: #45aaf2; color: white; border-radius: 10px; font-size: 14px;")
-
         
         self.pushButton_4 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_4.setGeometry(QtCore.QRect(100, 290, 111, 71))
         self.pushButton_4.setObjectName("pushButton_4")
         self.pushButton_4.setStyleSheet("background-color: #20bf6b; color: white; border-radius: 10px; font-size: 14px;")
 
-        
         self.label_sender = QtWidgets.QLabel(self.centralwidget)
         self.label_sender.setGeometry(QtCore.QRect(150, 410, 120, 30)) 
         self.label_sender.setText("Sender's Name:")
@@ -63,7 +61,6 @@ class Ui_MainWindow(object):
         self.sender_name.setPlaceholderText("Enter Sender's Name")
         self.sender_name.setAlignment(QtCore.Qt.AlignCenter)
         self.sender_name.setVisible(False)
-
         
         self.label_receiver = QtWidgets.QLabel(self.centralwidget)
         self.label_receiver.setGeometry(QtCore.QRect(560, 410, 250, 30))  
@@ -77,10 +74,17 @@ class Ui_MainWindow(object):
         self.receiver_name.setAlignment(QtCore.Qt.AlignCenter)
         self.receiver_name.setVisible(False)
 
-       
+        self.weight_frame = QtWidgets.QFrame(self.centralwidget)
+        self.weight_frame.setGeometry(QtCore.QRect(730, 190, 200, 40))  
+        self.weight_frame.setStyleSheet("background-color: white; border-radius: 10px;")  
+
+        self.weight_status_label = QtWidgets.QLabel(self.centralwidget)
+        self.weight_status_label.setGeometry(QtCore.QRect(730, 190, 200, 40))  
+        self.weight_status_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.weight_status_label.setStyleSheet("background-color: white; border-radius: 10px;")  
+
         self.stackedWidget = QtWidgets.QStackedWidget(self.centralwidget)
 
-        
         original_width = 451
         new_width = original_width * 0.8  
 
@@ -123,14 +127,6 @@ class Ui_MainWindow(object):
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
-        self.weight_frame = QtWidgets.QFrame(self.centralwidget)
-        self.weight_frame.setGeometry(QtCore.QRect(730, 190, 200, 40))  
-        self.weight_frame.setStyleSheet("background-color: white; border-radius: 10px;")  
-
-        self.weight_status_label = QtWidgets.QLabel(self.weight_frame)
-        self.weight_status_label.setGeometry(QtCore.QRect(10, 5, 180, 30))  
-        self.weight_status_label.setAlignment(QtCore.Qt.AlignCenter)
-
         self.retranslateUi(MainWindow)
         self.stackedWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -145,9 +141,9 @@ class Ui_MainWindow(object):
         self.pushButton_4.setText(_translate("MainWindow", "Retrieve"))
         self.label.setText(_translate("MainWindow", "Delivery Mode"))
         self.label_4.setText(_translate("MainWindow", "Current Location"))
-        self.comboBox_6.setItemText(0, _translate("MainWindow", "Dest1"))
-        self.comboBox_6.setItemText(1, _translate("MainWindow", "Dest2"))
-        self.comboBox_6.setItemText(2, _translate("MainWindow", "Dest3"))
+        self.comboBox_6.setItemText(0, _translate("MainWindow", "Dean"))
+        # self.comboBox_6.setItemText(1, _translate("MainWindow", "Dest2"))
+        # self.comboBox_6.setItemText(2, _translate("MainWindow", "Dest3"))
         self.pushButton_5.setText(_translate("MainWindow", "Run"))
 
 if __name__ == "__main__":

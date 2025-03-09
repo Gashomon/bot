@@ -3,18 +3,18 @@ from PySide6 import QtWidgets
 from PySide6.QtWidgets import QMainWindow, QApplication
 from PySide6.QtUiTools import QUiLoader
 
-# from applicate_bot.gui.real_ui.main import Ui_MainWindow as mainUi
-# from applicate_bot.gui.real_ui.control import Ui_MainWindow as ctrlUi
-# from applicate_bot.gui.real_ui.password import Ui_MainWindow as passUi
-# from applicate_bot.gui.real_ui.status import Ui_MainWindow as statUi
-# from applicate_bot.gui.real_ui.confirm import Ui_MainWindow as confUi
+from applicate_bot.gui.real_ui.main import Ui_MainWindow as mainUi
+from applicate_bot.gui.real_ui.control import Ui_MainWindow as ctrlUi
+from applicate_bot.gui.real_ui.password import Ui_MainWindow as passUi
+from applicate_bot.gui.real_ui.status import Ui_MainWindow as statUi
+from applicate_bot.gui.real_ui.confirm import Ui_MainWindow as confUi
 
 # TODO change directory to properly load
-from real_ui.main import Ui_MainWindow as mainUi
-from real_ui.control import Ui_MainWindow as ctrlUi
-from real_ui.password import Ui_MainWindow as passUi
-from real_ui.status import Ui_MainWindow as statUi
-from real_ui.confirm import Ui_MainWindow as confUi
+# from real_ui.main import Ui_MainWindow as mainUi
+# from real_ui.control import Ui_MainWindow as ctrlUi
+# from real_ui.password import Ui_MainWindow as passUi
+# from real_ui.status import Ui_MainWindow as statUi
+# from real_ui.confirm import Ui_MainWindow as confUi
 
 loader = QUiLoader()
 
@@ -56,6 +56,8 @@ class ControlUI(QMainWindow, ctrlUi):
             self.sender_name.setVisible(True)
             self.label_receiver.setVisible(True)
             self.receiver_name.setVisible(True)
+            self.weight_frame.setVisible(True)
+            self.weight_status_label.setVisible(True)
             
         else:
             self.stackedWidget.hide()
@@ -63,6 +65,8 @@ class ControlUI(QMainWindow, ctrlUi):
             self.sender_name.setVisible(False)
             self.label_receiver.setVisible(False)
             self.receiver_name.setVisible(False)
+            self.weight_frame.setVisible(False)
+            self.weight_status_label.setVisible(False)
         
     def deliver(self):
         if(self.stackedWidget.isHidden() or not self.label.text() == "Delivery Mode"):

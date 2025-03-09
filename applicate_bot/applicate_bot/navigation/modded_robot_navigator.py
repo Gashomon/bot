@@ -172,13 +172,13 @@ class BasicNavigator(Node):
         goal_msg.pose = pose
         goal_msg.behavior_tree = behavior_tree
 
-        self.info(
-            'Navigating to goal: '
-            + str(pose.pose.position.x)
-            + ' '
-            + str(pose.pose.position.y)
-            + '...'
-        )
+        # self.info(
+        #     '\nNavigating to goal: '
+        #     + str(pose.pose.position.x)
+        #     + ' '
+        #     + str(pose.pose.position.y)
+        #     + '...\n'
+        # )
         send_goal_future = self.nav_to_pose_client.send_goal_async(
             goal_msg, self._feedbackCallback
         )
@@ -221,14 +221,15 @@ class BasicNavigator(Node):
         self.result_future = self.goal_handle.get_result_async()
         return True
 
-    def spin(self, spin_dist=1.57, time_allowance=10, disable_collision_checks=False):
+    # def spin(self, spin_dist=1.57, time_allowance=10, disable_collision_checks=False):
+    def spin(self, spin_dist=0.50, time_allowance=10, disable_collision=False):
         self.debug("Waiting for 'Spin' action server")
         while not self.spin_client.wait_for_server(timeout_sec=1.0):
             self.info("'Spin' action server not available, waiting...")
         goal_msg = Spin.Goal()
         goal_msg.target_yaw = spin_dist
         goal_msg.time_allowance = Duration(sec=time_allowance)
-        goal_msg.disable_collision_checks = disable_collision_checks
+        # goal_msg.disable_collision_checks = disable_collision # disabled to work
 
         self.info(f'Spinning to angle {goal_msg.target_yaw}....')
         send_goal_future = self.spin_client.send_goal_async(
@@ -244,7 +245,8 @@ class BasicNavigator(Node):
         self.result_future = self.goal_handle.get_result_async()
         return True
 
-    def backup(self, backup_dist=0.15, backup_speed=0.025, time_allowance=10,
+    # def backup(self, backup_dist=0.15, backup_speed=0.025, time_allowance=10,
+    def backup(self, backup_dist=0.05, backup_speed=0.015, time_allowance=10,
                disable_collision_checks=False):
         self.debug("Waiting for 'Backup' action server")
         while not self.backup_client.wait_for_server(timeout_sec=1.0):
@@ -253,7 +255,7 @@ class BasicNavigator(Node):
         goal_msg.target = Point(x=float(backup_dist))
         goal_msg.speed = backup_speed
         goal_msg.time_allowance = Duration(sec=time_allowance)
-        goal_msg.disable_collision_checks = disable_collision_checks
+        # goal_msg.disable_collision_checks = disable_collision_checks # disabled to work
 
         self.info(f'Backing up {goal_msg.target.x} m at {goal_msg.speed} m/s....')
         send_goal_future = self.backup_client.send_goal_async(
@@ -269,7 +271,8 @@ class BasicNavigator(Node):
         self.result_future = self.goal_handle.get_result_async()
         return True
 
-    def driveOnHeading(self, dist=0.15, speed=0.025, time_allowance=10,
+    # def driveOnHeading(self, dist=0.15, speed=0.025, time_allowance=10,
+    def driveOnHeading(self, dist=0.05, speed=0.015, time_allowance=10,
                        disable_collision_checks=False):
         self.debug("Waiting for 'DriveOnHeading' action server")
         while not self.backup_client.wait_for_server(timeout_sec=1.0):
@@ -278,7 +281,7 @@ class BasicNavigator(Node):
         goal_msg.target = Point(x=float(dist))
         goal_msg.speed = speed
         goal_msg.time_allowance = Duration(sec=time_allowance)
-        goal_msg.disable_collision_checks = disable_collision_checks
+        # goal_msg.disable_collision_checks = disable_collision_checks # disabled to work
 
         self.info(f'Drive {goal_msg.target.x} m on heading at {goal_msg.speed} m/s....')
         send_goal_future = self.drive_on_heading_client.send_goal_async(

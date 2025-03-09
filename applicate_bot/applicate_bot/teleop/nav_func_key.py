@@ -21,8 +21,8 @@ else:
 pop = {
             '1':(0.3, 0.0, np.radians(0)),
             '2':(1.0, 0.0, np.radians(0)),
-            '3':(2.0, 0.0, np.radians(0)),
-            '3':(-1.0, 0.0, np.radians(0)),
+            '3':(1.5, 0.0, np.radians(0)),
+            '4':(-1.0, 0.0, np.radians(0)),
             # '4':(-3.5, 0.0, np.radians(11.31)),
             # '5':(9.0, 2.5, np.radians(155.56)),
             # '6':(3.5, 5.0, np.radians(-125.00)),
@@ -30,7 +30,7 @@ pop = {
         }
 class HousePatrolNode(Node):  
     def __init__(self):
-        super().__init__('house_patrol') 
+        super().__init__('key_navigator') 
         self.navigator = BasicNavigator()
 
         # Set initial pose
@@ -66,14 +66,15 @@ class HousePatrolNode(Node):
         pose.pose.position.x = position_x
         pose.pose.position.y = position_y
         pose.pose.position.z = 0.0
-        pose.pose.orientation.x = q_x
-        pose.pose.orientation.y = q_y
+        pose.pose.orientation.x = 0.0
+        pose.pose.orientation.y = 0.0
         pose.pose.orientation.z = q_z
         pose.pose.orientation.w = q_w
         return pose
 
     def follow_waypoints(self, waypoints):
-        self.navigator.followWaypoints(waypoints)
+        self.navigator.clearAllCostmaps()
+        self.navigator.goToPose(waypoints)
         while not self.navigator.isTaskComplete():
             feedback = self.navigator.getFeedback()
             self.get_logger().info('Navigation Feedback: %s' % feedback)
@@ -113,7 +114,7 @@ class HousePatrolNode(Node):
         while(1):
             key = self.get_key(settings, key_timeout)
             if key in pop.keys():
-                dest = [self.create_pose_stamped(pop[key][0], pop[key][1], pop[key][2])]
+                dest = self.create_pose_stamped(pop[key][0], pop[key][1], pop[key][2])
                 self.follow_waypoints(dest)
                 self.get_logger().info('Finished! Press some keys...\n')
             else:
