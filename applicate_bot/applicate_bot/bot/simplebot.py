@@ -53,14 +53,15 @@ class Bot(Node):
         
         # audio folders. starting from home/pi
         path_of_audios = '/home/pi/bot/src/bot/applicate_bot/applicate_bot/modules/real_fx/'
-        self.modules = Modules(setlock= -1, setloadin= -1, setloadout = -1, setdoor= -1, soundenable=True, soundpath=path_of_audios)
-        # self.modules = Modules(setlock= 17, setloadin= 23, setloadout = 24, setdoor= -1, soundenable=True, soundpath=path_of_audios)
-
+        # self.modules = Modules(setlock= -1, setloadin= -1, setloadout = -1, setdoor= -1, soundenable=True, soundpath=path_of_audios)
+        self.modules = Modules(setlock= 25, setloadin= 27, setloadout = 22, setdoor= -1, soundenable=True, soundpath=path_of_audios)
+        
+        print(f"enable modules are: lock({str(self.modules.LOCKENABLE)}), load({str(self.modules.LOADENABLE)})")
         self.navigator = Navigator()
         self.server = Server()
         self.logger = Logger()
         self.ui = UI()
-        self.timer = self.create_timer(0.1, self.run_updates)
+        self.timer = self.create_timer(100, self.run_updates)
         
         self.loadbot()
         self.foreverlooping()
@@ -71,7 +72,6 @@ class Bot(Node):
         self.ui.goto('main')
         self.ui.widget.show()
         self.run_updates()
-
 
         # Set initial pose
         initial_pose = self.create_pose_stamped(0.0, 0.0, 0.0)
@@ -103,6 +103,7 @@ class Bot(Node):
         value = self.modules.getLoad()
         # set value to label if ever
         self.ui.displayWeight(value)
+        self.ui.app.processEvents()
 
     def foreverlooping(self):
         self.ui.goto('main')
@@ -226,10 +227,9 @@ class Bot(Node):
 
         self.ui.display(mainT ="Robot is Leaving in 5 seconds. Please step aside.")
         self.run_updates()
-        time.sleep(5)
-        self.playfor('leaving')
-        
         self.lockon()
+        self.playfor('leaving')
+        time.sleep(5)        
 
         #turn off screen
         # self.ui.display("travelling")
@@ -300,7 +300,7 @@ class Bot(Node):
         # while not self.navigator.isTaskComplete():
         #     self.run_updates()
             
-        self.playfor('nothing') 
+        # self.playfor('nothing') 
         self.log("robot_home")
 
         return False
@@ -324,6 +324,7 @@ def main(args=None):
     except Exception as e:
         print(e)
     finally:
+        node.modules.closegpio()
         node.destroy_node()
         rclpy.shutdown()
 

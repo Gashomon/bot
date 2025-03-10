@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import lgpio # import GPIO
+# from hx711_Python3 import HX711_revised  # import the class HX711
 from hx711_Python3 import HX711_revised  # import the class HX711
 
 device = lgpio.gpiochip_open(0)# set GPIO pin mode to BCM numbering

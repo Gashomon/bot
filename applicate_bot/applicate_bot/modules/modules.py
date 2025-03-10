@@ -9,9 +9,9 @@ from enum import Enum
 
 # Actual Default
 # class GPIOpins(Enum):
-#     lockpin = 17
-#     loadinpin = 23
-#     loadoutpin = 24
+#     lockpin = 23
+#     loadinpin = 22 = dout
+#     loadoutpin = 27 = sck
 #     doorpin = 16
 
 # Applied Default for no automatic
@@ -67,6 +67,7 @@ class Modules():
             
     def setlock(self, state):
         if not self.LOCKENABLE:
+            print("unabled lock")
             if state == "on":
                 self.lockstat = True
                 self.lockstat = "on"
@@ -74,12 +75,14 @@ class Modules():
                 self.lockstat = False
                 self.lockstat = "off" 
             return
-
+        
         if state == "on":
+            print("lock on")
             lock.setState(self.device, self.lockpin, "LOCKED")
             # self.lockstat = True
             self.lockstat = "on"
         if state == "off":
+            print("lock off")
             lock.setState(self.device, self.lockpin, "UNLOCKED")
             # self.lockstat = False
             self.lockstat = "off" 
@@ -116,7 +119,7 @@ class Modules():
     def getLoad(self):
         if not self.LOADENABLE:
             return 0
-
+            
         return load.getLoadinGrams(self.hx711)
         pass
 

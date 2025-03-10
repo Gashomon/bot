@@ -51,35 +51,35 @@ class Ui_MainWindow(object):
         self.pushButton_4.setStyleSheet("background-color: #20bf6b; color: white; border-radius: 10px; font-size: 14px;")
 
         self.label_sender = QtWidgets.QLabel(self.centralwidget)
-        self.label_sender.setGeometry(QtCore.QRect(150, 410, 120, 30)) 
+        self.label_sender.setGeometry(QtCore.QRect(775, 70, 120, 30)) 
         self.label_sender.setText("Sender's Name:")
         self.label_sender.setStyleSheet("font-size: 12px; color: #4b6584;")
         self.label_sender.setVisible(False)
 
         self.sender_name = QtWidgets.QLineEdit(self.centralwidget)
-        self.sender_name.setGeometry(QtCore.QRect(235, 410, 250, 30))  
+        self.sender_name.setGeometry(QtCore.QRect(690, 100, 250, 30))  
         self.sender_name.setPlaceholderText("Enter Sender's Name")
         self.sender_name.setAlignment(QtCore.Qt.AlignCenter)
         self.sender_name.setVisible(False)
         
         self.label_receiver = QtWidgets.QLabel(self.centralwidget)
-        self.label_receiver.setGeometry(QtCore.QRect(560, 410, 250, 30))  
+        self.label_receiver.setGeometry(QtCore.QRect(775, 140, 250, 30))  
         self.label_receiver.setText("Receiver's Name:")
         self.label_receiver.setStyleSheet("font-size: 12px; color: #4b6584;")
         self.label_receiver.setVisible(False)
 
         self.receiver_name = QtWidgets.QLineEdit(self.centralwidget)
-        self.receiver_name.setGeometry(QtCore.QRect(655, 410, 250, 30))  
+        self.receiver_name.setGeometry(QtCore.QRect(690, 170, 250, 30))  
         self.receiver_name.setPlaceholderText("Enter Receiver's Name")
         self.receiver_name.setAlignment(QtCore.Qt.AlignCenter)
         self.receiver_name.setVisible(False)
 
         self.weight_frame = QtWidgets.QFrame(self.centralwidget)
-        self.weight_frame.setGeometry(QtCore.QRect(730, 190, 200, 40))  
+        self.weight_frame.setGeometry(QtCore.QRect(710, 280, 200, 40))  
         self.weight_frame.setStyleSheet("background-color: white; border-radius: 10px;")  
 
         self.weight_status_label = QtWidgets.QLabel(self.centralwidget)
-        self.weight_status_label.setGeometry(QtCore.QRect(730, 190, 200, 40))  
+        self.weight_status_label.setGeometry(QtCore.QRect(710, 280, 200, 40))  
         self.weight_status_label.setAlignment(QtCore.Qt.AlignCenter)
         self.weight_status_label.setStyleSheet("background-color: white; border-radius: 10px;")  
 
