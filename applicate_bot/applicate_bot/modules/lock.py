@@ -7,9 +7,14 @@ import lgpio
 
 def setState(deviceid, lockpin, state):
     if state == 'LOCKED':
+        print("LOCKEDD")
         lgpio.gpio_write(deviceid, lockpin, 1)
     if state == 'UNLOCKED':
-        lgpio.gpio_write(deviceid, lockpin, 0)
+        print("UNLOCKEEDD")
+        try:
+            lgpio.gpio_write(deviceid, lockpin, 0)
+        except:
+            print("error")
 
 def getdoorState(device, doorpin):
     result = lgpio.gpio_read(device, doorpin)

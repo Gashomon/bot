@@ -96,22 +96,22 @@ class UserInterface(MyGUI.GUI):
     def displayWeight(self, value):
         # weight = str(value)
         # self.control.weight_status_label.setText("Weight: " + weight + " kg")
-        if value > 10000:
+        if value > 5000:
             #set colors #eb4034
             #set heavy
-            self.control.weight_status_label.setText(f"Weight: {(value / 1000):.2f} kg - Overloaded!")
+            self.control.weight_status_label.setText(f"Weight: Overloaded!")
             self.control.weight_status_label.setStyleSheet("color: red;")
             pass
-        elif value > 5000:
+        elif value > 2500:
             #set colors #9beb34
             #set medium
-            self.control.weight_status_label.setText(f"Weight: {(value / 1000):.2f} kg - Normal")
+            self.control.weight_status_label.setText(f"Weight: Normal")
             self.control.weight_status_label.setStyleSheet("color: orange;")
             pass
         else:
             #set colors #34eb80
             #set ok
-            self.control.weight_status_label.setText(f"Weight: {(value / 1000):.2f} kg - Normal")
+            self.control.weight_status_label.setText(f"Weight: Good")
             self.control.weight_status_label.setStyleSheet("color: green;")
             pass
         self.app.processEvents()
@@ -121,7 +121,7 @@ if __name__ == "__main__":
     ui.widget.show()
     # ui.display(mainT='Hello', subT='hi')
     ui.goto('control')
-    ui.displayWeight(1010)
+    # ui.displayWeight(1010)
     # ui.app.processEvents()
     # ui.goto('password')
     # ui.goto("confirm")

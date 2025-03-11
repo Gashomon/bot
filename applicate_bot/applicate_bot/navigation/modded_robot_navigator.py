@@ -222,7 +222,7 @@ class BasicNavigator(Node):
         return True
 
     # def spin(self, spin_dist=1.57, time_allowance=10, disable_collision_checks=False):
-    def spin(self, spin_dist=0.50, time_allowance=10, disable_collision=False):
+    def spin(self, spin_dist=0.60, time_allowance=10, disable_collision=False):
         self.debug("Waiting for 'Spin' action server")
         while not self.spin_client.wait_for_server(timeout_sec=1.0):
             self.info("'Spin' action server not available, waiting...")

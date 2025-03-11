@@ -25,20 +25,20 @@ try:
     hx.set_offset(0)
     while True:
         # Turn the GPIO pin on
-        print("on")
-        lgpio.gpio_write(device, LOCK, 1)
+        # print("on")
+        # lgpio.gpio_write(device, LOCK, 1)
         # 0 = 210000 1 = 240000
 
-        # formula = (hx.get_raw_data_mean() - 420000) / 60000
-        # print("Raw Data: " + str(formula) + " kilograms")
+        formula = (hx.get_raw_data_mean(readings=30) - 420000) / 60000
+        print("Raw Data: " + str(hx.get_last_raw_data()) + " kilograms")
 
-        time.sleep(0.5)
+        # time.sleep(5)
 
         # Turn the GPIO pin off
         # lgpio.gpio_read(device, BUTTON)
-        print("off")
-        lgpio.gpio_write(device, LOCK, 0)
-        time.sleep(1)
+        # print("off")
+        # lgpio.gpio_write(device, LOCK, 0)
+        # time.sleep(5)
 
 except KeyboardInterrupt:
     # lgpio.gpio_write(device, LED, 0)

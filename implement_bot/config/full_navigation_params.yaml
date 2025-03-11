@@ -350,17 +350,18 @@ behavior_server: # lists all basic drive functions
     spin:
       plugin: "nav2_behaviors/Spin"
 
+
     backup:
       plugin: "nav2_behaviors/BackUp"
-      # acceleration_limit: 100.0
-      # deceleration_limit: -100.0
-      # minimum_speed: 100.0
+      # acceleration_limit: 2.5
+      # deceleration_limit: -2.5.0
+      minimum_speed: 0.15
 
     drive_on_heading:
       plugin: "nav2_behaviors/DriveOnHeading"
-      # acceleration_limit: 100.0
-      # deceleration_limit: -100.0
-      # minimum_speed: 100.0
+      # acceleration_limit: 2.5
+      # deceleration_limit: -2.5
+      minimum_speed: 0.15
 
     wait:
       plugin: "nav2_behaviors/Wait"
@@ -373,9 +374,9 @@ behavior_server: # lists all basic drive functions
     simulation_time_step: 1.0 # Time step for projections (s) (assistedteleop)
     # cmd_vel_teleop:           # Topic to listen for teleopmessages (assistedteleop)
 
-    # max_rotational_vel: 350.0
-    # min_rotational_vel: 150.0
-    # rotational_acc_lim: 50.0
+    # max_rotational_vel: 1.0
+    min_rotational_vel: 0.6
+    # rotational_acc_lim: 3.2
 
 waypoint_follower: # waypoint special configurations
   ros__parameters:
@@ -417,22 +418,23 @@ collision_monitor:
     stop_pub_timeout: 2.0
     enable_stamped_cmd_vel: True  # False for Jazzy or older
     use_realtime_priority: false
-    polygons: ["PolygonStop", "PolygonSlow"]
+    polygons: ["PolygonStop", "PolygonApproach"]
     PolygonStop:
       type: "polygon"
-      points: [0.4,0.4,0.4,-0.4,-0.4,-0.4,-0.4,0.4]
+      points: [0.4,0.4,0.4,-0.4,0.4,-0.4,0.4,0.4]
       action_type: "stop"
       min_points: 4  # max_points: 3 for Humble
       visualize: True
       polygon_pub_topic: "polygon_stop"
-    PolygonSlow:
+    PolygonApproach:
       type: "polygon"
-      points: [0.8,0.8,0.8,-0.8,-0.8,-0.8,-0.8,0.8]
-      action_type: "slowdown"
+      points: [0.8,0.8,0.8,-0.8,0.8,-0.8,0.8,0.8]
+      action_type: "approach"
       min_points: 4  # max_points: 3 for Humble
-      slowdown_ratio: 0.3
+      time_before_collision: 0.8
+      simulation_time_step: 1.0
       visualize: True
-      polygon_pub_topic: "polygon_slowdown"
+      polygon_pub_topic: "polygon_approach"
     observation_sources: ["scan"]
     scan:
       source_timeout: 0.2

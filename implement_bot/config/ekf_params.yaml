@@ -19,6 +19,12 @@ ekf_node:
       #                 0.0, 0.0, 0.0,
       #                 0.0, 0.0, 0.0]
 
+      initial_state: [0.0, 0.0, 0.0,
+                      0.0, 0.0, 0.0,
+                      0.0, 0.0, 0.0,
+                      0.0, 0.0, 0.0,
+                      0.0, 0.0, 0.0]
+
       map_frame: map                    # Defaults to "map" if unspecified
       odom_frame: odom                  # Defaults to "odom" if unspecified
       base_link_frame: base_link        # Defaults to "base_link" if unspecified
@@ -35,19 +41,19 @@ ekf_node:
       # odom0_nodelay: false
       # odom0_differential: false
       # odom0_relative: true
-      odom0_queue_size: 2
+      # odom0_queue_size: 2
       # odom0_pose_rejection_threshold: 5.0               
       # odom0_twist_rejection_threshold: 5.0                
 
       # imu0: imu_sensor #simulated_imu
-      imu0: imu_broad/imu #real_imu
+      # imu0: imu_broad/imu #real_imu
 
       # # just needed variables
-      imu0_config: [false, false, false,
-                    false, false, false,
-                    false, false, false,
-                    false, false, false,
-                    true, false, false]
+      # imu0_config: [false, false, false,
+      #               false, false, false,
+      #               false, false, false,
+      #               false, false, true,
+      #               false, false, false]
 
       # # all available variables
       # imu0_config: [false, false, false,
@@ -65,11 +71,11 @@ ekf_node:
       # imu0_remove_gravitational_acceleration: true    # needs to also publish orientation to work
       # imu0_nodelay: false
       # imu0_differential: true
-      imu0_relative: true
-      imu0_queue_size: 2
-      # imu0_pose_rejection_threshold: 0.5                 
-      # imu0_twist_rejection_threshold: 5.0                
-      # imu0_linear_acceleration_rejection_threshold: 5.0  
+      # imu0_relative: true
+      # imu0_queue_size: 2
+      # imu0_pose_rejection_threshold: 2.0                
+      # imu0_twist_rejection_threshold: 2.0               
+      # imu0_linear_acceleration_rejection_threshold: 2.0  
       # imu0_remove_gravitational_acceleration: false
 
       # use_control: true

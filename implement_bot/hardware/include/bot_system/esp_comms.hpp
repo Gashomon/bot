@@ -167,6 +167,7 @@ public:
         // cout << s.substr(start, end - start) << endl; //need to add std:: if no namespace
         subtoken = response.substr(start, end - start);
 
+        //add small adjusts depending on initial values
         if(cnt == 0)      vel_x = std::atof(subtoken.c_str());
         else if(cnt == 1) vel_y = std::atof(subtoken.c_str());
         else if(cnt == 2) vel_z = std::atof(subtoken.c_str());

@@ -102,8 +102,8 @@ class ControlUI(QMainWindow, ctrlUi):
             self.label_receiver.setVisible(False)
             self.receiver_name.setVisible(False)          
 
-    def updateWeight(self):
-        pass
+    # def updateWeight(self):
+    #     pass
 
 class StatusUI(QMainWindow, statUi):
     def __init__(self):

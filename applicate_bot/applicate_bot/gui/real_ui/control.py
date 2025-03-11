@@ -33,13 +33,16 @@ class Ui_MainWindow(object):
         self.pushButton_2.setObjectName("pushButton_2")
         self.pushButton_2.setStyleSheet("background-color: #3867d6; color: white; border-radius: 10px; font-size: 14px;")
 
-        
+        self.pushButton_4 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_4.setGeometry(QtCore.QRect(100, 195, 111, 71))
+        self.pushButton_4.setObjectName("pushButton_4")
+        self.pushButton_4.setStyleSheet("background-color: #3867d6; color: white; border-radius: 10px; font-size: 14px;")
+
         self.label_3 = QtWidgets.QLabel(self.centralwidget)
         self.label_3.setGeometry(QtCore.QRect(80, 50, 151, 61))
         self.label_3.setObjectName("label_3")
         self.label_3.setStyleSheet("font-size: 18px; color: #4b6584;")
 
-        
         self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_3.setGeometry(QtCore.QRect(100, 100, 111, 71))
         self.pushButton_3.setObjectName("pushButton_3")
@@ -136,6 +139,7 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "Command Window"))
         self.label_2.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\"font-size:18pt;\">Command Window</span></p></body></html>"))
         self.pushButton_2.setText(_translate("MainWindow", "Fetch"))
+        self.pushButton_4.setText(_translate("MainWindow", "Unlock Door"))
         self.label_3.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\"font-size:12pt;\">Travel Mode:</span></p></body></html>"))
         self.pushButton_3.setText(_translate("MainWindow", "Deliver"))
         self.pushButton_4.setText(_translate("MainWindow", "Retrieve"))

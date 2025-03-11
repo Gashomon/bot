@@ -58,7 +58,7 @@
         <joint name="${pos_x}_range_joint" type="fixed">
             <parent link="base_link"/>
             <child link="${pos_x}_range_link"/>
-            <xacro:scaled_origin_rpy x="${(actual_bot_length/2) + smol_offset}" y="${offset_x + 0.1}"  z="${actual_wheel_radius}" roll="0" pitch="0" yaw="0"/>
+            <xacro:scaled_origin_rpy x="${(actual_bot_length/2) + smol_offset}" y="${offset_x}"  z="${actual_wheel_radius}" roll="0" pitch="0" yaw="0"/>
             <axis xyz="0 0 0"/>
         </joint>
 
