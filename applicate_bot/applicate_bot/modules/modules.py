@@ -2,7 +2,7 @@ import applicate_bot.modules.load as load
 import applicate_bot.modules.lock as lock
 import applicate_bot.modules.audio as audio
 
-import time
+import time, statistics
 import lgpio
 
 from enum import Enum
@@ -32,10 +32,17 @@ class Modules():
         self.device = lgpio.gpiochip_open(0)
 
         self.lockpin = setlock
-        self.lockstat = True
+        self.lockstate = "off"
+        self.locktimer = 5.0
+        self.countlock = False
+        self.lockstarttime = -1.0
         
         self.loadinpin = setloadin
         self.loadoutpin= setloadout
+        self.curr_weight = 0.0
+        self.weightlist = []
+        self.max_weight_counter = 30
+        self.loadstate = "light"
 
         self.doorpin = setdoor
 
@@ -64,35 +71,46 @@ class Modules():
             self.soundlibpath = soundpath
         else:
             self.SOUNDENABLE = False
-            
+
+    def setload(self, value):
+        if value > 5000:
+            self.loadstate = 'heavy'
+            pass
+        elif value > 2500:
+            self.loadstate = 'middle'
+            pass
+        else:
+            self.loadstate = 'light'
+            pass        
+    
     def setlock(self, state):
         if not self.LOCKENABLE:
             print("unabled lock")
             if state == "on":
-                self.lockstat = True
-                self.lockstat = "on"
+                # self.lockstate = True
+                self.lockstate = "on"
             if state == "off":
-                self.lockstat = False
-                self.lockstat = "off" 
+                # self.lockstate = False
+                self.lockstate = "off" 
             return
         
-        if state == "on":
+        if state == "on" and self.lockstate == 'off':
             print("lock on")
             lock.setState(self.device, self.lockpin, "LOCKED")
-            # self.lockstat = True
-            self.lockstat = "on"
-        if state == "off":
+            # self.lockstate = True
+            self.lockstate = "on"
+        if state == "off" and self.lockstate == 'on':
             print("lock off")
             lock.setState(self.device, self.lockpin, "UNLOCKED")
-            # self.lockstat = False
-            self.lockstat = "off" 
+            # self.lockstate = False
+            self.lockstate = "off" 
         pass
     
     def getlockstate(self):
         if not self.LOCKENABLE:
             pass
 
-        return self.lockstat
+        return self.lockstate
         pass
         
     def getdoorstate(self):
@@ -120,8 +138,21 @@ class Modules():
         if not self.LOADENABLE:
             return 0
             
-        return load.getLoadinGrams(self.hx711)
-        pass
+        readings = self.curr_weight
+        conversionFormula = readings / 200 #enter the conversion rate
+        return conversionFormula
+        
+    def updateWeight(self):
+        if not self.LOADENABLE:
+            return
+
+        load.addLoadRead(self.hx711, self.weightlist)
+        
+        if len(self.weightlist) >= self.max_weight_counter:
+            self.curr_weight = statistics.mean(self.weightlist)
+            self.weightlist.clear()
+        
+        return self.curr_weight
 
     def closegpio(self):
         lgpio.gpiochip_close(self.device)

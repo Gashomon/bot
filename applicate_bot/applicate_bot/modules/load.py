@@ -16,10 +16,27 @@ def init_load(deviceid, outpin, clkpin,
     hx.set_offset(offset)
     return hx
 
+# not used
 def readLoadSensor(hx):
     result = hx.get_raw_data_mean()
     return result
 
+def addLoadRead(hx, load_arr):
+    tmp1 = []
+    tmp1.append(load_arr)
+    tmp1.append(hx._read())
+    
+    tmp2 = []
+    if len(tmp1) > 1:
+        tmp2 = hx._data_filter(tmp1)
+    else:
+        tmp2 = tmp1
+    
+    load_arr.clear()
+    load_arr.append(tmp2)
+    return 
+
+# not used
 def getLoadinGrams(hx):
     readings = readLoadSensor(hx)
     conversionFormula = readings / 200 #enter the conversion rate

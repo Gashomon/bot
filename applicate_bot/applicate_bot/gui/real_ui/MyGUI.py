@@ -154,13 +154,13 @@ class ConfirmUI(QMainWindow, confUi):
         super(ConfirmUI,self).__init__()
         self.setupUi(self)
 
-    def confirm(self, quesText, b1Func, b2Func, b1Text='YES', b2Text='NO'):
-        self.label_2.setText(quesText)
-        self.label_2.setStyleSheet("font-weight: bold; font-size: 50px; background:none;")
-        self.pushButton.setText(b1Text)
-        self.pushButton_2.setText(b2Text)
-        self.pushButton.clicked.connect(b1Func)
-        self.pushButton_2.clicked.connect(b2Func)
+    # def confirm(self, quesText, b1Func, b2Func, b1Text, b2Text):
+    #     self.label_2.setText(quesText)
+    #     self.label_2.setStyleSheet("font-weight: bold; font-size: 50px; background:none;")
+    #     self.pushButton.setText(b1Text)
+    #     self.pushButton_2.setText(b2Text)
+    #     self.pushButton.clicked.connect(b1Func)
+    #     self.pushButton_2.clicked.connect(b2Func)
 
 class GUI():
     app=QApplication(sys.argv)

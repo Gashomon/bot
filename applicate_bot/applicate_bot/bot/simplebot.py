@@ -49,9 +49,7 @@ class Bot(Node):
     def __init__(self):
         super().__init__('appbot') 
 
-        self.EXPERIMENTAL=True
-        self.stet = "ui"
-        self.doortimer = 0
+        self.EXPERIMENTAL=True # not used
         
         # audio folders. starting from home/pi
         path_of_audios = '/home/pi/bot/src/bot/applicate_bot/applicate_bot/modules/real_fx/'
@@ -59,14 +57,16 @@ class Bot(Node):
         self.modules = Modules(setlock= 25, setloadin= -1, setloadout = -1, setdoor= -1, soundenable=True, soundpath=path_of_audios)
         
         print(f"enable modules are: lock({str(self.modules.LOCKENABLE)}), load({str(self.modules.LOADENABLE)})")
+        
         self.navigator = Navigator()
         self.server = Server()
         self.logger = Logger()
         self.ui = UI()
-        # self.timer = self.create_timer(1, self.run_updates)
-        
+
         self.loadbot()
-        self.foreverlooping()
+
+        self.timer = self.create_timer(0.01, self.run_updates)
+        # self.foreverlooping() # TEST IT OFF  
 
     # A BIT OF LOOPING COMPILER STUFFS
     def loadbot(self):
@@ -74,63 +74,63 @@ class Bot(Node):
         self.ui.goto('main')
         self.ui.widget.show()
         self.modules.setlock('on')
-        # self.run_updates()
 
         # Set initial pose
         initial_pose = self.create_pose_stamped(0.0, 0.0, 0.0)
         # self.navigator.setInitialPose(initial_pose)
 
-        # # Wait for Nav2 to be active
-        self.navigator.waitUntilNav2Active()
-        
-        # self.lockon() # deact for simplicity
-        self.modules.setlock('on')
+        # Wait for Nav2 to be active
+        self.navigator.waitUntilNav2Active()   
         self.playfor('activated')
 
-        # lock unlock
-        self.ui.control.pushButton_4.clicked.connect(self.open_door)
-    
-    def run_updates(self, event=None):
+        # permanent button assigns
+        self.ui.main.pushButton.clicked.connect(self.cmd_btn)
+        self.ui.control.pushButton_4.clicked.connect(self.lockoff)
+
+        # self.run_updates()
+            
+    def run_updates(self, *events):
         print("updating")
-        if event == "noui":
-            pass
+        if events.count("noui"):
+            print("dont ui")
+            return
 
         self.ui.app.processEvents()
-        if(event == "control"):
-            # if self.ui.
-            self.ui.enableRun()
+
+        if events.count("load"):
+            print("loadup")
             self.updateWeight()
-            snd_onc = True
-            while not self.loadislighterthan(5000): 
-                self.ui.app.processEvents()             
+            if not self.loadislighterthan(5000) and self.ui.runEnabled():    
+                self.playfor('heavy')       
                 self.ui.disableRun()
-                self.updateWeight()
-                self.ui.app.processEvents()   
-                if snd_onc:
-                    snd_onc = False
-                    self.playfor('heavy')
-            snd_onc = True 
-        self.ui.app.processEvents()
-        
-    def updateWeight(self):
-        if self.modules.LOADENABLE:
-            value = self.modules.getLoad()
-            # set value to label if ever
-            self.ui.displayWeight(value)
+
+            if self.loadislighterthan(5000) and not self.ui.runEnabled():
+                self.ui.enableRun()
+
+        if events.count('lock'):
+            print("lockup")
+            if self.modules.lockstate == 'on' and self.ui.lockEnabled():
+                self.ui.disableLock()
+            if self.modules.lockstate == 'off' and not self.ui.lockEnabled():
+                self.ui.enableLock()
+            
+            if self.modules.countlock:
+                if time.perf_counter() - self.modules.lockstarttime >= self.modules.locktimer:
+                    self.lockon()
+
         self.ui.app.processEvents()
 
     def foreverlooping(self):
         self.ui.goto('main')
-        self.ui.main.pushButton.clicked.connect(self.cmd_btn)
         while rclpy.ok():
             self.run_updates()
             # pass
-            
+    
     def cmd_btn(self):
         print("starting")
         self.waitforcmd()
         print("going back")
-
+    
     # NAVIGATOR STUFF
     def create_pose_stamped(self, position_x, position_y, orientation_z):
         q_x, q_y, q_z, q_w = tf_transformations.quaternion_from_euler(0.0, 0.0, orientation_z)
@@ -163,7 +163,6 @@ class Bot(Node):
                         / 1e9
                     )
                     + ' seconds.\n'
-            
                 )
         result = self.navigator.getResult()
         self.get_logger().info('Navigation Result: %s' % result)
@@ -172,34 +171,37 @@ class Bot(Node):
     def lockon(self):
         self.modules.setlock('on')
         self.playfor('locked')
-    
+
+        self.modules.countlock = False
+        self.modules.lockstarttime = -1.0
+        self.ui.enableLock()
+        
     def lockoff(self):
         self.modules.setlock('off')
         self.playfor('unlocked')
-    
-    def open_door(self):
-        if self.modules.getlockstate() == 'on':
-            self.lockoff()
-            pass
 
-        if self.modules.getlockstate() == 'off':
-            self.lockon()
-            pass
-    
+        self.modules.countlock = True
+        self.modules.lockstarttime = time.perf_counter()
+        self.ui.disableLock()
+
     def playfor(self, situation):
         self.modules.playonce(situation)
 
     def loadislighterthan(self, limit):
         load = self.modules.getLoad()
         if load > limit: #load is heavy. limit in grams
-            self.playfor('heavy')
             return False
         else:
             return True
 
+    def updateWeight(self):
+        if self.modules.LOADENABLE:
+            value = self.modules.getLoad()
+            # set value to label if ever
+            self.ui.displayWeight(value)
+
     # MAIN ROBOT CONTROLLING STUFF    
     def waitforcmd(self):
-        self.lockoff()
         self.ui.goto("control") 
         
         t = Transaction()
@@ -208,7 +210,7 @@ class Bot(Node):
         self.ui.control.pushButton_5.clicked.connect(
             lambda: self.ui.sendcmd(t))
         while t.dest1 is None or t.dest2 is None:
-            self.run_updates("control")
+            self.run_updates("load","lock")
         t.password = self.genpass()
 
         self.playfor('cmd_got')
@@ -223,15 +225,14 @@ class Bot(Node):
         self.log("robot_begin")
         if transaction.type == 1:
             reset = self.deliver(transaction)
-        if transaction.type == 2:
-             reset = self.fetch(transaction)
-        if transaction.type == 3:
-            reset = self.retrieve(transaction)
+        # if transaction.type == 2:
+        #      reset = self.fetch(transaction)
+        # if transaction.type == 3:
+        #     reset = self.retrieve(transaction)
         
         print(reset)
         if reset:
             self.log("robot_cancel")
-            self.lockon()
             return
         
         print("done")
@@ -250,7 +251,6 @@ class Bot(Node):
 
         self.ui.display(mainT ="Robot is Leaving in 5 seconds. Please step aside.")
         # self.run_updates()
-        self.lockon()
         self.playfor('leaving')
         time.sleep(5)        
 
@@ -263,7 +263,7 @@ class Bot(Node):
         # self.goPose(pose)
 
         # while not self.navigator.isTaskComplete():
-        #     self.run_updates()
+        #     self.run_updates("noui")
         
         time.sleep(3)
         #turn on screen
@@ -303,22 +303,26 @@ class Bot(Node):
                 ex = [None]
                 self.ui.check(q, ex)
                 # self.run_updates()
-        
+
         print("safe")
         self.playfor('password')
         self.ui.verifyuser(t.password)
         # self.run_updates()
-        self.lockoff()
 
-        q = "Take everything. Close door if finished.\n Press Yes to Leave."
+        q = "Take everything. Close door if finished."
         ex[0] = None
-        self.ui.check(q, ex)
+        self.ui.check(q, ex, 'leave', 'unlock')
         self.playfor('remove_item')
         while ex[0] is not True:
-            self.run_updates()
+            self.run_updates('lock')
+            if ex[0] is False:
+                self.lockoff()
             pass
-        self.lockon()
+
+        self.ui.display(mainT ="Robot is Leaving in 5 seconds. Please step aside.")
+        # self.run_updates()
         self.playfor('leaving')
+        time.sleep(5)
         
         #turn off screen
         self.ui.display("travelling")

@@ -43,10 +43,12 @@ class UserInterface(MyGUI.GUI):
         transaction.receiver = self.control.receiver_name.text()
         return transaction
 
-    def check(self, question, lvar):
+    def check(self, question, lvar, tx1='YES', tx2='NO'):
         self.goto('confirm')
         self.confirm.label.setText(question)
         self.confirm.label.setStyleSheet("font-weight: bold; font-size: 40px; background:none;")
+        self.confirm.yes_button.setText(tx1)
+        self.confirm.no_button.setText(tx2)
         # self.confirm.confirm(question, lambda:True, lambda:False)
         # self.confirm.confirm(question, ex:=lambda:True, ex:=lambda:False)
         self.confirm.yes_button.clicked.connect(lambda:self.rtn1(lvar))
@@ -86,33 +88,63 @@ class UserInterface(MyGUI.GUI):
         self.goto('status')
 
     def disableRun(self):
+        # for control
         self.control.pushButton_5.setDisabled(True)
         self.control.pushButton_5.setStyleSheet("background-color: #4d4c4c; color: white; border-radius: 10px;")
 
+        # for confirm
+        self.confirm.no_button.setDisabled(True)
+        self.confirm.no_button.setStyleSheet("background-color: grey; color: blue")
+
     def enableRun(self):
+        # for control
         self.control.pushButton_5.setDisabled(False)
         self.control.pushButton_5.setStyleSheet("background-color: #3867d6; color: white; border-radius: 10px;")
 
+        # for confirm
+        self.confirm.no_button.setDisabled(False)
+        self.confirm.no_button.setStyleSheet("background-color: lightblue; color: blue;")
+
+    def runEnabled(self):
+        return self.control.pushButton_5.isEnabled()
+    
+    def disableLock(self):
+        self.control.pushButton_6.setDisabled(True)
+        self.control.pushButton_6.setStyleSheet("background-color: #4d4c4c; color: white; border-radius: 10px;")
+
+    def enableLock(self):
+        self.control.pushButton_6.setDisabled(False)
+        self.control.pushButton_6.setStyleSheet("background-color: #3867d6; color: white; border-radius: 10px;")
+
+    def lockEnabled(self):
+        return self.control.pushButton_6.isEnabled()
+    
     def displayWeight(self, value):
         # weight = str(value)
         # self.control.weight_status_label.setText("Weight: " + weight + " kg")
-        if value > 5000:
+        if value == 'heavy':
             #set colors #eb4034
             #set heavy
             self.control.weight_status_label.setText(f"Weight: Overloaded!")
             self.control.weight_status_label.setStyleSheet("color: red;")
             pass
-        elif value > 2500:
+        elif value == 'normal':
             #set colors #9beb34
             #set medium
             self.control.weight_status_label.setText(f"Weight: Normal")
             self.control.weight_status_label.setStyleSheet("color: orange;")
             pass
-        else:
+        elif value == 'light':
             #set colors #34eb80
             #set ok
             self.control.weight_status_label.setText(f"Weight: Good")
             self.control.weight_status_label.setStyleSheet("color: green;")
+            pass
+        else:
+            #set colors #808080
+            #set ok
+            self.control.weight_status_label.setText(f"Weight: Unknown")
+            self.control.weight_status_label.setStyleSheet("color: grey;")
             pass
         self.app.processEvents()
         pass

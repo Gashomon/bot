@@ -16,6 +16,7 @@ def setState(deviceid, lockpin, state):
         except:
             print("error")
 
+# not used
 def getdoorState(device, doorpin):
     result = lgpio.gpio_read(device, doorpin)
     return result

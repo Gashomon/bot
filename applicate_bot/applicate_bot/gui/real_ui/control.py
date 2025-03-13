@@ -21,12 +21,10 @@ class Ui_MainWindow(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
 
-        
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
         self.label_2.setGeometry(QtCore.QRect(380, 5, 221, 50))
         self.label_2.setObjectName("label_2")
         self.label_2.setStyleSheet("font-size: 24px; font-weight: bold; color: #4b6584;")
-
         
         self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_2.setGeometry(QtCore.QRect(100, 195, 111, 71))
@@ -48,10 +46,15 @@ class Ui_MainWindow(object):
         self.pushButton_3.setObjectName("pushButton_3")
         self.pushButton_3.setStyleSheet("background-color: #45aaf2; color: white; border-radius: 10px; font-size: 14px;")
         
-        self.pushButton_4 = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_4.setGeometry(QtCore.QRect(100, 290, 111, 71))
-        self.pushButton_4.setObjectName("pushButton_4")
-        self.pushButton_4.setStyleSheet("background-color: #20bf6b; color: white; border-radius: 10px; font-size: 14px;")
+        self.pushButton_6 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_6.setGeometry(QtCore.QRect(100, 290, 111, 71))
+        self.pushButton_6.setObjectName("pushButton_6")
+        self.pushButton_6.setStyleSheet("background-color: #20bf6b; color: white; border-radius: 10px; font-size: 14px;")
+
+        self.pushButton_7 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_7.setGeometry(QtCore.QRect(100, 195, 111, 71))
+        self.pushButton_7.setObjectName("pushButton_7")
+        self.pushButton_7.setStyleSheet("background-color: #3867d6; color: white; border-radius: 10px; font-size: 14px;")
 
         self.label_sender = QtWidgets.QLabel(self.centralwidget)
         self.label_sender.setGeometry(QtCore.QRect(775, 70, 120, 30)) 
@@ -139,10 +142,11 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "Command Window"))
         self.label_2.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\"font-size:18pt;\">Command Window</span></p></body></html>"))
         self.pushButton_2.setText(_translate("MainWindow", "Fetch"))
-        self.pushButton_4.setText(_translate("MainWindow", "Unlock Door"))
         self.label_3.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\"font-size:12pt;\">Travel Mode:</span></p></body></html>"))
         self.pushButton_3.setText(_translate("MainWindow", "Deliver"))
         self.pushButton_4.setText(_translate("MainWindow", "Retrieve"))
+        self.pushButton_6.setText(_translate("MainWindow", "Unlock Door"))
+        self.pushButton_7.setText(_translate("MainWindow", "Keyboard"))
         self.label.setText(_translate("MainWindow", "Delivery Mode"))
         self.label_4.setText(_translate("MainWindow", "Current Location"))
         self.comboBox_6.setItemText(0, _translate("MainWindow", "Dean"))
