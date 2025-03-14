@@ -54,7 +54,7 @@ class Bot(Node):
         # audio folders. starting from home/pi
         path_of_audios = '/home/pi/bot/src/bot/applicate_bot/applicate_bot/modules/real_fx/'
         # self.modules = Modules(setlock= -1, setloadin= -1, setloadout = -1, setdoor= -1, soundenable=True, soundpath=path_of_audios)
-        self.modules = Modules(setlock= 25, setloadin= -1, setloadout = -1, setdoor= -1, soundenable=True, soundpath=path_of_audios)
+        self.modules = Modules(setlock= 25, setloadin= 27, setloadout = 22, setdoor= -1, soundenable=True, soundpath=path_of_audios)
         
         print(f"enable modules are: lock({str(self.modules.LOCKENABLE)}), load({str(self.modules.LOADENABLE)})")
         
@@ -85,12 +85,12 @@ class Bot(Node):
 
         # permanent button assigns
         self.ui.main.pushButton.clicked.connect(self.cmd_btn)
-        self.ui.control.pushButton_4.clicked.connect(self.lockoff)
+        self.ui.control.pushButton_6.clicked.connect(self.lockoff)
 
         # self.run_updates()
             
     def run_updates(self, *events):
-        print("updating")
+        # print("updating")
         if events.count("noui"):
             print("dont ui")
             return
@@ -98,8 +98,9 @@ class Bot(Node):
         self.ui.app.processEvents()
 
         if events.count("load"):
-            print("loadup")
+            # print("loadup")
             self.updateWeight()
+            # print(self.modules.curr_weight)
             if not self.loadislighterthan(5000) and self.ui.runEnabled():    
                 self.playfor('heavy')       
                 self.ui.disableRun()
@@ -108,11 +109,11 @@ class Bot(Node):
                 self.ui.enableRun()
 
         if events.count('lock'):
-            print("lockup")
+            # print("lockup")
             if self.modules.lockstate == 'on' and self.ui.lockEnabled():
-                self.ui.disableLock()
-            if self.modules.lockstate == 'off' and not self.ui.lockEnabled():
                 self.ui.enableLock()
+            if self.modules.lockstate == 'off' and not self.ui.lockEnabled():
+                self.ui.disableLock()
             
             if self.modules.countlock:
                 if time.perf_counter() - self.modules.lockstarttime >= self.modules.locktimer:
@@ -196,9 +197,12 @@ class Bot(Node):
 
     def updateWeight(self):
         if self.modules.LOADENABLE:
+            self.modules.updateWeight()
             value = self.modules.getLoad()
+            print(value)
+            self.modules.setload(value)
             # set value to label if ever
-            self.ui.displayWeight(value)
+            self.ui.displayWeight(self.modules.loadstate)
 
     # MAIN ROBOT CONTROLLING STUFF    
     def waitforcmd(self):

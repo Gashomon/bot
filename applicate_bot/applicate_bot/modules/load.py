@@ -22,18 +22,37 @@ def readLoadSensor(hx):
     return result
 
 def addLoadRead(hx, load_arr):
-    tmp1 = []
-    tmp1.append(load_arr)
-    tmp1.append(hx._read())
+    # do backup of current channel befor reading for later use
+    # print("getting new data")
+    backup_channel = hx._current_channel
+    backup_gain = hx._gain_channel_A
+    # do required number of readings
+    newval = hx._read()
+    newarr = []
     
-    tmp2 = []
-    if len(tmp1) > 1:
-        tmp2 = hx._data_filter(tmp1)
-    else:
-        tmp2 = tmp1
+    if newval > -1 and newval:
+        load_arr.append(newval)
+
     
-    load_arr.clear()
-    load_arr.append(tmp2)
+        if len(load_arr) > 2  and hx._data_filter:
+            # print(f"t1 is {tmp1}")
+            newarr = hx._data_filter(load_arr)
+            # print(newarr)
+            
+        load_arr = newarr
+    # tmp1 = []
+    # tmp1 = load_arr
+    
+    # tmp1.append(hx._read())
+    
+    # tmp2 = []
+    # if len(tmp1) > 2  and hx._data_filter:
+    #     print(f"t1 is {tmp1}")
+    #     tmp2 = hx._data_filter(tmp1)
+    # else:
+    #     tmp2 = tmp1
+    # load_arr = tmp2   
+    # print(f" arr {load_arr}")
     return 
 
 # not used

@@ -42,6 +42,7 @@ class Modules():
         self.curr_weight = 0.0
         self.weightlist = []
         self.max_weight_counter = 30
+        self.timer = time.perf_counter()
         self.loadstate = "light"
 
         self.doorpin = setdoor
@@ -57,6 +58,8 @@ class Modules():
         if self.loadinpin > 0 and self.loadoutpin > 0:
             self.LOADENABLE = True
             self.hx711 = load.init_load(self.device, self.loadinpin, self.loadoutpin)
+            self.backup_channel = self.hx711._current_channel
+            self.backup_gain = self.hx711._gain_channel_A
         else:
             self.LOADENABLE = False
 
@@ -77,7 +80,7 @@ class Modules():
             self.loadstate = 'heavy'
             pass
         elif value > 2500:
-            self.loadstate = 'middle'
+            self.loadstate = 'normal'
             pass
         else:
             self.loadstate = 'light'
@@ -148,11 +151,16 @@ class Modules():
 
         load.addLoadRead(self.hx711, self.weightlist)
         
-        if len(self.weightlist) >= self.max_weight_counter:
+        if len(self.weightlist) >= self.max_weight_counter or time.perf_counter()-self.timer > 3000.0:
+            # print("getting mean")
             self.curr_weight = statistics.mean(self.weightlist)
+            self.hx711._save_last_raw_data(self.backup_channel, self.backup_gain, self.weightlist)
+            self.timer = time.perf_counter()
             self.weightlist.clear()
+
+        # self.hx711._save_last_raw_data(self.hx711, self.hx711.backup_gain, self.curr_weight)
         
-        return self.curr_weight
+        return 
 
     def closegpio(self):
         lgpio.gpiochip_close(self.device)

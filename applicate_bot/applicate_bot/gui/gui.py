@@ -148,6 +148,7 @@ class UserInterface(MyGUI.GUI):
             pass
         self.app.processEvents()
         pass
+
 if __name__ == "__main__":
     ui = UserInterface()
     ui.widget.show()
