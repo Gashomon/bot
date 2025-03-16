@@ -19,7 +19,7 @@ class Ui_MainWindow(object):
         self.label.setObjectName("label")
         
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(300, 270, 166, 46))  # Adjusted for new size
+        self.pushButton.setGeometry(QtCore.QRect(420, 270, 130, 46)) # Adjusted for new size
         self.pushButton.setObjectName("pushButton")
         
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
@@ -28,7 +28,7 @@ class Ui_MainWindow(object):
         
         # New button for robot introduction
         self.introduceButton = QtWidgets.QPushButton(self.centralwidget)
-        self.introduceButton.setGeometry(QtCore.QRect(500, 270, 166, 46))  # New button below the existing one
+        self.introduceButton.setGeometry(QtCore.QRect(760, 50, 100, 30))   # New button below the existing one
         self.introduceButton.setObjectName("introduceButton")
 
         MainWindow.setCentralWidget(self.centralwidget)
@@ -53,13 +53,13 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:12pt; color: black;\">Main Window</span></p><p align=\"center\"><br/></p></body></html>"))
         
         # Enlarging the text size of the "command" button (1.5 times)
-        self.pushButton.setText(_translate("MainWindow", "Command Robot"))
+        self.pushButton.setText(_translate("MainWindow", "Command"))
         self.pushButton.setStyleSheet("color: black; font-size: 15pt;")  # Font size increased
 
         self.label_2.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:48pt; color: black;\">WELCOME</span></p></body></html>"))
 
         # Enlarging the text size of the "Introduce Robot" button (1.5 times)
-        self.introduceButton.setText(_translate("MainWindow", "Introduce Robot"))
+        self.introduceButton.setText(_translate("MainWindow", "Introduce"))
         self.introduceButton.setStyleSheet("color: black; font-size: 15pt;")  # Font size increased
 
 if __name__ == "__main__":

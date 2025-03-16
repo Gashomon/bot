@@ -1,6 +1,6 @@
 import applicate_bot.modules.load as load
 import applicate_bot.modules.lock as lock
-import applicate_bot.modules.audio as audio
+import applicate_bot.modules.peripherals as perifs
 
 import time, statistics
 import lgpio
@@ -32,8 +32,8 @@ class Modules():
         self.device = lgpio.gpiochip_open(0)
 
         self.lockpin = setlock
-        self.lockstate = "off"
-        self.locktimer = 5.0
+        self.lockstate = "on"
+        self.locktimer = 2.0
         self.countlock = False
         self.lockstarttime = -1.0
         
@@ -129,12 +129,12 @@ class Modules():
         pass
     
     def playonce(self, situation):
-        audio.playfor(self.soundlibpath, situation)
+        perifs.playfor(self.soundlibpath, situation)
         pass
     
     def playloop(self, situation, duration_count=3, trigger=None):
         while True:
-            audio.playfor(situation)
+            perifs.playfor(situation)
         pass
             
     def getLoad(self):
@@ -142,7 +142,7 @@ class Modules():
             return 0
             
         readings = self.curr_weight
-        conversionFormula = readings / 200 #enter the conversion rate
+        conversionFormula = (readings / 200 ) - 1900 #enter the conversion rate
         return conversionFormula
         
     def updateWeight(self):
@@ -161,6 +161,10 @@ class Modules():
         # self.hx711._save_last_raw_data(self.hx711, self.hx711.backup_gain, self.curr_weight)
         
         return 
+
+    def toggleKeyboard(self):
+
+        perifs.clickAt(835,10)
 
     def closegpio(self):
         lgpio.gpiochip_close(self.device)

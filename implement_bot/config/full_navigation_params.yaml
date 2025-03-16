@@ -32,13 +32,13 @@ amcl:
     save_pose_rate: 0.5 # Hz for updating for pose parameter server
     sigma_hit: 0.2 # checker to match sensor readings. Higher = more tolerant
     tf_broadcast: True 
-    transform_tolerance: 1.0 # duration for the transforms to be valid
+    transform_tolerance: 0.5 # duration for the transforms to be valid
     update_min_a: 0.1 # update rate in radians for rotating. default 0.25
     update_min_d: 0.1 # update rate in meters for moving. default 0.25
-    z_hit: 0.001 # trust that sensor readings are perfect to map. default  0.5
+    z_hit: 0.1 # trust that sensor readings are perfect to map. default  0.5
     z_max: 0.1 # trust that max sensor reads are correct. default 0.05
     z_rand: 1.0 # trust on sensor readings that deosn't make sense on map
-    z_short: 0.05 # trust on sensor
+    z_short: 0.5 # trust on sensor default 0.05
     scan_topic: /ldlidar_node/scan
     # added initial pose
     set_initial_pose: true
@@ -146,7 +146,7 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
     general_goal_checker:
       plugin: "nav2_controller::SimpleGoalChecker"
       stateful: True
-      xy_goal_tolerance: 0.4 # error in meters on the actual goal
+      xy_goal_tolerance: 0.05 # error in meters on the actual goal
       yaw_goal_tolerance: 2.0 # error in radians on the actual goal
     # Rotate Shim Controller
     FollowPath:  
@@ -350,7 +350,6 @@ behavior_server: # lists all basic drive functions
     spin:
       plugin: "nav2_behaviors/Spin"
 
-
     backup:
       plugin: "nav2_behaviors/BackUp"
       # acceleration_limit: 2.5
@@ -375,7 +374,7 @@ behavior_server: # lists all basic drive functions
     # cmd_vel_teleop:           # Topic to listen for teleopmessages (assistedteleop)
 
     # max_rotational_vel: 1.0
-    min_rotational_vel: 0.6
+    min_rotational_vel: 0.8
     # rotational_acc_lim: 3.2
 
 waypoint_follower: # waypoint special configurations

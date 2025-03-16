@@ -29,7 +29,7 @@ class Ui_MainWindow(object):
         self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_2.setGeometry(QtCore.QRect(100, 195, 111, 71))
         self.pushButton_2.setObjectName("pushButton_2")
-        self.pushButton_2.setStyleSheet("background-color: #3867d6; color: white; border-radius: 10px; font-size: 14px;")
+        self.pushButton_2.setStyleSheet("background-color: #3867d6; color: white; border-radius: 10px; font-size: 17px;")
 
         self.pushButton_4 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_4.setGeometry(QtCore.QRect(100, 195, 111, 71))
@@ -44,7 +44,8 @@ class Ui_MainWindow(object):
         self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_3.setGeometry(QtCore.QRect(100, 100, 111, 71))
         self.pushButton_3.setObjectName("pushButton_3")
-        self.pushButton_3.setStyleSheet("background-color: #45aaf2; color: white; border-radius: 10px; font-size: 14px;")
+        self.pushButton_3.setStyleSheet("background-color: #45aaf2; color: white; border-radius: 10px; font-size: 17px;")
+
         
         self.pushButton_6 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_6.setGeometry(QtCore.QRect(100, 290, 111, 71))
@@ -59,7 +60,7 @@ class Ui_MainWindow(object):
         self.label_sender = QtWidgets.QLabel(self.centralwidget)
         self.label_sender.setGeometry(QtCore.QRect(775, 70, 120, 30)) 
         self.label_sender.setText("Sender's Name:")
-        self.label_sender.setStyleSheet("font-size: 12px; color: #4b6584;")
+        self.label_sender.setStyleSheet("font-size: 14px; color: #4b6584;")
         self.label_sender.setVisible(False)
 
         self.sender_name = QtWidgets.QLineEdit(self.centralwidget)
@@ -71,7 +72,7 @@ class Ui_MainWindow(object):
         self.label_receiver = QtWidgets.QLabel(self.centralwidget)
         self.label_receiver.setGeometry(QtCore.QRect(775, 140, 250, 30))  
         self.label_receiver.setText("Receiver's Name:")
-        self.label_receiver.setStyleSheet("font-size: 12px; color: #4b6584;")
+        self.label_receiver.setStyleSheet("font-size: 14px; color: #4b6584;")
         self.label_receiver.setVisible(False)
 
         self.receiver_name = QtWidgets.QLineEdit(self.centralwidget)
@@ -101,26 +102,28 @@ class Ui_MainWindow(object):
         self.page1 = QtWidgets.QWidget()
         self.page1.setObjectName("page1")
         self.label = QtWidgets.QLabel(self.page1)
-        self.label.setGeometry(QtCore.QRect(130, 30, 111, 41))
+        self.label.setGeometry(QtCore.QRect(130, 10, 111, 41))
         self.label.setObjectName("label")
         self.label.setStyleSheet("font-size: 16px; color: black;")
 
         self.label_4 = QtWidgets.QLabel(self.page1)
-        self.label_4.setGeometry(QtCore.QRect(130, 110, 111, 41))
+        self.label_4.setGeometry(QtCore.QRect(130, 90, 111, 41))
         self.label_4.setObjectName("label_4")
         self.label_4.setStyleSheet("font-size: 14px; color: black;")
 
         self.comboBox_6 = QtWidgets.QComboBox(self.page1)
-        self.comboBox_6.setGeometry(QtCore.QRect(142, 160, 91, 22))
+        self.comboBox_6.setGeometry(QtCore.QRect(120, 140, 130, 35))
         self.comboBox_6.setObjectName("comboBox_6")
-        self.comboBox_6.setStyleSheet("background-color: #b8e994; border-radius: 5px; color: black;")
+        self.comboBox_6.setStyleSheet("background-color: #b8e994; font: 14px; border-radius: 5px; color: black;")
         self.comboBox_6.addItem("")
         self.comboBox_6.addItem("")
 
         self.pushButton_5 = QtWidgets.QPushButton(self.page1)
-        self.pushButton_5.setGeometry(QtCore.QRect(40, 230, 81, 41))
+        self.pushButton_5.setGeometry(QtCore.QRect(40, 230, 130, 50))
         self.pushButton_5.setObjectName("pushButton_5")
-        self.pushButton_5.setStyleSheet("background-color: #3867d6; color: white; border-radius: 10px;")
+        self.pushButton_5.setStyleSheet("background-color: #3867d6; color: white; font: 15px; border-radius: 10px;")
+
+        
 
         self.stackedWidget.addWidget(self.page1)
 

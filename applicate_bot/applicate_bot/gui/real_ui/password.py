@@ -17,23 +17,24 @@ class Ui_MainWindow(object):
         self.label.setStyleSheet("color: blue;")
         
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
-        self.label_2.setGeometry(QtCore.QRect(280, 120, 400, 61))
+        self.label_2.setGeometry(QtCore.QRect(270, 120, 400, 61))
         self.label_2.setAlignment(QtCore.Qt.AlignCenter)
         self.label_2.setObjectName("label_2")
-        self.label_2.setStyleSheet("color: blue;")
+        self.label_2.setStyleSheet("color: blue;background: lightblue;")
         
         self.label_3 = QtWidgets.QLabel(self.centralwidget)
-        self.label_3.setGeometry(QtCore.QRect(330, 200, 300, 51))
+        self.label_3.setGeometry(QtCore.QRect(330, 200, 300, 50)) 
         self.label_3.setAlignment(QtCore.Qt.AlignCenter)
         self.label_3.setObjectName("label_3")
-        self.label_3.setStyleSheet("color: blue;")
+        self.label_3.setStyleSheet("border: 2px solid black; font-size: 18pt; color: black; background: white;")
         
         # Button styling
         button_color = "skyblue"
         self.pushButtons = []
-        positions = [(200, 340), (280, 340), (360, 340), (440, 340), (520, 340),
-                     (200, 430), (280, 430), (360, 430), (440, 430), (520, 430),
-                     (640, 340), (640, 430), (730, 430)]
+        
+        positions = [(250, 310), (330, 310), (410, 310), (490, 310), (570, 310),
+                     (250, 400), (330, 400), (410, 400), (490, 400), (570, 400),
+                     (690, 310), (690, 400), (780, 400)]  
         labels = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "OK", "Delete", "Clear"]
         special_colors = {"OK": "lightgreen", "Delete": "red", "Clear": "lightblue"}
         
@@ -44,7 +45,7 @@ class Ui_MainWindow(object):
             button.setText(labels[i])
             color = special_colors.get(labels[i], button_color)
             text_color = "white" if labels[i] in special_colors else "black"
-            font_style = "font: bold 14pt 'Arial';" if labels[i] in special_colors else "font: 12pt 'Arial';"
+            font_style = "font: bold 16pt 'Arial';" if labels[i] in special_colors else "font: 14pt 'Arial';"
             button.setStyleSheet(f"background-color: {color}; color: {text_color}; {font_style}")
             self.pushButtons.append(button)
         

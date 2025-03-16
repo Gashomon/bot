@@ -62,18 +62,18 @@ class UserInterface(MyGUI.GUI):
         # print("False")
         msg[0] = False
 
-    def verifyuser(self, password):
+    def verifyuser(self, password, play):
         self.goto('password')
         self.password.label_3.setText("Enter PassCode. Clear First")
         self.password.label_3.setText("Enter PassCode. Clear First")
         pasc=[None]
-        self.password.pushButtons[10].clicked.connect(lambda: self.passhold(password, pasc))
+        self.password.pushButtons[10].clicked.connect(lambda: self.passhold(password, pasc, play))
 
         while not pasc[0]:
             self.app.processEvents()
     
-    def passhold(self, passcode, var):
-        if self.password.verify(passcode):
+    def passhold(self, passcode, var, fail):
+        if self.password.verify(passcode, fail):
             var[0] = True
         else:
             var[0] = False
@@ -92,18 +92,10 @@ class UserInterface(MyGUI.GUI):
         self.control.pushButton_5.setDisabled(True)
         self.control.pushButton_5.setStyleSheet("background-color: #4d4c4c; color: white; border-radius: 10px;")
 
-        # for confirm
-        self.confirm.no_button.setDisabled(True)
-        self.confirm.no_button.setStyleSheet("background-color: grey; color: blue")
-
     def enableRun(self):
         # for control
         self.control.pushButton_5.setDisabled(False)
         self.control.pushButton_5.setStyleSheet("background-color: #3867d6; color: white; border-radius: 10px;")
-
-        # for confirm
-        self.confirm.no_button.setDisabled(False)
-        self.confirm.no_button.setStyleSheet("background-color: lightblue; color: blue;")
 
     def runEnabled(self):
         return self.control.pushButton_5.isEnabled()
@@ -112,9 +104,17 @@ class UserInterface(MyGUI.GUI):
         self.control.pushButton_6.setDisabled(True)
         self.control.pushButton_6.setStyleSheet("background-color: #4d4c4c; color: white; border-radius: 10px;")
 
+        # for confirm
+        self.confirm.no_button.setDisabled(True)
+        self.confirm.no_button.setStyleSheet("background-color: grey; color: blue")
+
     def enableLock(self):
         self.control.pushButton_6.setDisabled(False)
         self.control.pushButton_6.setStyleSheet("background-color: #3867d6; color: white; border-radius: 10px;")
+
+        # for confirm
+        self.confirm.no_button.setDisabled(False)
+        self.confirm.no_button.setStyleSheet("background-color: lightblue; color: blue;")
 
     def lockEnabled(self):
         return self.control.pushButton_6.isEnabled()

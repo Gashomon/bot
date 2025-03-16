@@ -136,13 +136,14 @@ class PasswordUI(QMainWindow, passUi):
     def reset(self):
         self.label_3.setText('')
         
-    def verify(self, passcode):
+    def verify(self, passcode, action):
         input = self.label_3.text()
         if input == passcode:
             self.label_2.setText('Success')
             return True
         else:
             self.label_2.setText('Wrong Passcode. Try Again')
+            action()
             return False
     
     def backspc(self):

@@ -1,6 +1,7 @@
 from enum import Enum
 import random
 import time
+import random
 
 from applicate_bot.modules.modules import Modules as Modules
 from applicate_bot.navigation.modded_robot_navigator import BasicNavigator as Navigator
@@ -23,7 +24,7 @@ longsituationslist = {}
 destinationlist = {
     'Initial': (0.0, 0.0, 0.0),
     'Home': (0.0, 0.0, 0.0),
-    'Dean': (1.0, 0.0, 0.0), 
+    'Dean': (5.0, 0.0, 0.0), 
     'CE'  : (0.0, 0.0, 0.0),
     'EE' : (0.0, 0.0, 0.0),
     'CpE'  : (0.0, 0.0, 0.0),
@@ -73,7 +74,7 @@ class Bot(Node):
         self.playfor('loading')
         self.ui.goto('main')
         self.ui.widget.show()
-        self.modules.setlock('on')
+        # self.modules.setlock('on')
 
         # Set initial pose
         initial_pose = self.create_pose_stamped(0.0, 0.0, 0.0)
@@ -85,7 +86,9 @@ class Bot(Node):
 
         # permanent button assigns
         self.ui.main.pushButton.clicked.connect(self.cmd_btn)
+        self.ui.main.introduceButton.clicked.connect(self.playIntro)
         self.ui.control.pushButton_6.clicked.connect(self.lockoff)
+        self.ui.control.pushButton_7.clicked.connect(self.modules.toggleKeyboard)
 
         # self.run_updates()
             
@@ -157,21 +160,14 @@ class Bot(Node):
             feedback = self.navigator.getFeedback()
             if feedback and i % 3 == 0:
                 self.get_logger().info('Navigation Feedback: %s' % feedback)
-                self.get_logger().info(
-                    'Estimated time of arrival: '
-                    + '{0:.0f}'.format(
-                        Duration.from_msg(feedback.estimated_time_remaining).nanoseconds
-                        / 1e9
-                    )
-                    + ' seconds.\n'
-                )
+                self.get_logger().info('Estimated time of arrival: '+ '{0:.0f}'.format(Duration.from_msg(feedback.estimated_time_remaining).nanoseconds/ 1e9)+ ' seconds.\n')
         result = self.navigator.getResult()
         self.get_logger().info('Navigation Result: %s' % result)
 
     # MODULES STUFF
     def lockon(self):
         self.modules.setlock('on')
-        self.playfor('locked')
+        # self.playfor('locked')
 
         self.modules.countlock = False
         self.modules.lockstarttime = -1.0
@@ -204,6 +200,11 @@ class Bot(Node):
             # set value to label if ever
             self.ui.displayWeight(self.modules.loadstate)
 
+    def playIntro(self):
+        intro = 'hello' + str(random.randint(1,3))
+        print(f"intro is {intro}")
+        self.playfor(intro)
+
     # MAIN ROBOT CONTROLLING STUFF    
     def waitforcmd(self):
         self.ui.goto("control") 
@@ -221,7 +222,8 @@ class Bot(Node):
         self.run(t)
         
         self.ui.goto('main')
-        # self.run_updates()
+        self.run_updates()
+        self.playfor('finish')
         return
 
     def run(self, transaction):
@@ -240,7 +242,7 @@ class Bot(Node):
             return
         
         print("done")
-  
+        
     def deliver(self, transaction):
         t = transaction
         
@@ -248,6 +250,7 @@ class Bot(Node):
         ex = [None]
         q = "This transaction's passcode is: " + t.password + ".\nYes to go, no to abort"
         self.ui.check(q, ex)
+        self.playfor('show_pass')
         while ex[0] is not True:
             self.run_updates()
             if ex[0] is False:
@@ -259,17 +262,17 @@ class Bot(Node):
         time.sleep(5)        
 
         #turn off screen
-        self.ui.display("travelling")
+        # self.ui.display("travelling")
         # self.run_updates()
 
         tp = destinationlist.get(t.dest2)
         pose = self.create_pose_stamped(tp[0], tp[1], tp[2])
-        # self.goPose(pose)
+        self.goPose(pose)
 
-        # while not self.navigator.isTaskComplete():
-        #     self.run_updates("noui")
+        while not self.navigator.isTaskComplete():
+            self.run_updates("noui")
         
-        time.sleep(3)
+        # time.sleep(3)
         #turn on screen
 
         q = ""
@@ -293,24 +296,27 @@ class Bot(Node):
             if ex[0] is False:
                 print('not user daw')
                 self.ui.display(mainT = "Please notify whomever has the passcode")
-                # self.run_updates()
+                self.run_updates()
                 time.sleep(1)
                 self.ui.display(mainT = "Please notify whomever has the passcode.")
-                # self.run_updates()
+                self.run_updates()
                 time.sleep(1)
                 self.ui.display(mainT = "Please notify whomever has the passcode..")
-                # self.run_updates()
+                self.run_updates()
                 time.sleep(1)
                 self.ui.display(mainT = "Please notify whomever has the passcode...")
-                # self.run_updates()
+                self.playfor('notify')
+                self.run_updates()
                 time.sleep(1)
                 ex = [None]
                 self.ui.check(q, ex)
-                # self.run_updates()
+                self.run_updates()
+                 #should be on loop
+               
 
         print("safe")
-        self.playfor('password')
-        self.ui.verifyuser(t.password)
+        self.playfor('enter_pass')
+        self.ui.verifyuser(t.password, lambda: self.playfor('wrong_pw'))
         # self.run_updates()
 
         q = "Take everything. Close door if finished."
@@ -321,23 +327,26 @@ class Bot(Node):
             self.run_updates('lock')
             if ex[0] is False:
                 self.lockoff()
-            pass
+                ex = [None]
+                self.ui.check(q, ex, 'leave', 'unlock')
+                # self.run_updates('lock')
+            
 
         self.ui.display(mainT ="Robot is Leaving in 5 seconds. Please step aside.")
         # self.run_updates()
         self.playfor('leaving')
-        time.sleep(5)
+        # time.sleep(5)
         
         #turn off screen
-        self.ui.display("travelling")
+        # self.ui.display("travelling")
         # self.run_updates()
 
         tp = destinationlist.get("Home")
         pose = self.create_pose_stamped(tp[0], tp[1], tp[2])
-        # self.goPose(pose)
+        self.goPose(pose)
 
-        # while not self.navigator.isTaskComplete():
-        #     self.run_updates()
+        while not self.navigator.isTaskComplete():
+            self.run_updates('noui')
         
         time.sleep(3)
         # self.playfor('nothing') 

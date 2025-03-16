@@ -172,13 +172,13 @@ class BasicNavigator(Node):
         goal_msg.pose = pose
         goal_msg.behavior_tree = behavior_tree
 
-        # self.info(
-        #     '\nNavigating to goal: '
-        #     + str(pose.pose.position.x)
-        #     + ' '
-        #     + str(pose.pose.position.y)
-        #     + '...\n'
-        # )
+        self.info(
+            '\nNavigating to goal: '
+            + str(pose.pose.position.x)
+            + ' '
+            + str(pose.pose.position.y)
+            + '...\n'
+        )
         send_goal_future = self.nav_to_pose_client.send_goal_async(
             goal_msg, self._feedbackCallback
         )
@@ -222,7 +222,7 @@ class BasicNavigator(Node):
         return True
 
     # def spin(self, spin_dist=1.57, time_allowance=10, disable_collision_checks=False):
-    def spin(self, spin_dist=0.60, time_allowance=10, disable_collision=False):
+    def spin(self, spin_dist=1.25, time_allowance=10, disable_collision=False):
         self.debug("Waiting for 'Spin' action server")
         while not self.spin_client.wait_for_server(timeout_sec=1.0):
             self.info("'Spin' action server not available, waiting...")
