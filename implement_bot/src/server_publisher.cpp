@@ -130,8 +130,8 @@ class ServerPub : public rclcpp::Node
     }
 
       void static signal_callback_handler(int signum) {
-        // cout << "server shutting down..." << signum << endl;
-        // RCLCPP_INFO(this->get_logger(), "server shutting down...");
+        cout << "server shutting down..." << signum << endl;
+        RCLCPP_INFO(this->get_logger(), "server shutting down...");
         // Terminate program
         // exit(signum);
         rclcpp::shutdown();

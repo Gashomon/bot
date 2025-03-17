@@ -32,7 +32,7 @@ class Modules():
         self.device = lgpio.gpiochip_open(0)
 
         self.lockpin = setlock
-        self.lockstate = "on"
+        self.lockstate = "off"
         self.locktimer = 2.0
         self.countlock = False
         self.lockstarttime = -1.0
@@ -52,6 +52,8 @@ class Modules():
         if self.lockpin > 0:
             self.LOCKENABLE = True
             lgpio.gpio_claim_output(self.device, self.lockpin)
+            print("i need to be one")
+            self.setlock('on')
         else:
             self.LOCKENABLE = False
         
@@ -91,9 +93,11 @@ class Modules():
             print("unabled lock")
             if state == "on":
                 # self.lockstate = True
+                print("lon")
                 self.lockstate = "on"
             if state == "off":
                 # self.lockstate = False
+                print("loff")
                 self.lockstate = "off" 
             return
         

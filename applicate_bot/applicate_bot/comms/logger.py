@@ -155,7 +155,7 @@ class DataLogger(Node):
 
         self.vel_subscriber = self.create_subscription( 
             Twist,
-            'diff_cont/vel_unstampedr',
+            'diff_cont/cmd_vel_unstamped',
             self.vel_callback,
             10)
         self.vel_subscriber
@@ -261,7 +261,7 @@ class DataLogger(Node):
     def vel_writer(self):
         if self.new_vel_msg:
             self.writer.write(
-                'diffcont/vel_unstamped',
+                'diff_cont/cmd_vel_unstamped',
                 self.vel_msg,
                 Clock().now().nanoseconds)
             self.new_vel_msg = False

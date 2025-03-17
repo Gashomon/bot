@@ -8,6 +8,7 @@ from applicate_bot.navigation.modded_robot_navigator import BasicNavigator as Na
 from applicate_bot.gui.gui import UserInterface as UI
 from applicate_bot.comms.command_server import ServerSub as Server
 from applicate_bot.comms.logger import DataLogger as Logger 
+# from applicate_bot.teleop.roller import Controller as Controller
 
 import rclpy
 from rclpy.node import Node
@@ -59,7 +60,7 @@ class Bot(Node):
         
         print(f"enable modules are: lock({str(self.modules.LOCKENABLE)}), load({str(self.modules.LOADENABLE)})")
         
-        self.navigator = Navigator()
+        # self.navigator = Navigator()
         self.server = Server()
         self.logger = Logger()
         self.ui = UI()
@@ -71,10 +72,11 @@ class Bot(Node):
 
     # A BIT OF LOOPING COMPILER STUFFS
     def loadbot(self):
+        print(self.server.fk_done())
         self.playfor('loading')
         self.ui.goto('main')
         self.ui.widget.show()
-
+        
         print('initial lock on')
         self.modules.setlock('on')
 
@@ -83,7 +85,7 @@ class Bot(Node):
         # self.navigator.setInitialPose(initial_pose)
 
         # Wait for Nav2 to be active
-        self.navigator.waitUntilNav2Active()   
+        # self.navigator.waitUntilNav2Active()   
         self.playfor('activated')
 
         # permanent button assigns
@@ -98,8 +100,10 @@ class Bot(Node):
         # print("updating")
         if events.count("noui"):
             print("dont ui")
+            rclpy.spin_once(self.server)
             return
-
+        
+        # print(self.server.fk_done())
         self.ui.app.processEvents()
 
         if events.count("load"):
@@ -144,7 +148,7 @@ class Bot(Node):
         q_x, q_y, q_z, q_w = tf_transformations.quaternion_from_euler(0.0, 0.0, orientation_z)
         pose = PoseStamped()
         pose.header.frame_id = 'map'
-        pose.header.stamp = self.navigator.get_clock().now().to_msg()
+        # pose.header.stamp = self.navigator.get_clock().now().to_msg()
         pose.pose.position.x = position_x
         pose.pose.position.y = position_y
         pose.pose.position.z = 0.0
@@ -155,18 +159,18 @@ class Bot(Node):
         return pose
 
     def goPose(self, goal_pose):
-        self.navigator.clearAllCostmaps()
-        time.sleep(1)
-        self.navigator.goToPose(goal_pose)
+        # self.navigator.clearAllCostmaps()
+        # self.navigator.follow_path(goal_pose)
         i = 0
-        while not self.navigator.isTaskComplete():
-            i = i + 1
-            feedback = self.navigator.getFeedback()
-            if feedback and i % 10 == 0:
-                self.get_logger().info('Navigation Feedback: %s' % feedback)
-                self.get_logger().info('Estimated time of arrival: '+ '{0:.0f}'.format(Duration.from_msg(feedback.estimated_time_remaining).nanoseconds/ 1e9)+ ' seconds.\n')
-        result = self.navigator.getResult()
-        self.get_logger().info('Navigation Result: %s' % result)
+        # while not self.navigator.isTaskComplete():
+        #     i = i + 1
+        #     feedback = self.navigator.getFeedback()
+        #     if feedback and i % 3 == 0:
+        #         pass
+                # self.get_logger().info('Navigation Feedback: %s' % feedback)
+                # self.get_logger().info('Estimated time of arrival: '+ '{0:.0f}'.format(Duration.from_msg(feedback.estimated_time_remaining).nanoseconds/ 1e9)+ ' seconds.\n')
+        # result = self.navigator.getResult()
+        # self.get_logger().info('Navigation Result: %s' % result)
 
     # MODULES STUFF
     def lockon(self):
@@ -269,13 +273,13 @@ class Bot(Node):
         self.ui.display("travelling")
         self.run_updates()
 
-        tp = destinationlist.get(t.dest2)
-        pose = self.create_pose_stamped(tp[0], tp[1], tp[2])
-        self.goPose(pose)
+        # tp = destinationlist.get(t.dest2)
+        # pose = self.create_pose_stamped(tp[0], tp[1], tp[2])
+        # self.goPose(pose)
 
-        while not self.navigator.isTaskComplete():
-            self.run_updates("noui")
-
+        # while not self.server.fk_done():
+        self.run_updates("noui")
+        
         #turn on screen
 
         q = ""
@@ -332,7 +336,7 @@ class Bot(Node):
                 ex = [None]
                 self.ui.check(q, ex, 'leave', 'unlock')
                 # self.run_updates('lock')
-            
+
         self.ui.display(mainT ="Robot is Leaving in 5 seconds. Please step aside.")
         # self.run_updates()
         self.playfor('leaving')
@@ -343,11 +347,11 @@ class Bot(Node):
         self.run_updates()
 
         tp = destinationlist.get("Home")
-        pose = self.create_pose_stamped(tp[0], tp[1], tp[2])
-        self.goPose(pose)
+        # pose = self.create_pose_stamped(tp[0], tp[1], tp[2])
+        # self.goPose(pose)
 
-        while not self.navigator.isTaskComplete():
-            self.run_updates('noui')
+        # while not self.server.fk_done():
+        self.run_updates("noui")
 
         # self.playfor('nothing') 
         self.log("robot_home")
@@ -370,10 +374,10 @@ def main(args=None):
     node = Bot() 
     try:
         rclpy.spin(node)
-    except Exception as e:  
+    except Exception as e:
         print(e)
     finally:
-        node.modules.setlock('off')
+        node.modules.setlock('on')
         node.modules.closegpio()
         node.destroy_node()
         rclpy.shutdown()

@@ -17,20 +17,9 @@ else:
     import termios
     import tty
 # 
-
-pop = {
-            '1':(3.0, 0.0, np.radians(0)),
-            '2':(5.0, 0.0, np.radians(0)),
-            '3':(1.5, 0.0, np.radians(0)),
-            '4':(-1.0, 0.0, np.radians(0)),
-            # '4':(-3.5, 0.0, np.radians(11.31)),
-            # '5':(9.0, 2.5, np.radians(155.56)),
-            # '6':(3.5, 5.0, np.radians(-125.00)),
-            '7':(0.0, 0.0, 0.0)  # Assuming the robot stops facing the original direction
-        }
-class HousePatrolNode(Node):  
+class Navigator(Node):  
     def __init__(self):
-        super().__init__('key_navigator') 
+        super().__init__('navigator') 
         self.navigator = BasicNavigator()
 
         # Set initial pose
@@ -66,65 +55,48 @@ class HousePatrolNode(Node):
         pose.pose.position.x = position_x
         pose.pose.position.y = position_y
         pose.pose.position.z = 0.0
-        pose.pose.orientation.x = 0.0
-        pose.pose.orientation.y = 0.0
+        pose.pose.orientation.x = q_x
+        pose.pose.orientation.y = q_y
         pose.pose.orientation.z = q_z
         pose.pose.orientation.w = q_w
         return pose
 
     def follow_waypoints(self, waypoints):
         self.navigator.clearAllCostmaps()
+        print("clearing costmaps...")
+        while not self.navigator.isTaskComplete():
+            pass
         self.navigator.goToPose(waypoints)
         while not self.navigator.isTaskComplete():
             feedback = self.navigator.getFeedback()
-            self.get_logger().info('Navigation Feedback: %s' % feedback)
+            # self.get_logger().info('Navigation Feedback: %s' % feedback)
         result = self.navigator.getResult()
         self.get_logger().info('Navigation Result: %s' % result)
         self.set_path()
-# 
-    def get_key(self, settings, timeout):
-        if sys.platform == 'win32':
-            # getwch() returns a string on Windows
-            key = msvcrt.getwch()
-        else:
-            tty.setraw(sys.stdin.fileno())
-            # sys.stdin.read() returns a string on Linux
-            rlist, _, _ = select([sys.stdin], [], [], timeout)
-            if rlist:
-                key = sys.stdin.read(1)
-            else:
-                key = ''
-            termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
-        return key
-    
-    def saveTerminalSettings(self):
-        if sys.platform == 'win32':
-            return None
-        return termios.tcgetattr(sys.stdin)
-
-    def restoreTerminalSettings(old_settings):
-        if sys.platform == 'win32':
-            return
-        termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
 
     def set_path(self):
-        settings = self.saveTerminalSettings()
+        
         key_timeout = 0.5
         self.get_logger().info('Starting. Press some keys...\n')
         while(1):
-            key = self.get_key(settings, key_timeout)
-            if key in pop.keys():
-                dest = self.create_pose_stamped(pop[key][0], pop[key][1], pop[key][2])
-                self.follow_waypoints(dest)
-                self.get_logger().info('Finished! Press some keys...\n')
-            else:
-                # self.get_logger().info('Press some keys...\n')
-                if (key == '\x03'):
-                    break
+            inpu = input("Enter Coordinates: ")
+
+            if (inpu == 'quit'):
+                break
+            
+            arr = inpu.split()
+            coor = []
+            for i in arr:
+                coor.append(float(i))
+
+            dest = self.create_pose_stamped(coor[0], coor[1], coor[2])
+            self.follow_waypoints(dest)
+            self.get_logger().info('Finished! Press some keys...\n')
+                
 # 
 def main(args=None):
     rclpy.init(args=args)
-    node = HousePatrolNode()  
+    node = Navigator()  
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:

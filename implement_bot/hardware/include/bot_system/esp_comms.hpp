@@ -71,7 +71,7 @@ public:
       // Responses end with \r\n so we will read up to (and including) the \n.
       serial_conn_.ReadLine(response, '\n', timeout_ms_);
     }
-    catch (const LibSerial::ReadTimeout&)
+    catch (...)
     {
         std::cerr << "The ReadByte() call has timed out." << std::endl;
         std::cerr << "Sent:" << msg_to_send << std::endl;
@@ -81,7 +81,7 @@ public:
     
     if (print_output)
     {
-      if(msg_to_send == "e\r"){
+      if(msg_to_send != "e\r" && msg_to_send != "r\r" && msg_to_send != "l\r" && msg_to_send != "i\r" && msg_to_send != "m 0 0\r"){
         
       std::string msg = msg_to_send.substr(0, msg_to_send.length()-1);
       std::cout << "Sent: " << msg_to_send << std::endl;
