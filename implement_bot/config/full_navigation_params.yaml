@@ -87,15 +87,6 @@ bt_navigator: # Main Navigator. Compiles everything else. Lists all major naviga
     navigate_through_poses:
       plugin: "nav2_bt_navigator::NavigateThroughPosesNavigator"
       use_sim_time: False
-    default_nav_to_pose_bt_xml: "bot/src/bot/implement_bot/import/behavior_trees/navigate_to_pose_w_replanning_goal_patience_and_recovery.xml"
-    default_nav_through_poses_bt_xml: "bot/src/bot/implement_bot/import/behavior_trees/navigate_through_poses_w_replanning_and_recovery.xml"
-    navigators: ["navigate_to_pose", "navigate_through_poses"]
-    navigate_to_pose:
-      plugin: "nav2_bt_navigator::NavigateToPoseNavigator"
-      use_sim_time: False
-    navigate_through_poses:
-      plugin: "nav2_bt_navigator::NavigateThroughPosesNavigator"
-      use_sim_time: False
     plugin_lib_names:
       - nav2_compute_path_to_pose_action_bt_node
       - nav2_compute_path_through_poses_action_bt_node
@@ -157,19 +148,6 @@ bt_navigator: # Main Navigator. Compiles everything else. Lists all major naviga
       - route
       - undock_robot
       - wait
-    error_code_name_prefixes:
-      - assisted_teleop
-      - backup
-      - compute_path
-      - dock_robot
-      - drive_on_heading
-      - follow_path
-      - nav_thru_poses
-      - nav_to_pose
-      - spin
-      - route
-      - undock_robot
-      - wait
 
 controller_server: # Current Progress Checker / Path Follower / Costmap Publisher
   ros__parameters:
@@ -185,7 +163,6 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
     publish_zero_velocity: true
     progress_checker_plugin: "progress_checker"
     goal_checker_plugins: ["simple_goal_checker"]
-    goal_checker_plugins: ["simple_goal_checker"]
     controller_plugins: ["FollowPath"]
     # Progress checker parameters
     progress_checker:
@@ -195,7 +172,6 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
       required_movement_radius: 0.25 # need to atleast move in meters. default 0.5
       movement_time_allowance: 5.0 # time to take most to move in seconds. default 10.0
     # Goal checker parameters
-    simple_goal_checker:
     simple_goal_checker:
       plugin: "nav2_controller::SimpleGoalChecker"
       stateful: True
@@ -238,24 +214,19 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
       primary_controller: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
       angular_dist_threshold: 0.785 # radians
       forward_sampling_distance: 0.5 # meters
-      forward_sampling_distance: 0.5 # meters
       angular_disengage_threshold: 0.3925 # rad/s
-      rotate_to_heading_angular_vel: 2.0
       rotate_to_heading_angular_vel: 2.0
       max_angular_accel: 3.0
       simulate_ahead_time: 1.0
-      simulate_ahead_time: 1.0
       rotate_to_goal_heading: false
-      closed_loop: true # default true
       closed_loop: true # default true
 
       primary_controller.desired_linear_vel: 0.35
       primary_controller.lookahead_dist: 1.0
-      primary_controller.lookahead_dist: 1.0
       primary_controller.min_lookahead_dist: 0.3
       primary_controller.max_lookahead_dist: 0.9
       primary_controller.lookahead_time: 1.0
-      primary_controller.rotate_to_heading_angular_vel: 1.0S
+      primary_controller.rotate_to_heading_angular_vel: 1.0
       primary_controller.transform_tolerance: 0.5
       primary_controller.use_velocity_scaled_lookahead_dist: true
       primary_controller.min_approach_linear_velocity: 0.05
@@ -291,8 +262,6 @@ local_costmap:
       # origin_x: -1.97
       # origin_y: -4.24
       map_vis_z: 0.0
-      # plugins: ["obstacle_layer","range_layer", "inflation_layer", ]
-      plugins: ["obstacle_layer", "inflation_layer"]
       # plugins: ["obstacle_layer","range_layer", "inflation_layer", ]
       plugins: ["obstacle_layer", "inflation_layer"]
       obstacle_layer:
@@ -495,8 +464,8 @@ velocity_smoother:  #additional velocity control
     use_sim_time: False
     smoothing_frequency: 10.0
     scale_velocities: False
-    # feedback: "CLOSED_LOOP" # should be close
-    feedback: "OPEN_LOOP"
+    feedback: "CLOSED_LOOP" # should be close
+    # feedback: "OPEN_LOOP"
     max_velocity:  [0.5, 0.0, 2.5]
     min_velocity: [-0.5, 0.0, -2.5]
     max_accel: [2.5, 0.0, 3.2]
