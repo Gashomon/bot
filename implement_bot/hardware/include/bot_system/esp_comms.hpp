@@ -175,6 +175,8 @@ public:
         else if(cnt == 4) ang_y = std::atof(subtoken.c_str());
         else if(cnt == 5) ang_z = std::atof(subtoken.c_str());
 
+        if (ang_z > -0.02  && ang_z < 0.02) ang_z = 0.0;
+
         cnt++;
     } while (end != -1);
     

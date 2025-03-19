@@ -78,7 +78,7 @@ class Modules():
             self.SOUNDENABLE = False
 
     def setload(self, value):
-        if value > 5000:
+        if value > 3000:
             self.loadstate = 'heavy'
             pass
         elif value > 2500:

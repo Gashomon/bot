@@ -110,11 +110,11 @@ class Bot(Node):
             # print("loadup")
             self.updateWeight()
             # print(self.modules.curr_weight)
-            if not self.loadislighterthan(5000) and self.ui.runEnabled():    
+            if not self.loadislighterthan(3000) and self.ui.runEnabled():    
                 self.playfor('heavy')       
                 self.ui.disableRun()
 
-            if self.loadislighterthan(5000) and not self.ui.runEnabled():
+            if self.loadislighterthan(3000) and not self.ui.runEnabled():
                 self.ui.enableRun()
 
         if events.count('lock'):
@@ -265,20 +265,21 @@ class Bot(Node):
                 return True
 
         self.ui.display(mainT ="Robot is Leaving in 5 seconds. Please step aside.")
-        # self.run_updates()
+        self.run_updates()
         self.playfor('leaving')
         time.sleep(5)        
 
         #turn off screen
         self.ui.display("travelling")
         self.run_updates()
+        time.sleep(3)
 
         # tp = destinationlist.get(t.dest2)
         # pose = self.create_pose_stamped(tp[0], tp[1], tp[2])
         # self.goPose(pose)
 
         # while not self.server.fk_done():
-        self.run_updates("noui")
+        # self.run_updates("noui")
         
         #turn on screen
 
@@ -338,20 +339,20 @@ class Bot(Node):
                 # self.run_updates('lock')
 
         self.ui.display(mainT ="Robot is Leaving in 5 seconds. Please step aside.")
-        # self.run_updates()
+        self.run_updates()
         self.playfor('leaving')
         time.sleep(5)
         
         #turn off screen
         self.ui.display("travelling")
         self.run_updates()
-
+        time.sleep(3)
         tp = destinationlist.get("Home")
         # pose = self.create_pose_stamped(tp[0], tp[1], tp[2])
         # self.goPose(pose)
 
         # while not self.server.fk_done():
-        self.run_updates("noui")
+        # self.run_updates("noui")
 
         # self.playfor('nothing') 
         self.log("robot_home")

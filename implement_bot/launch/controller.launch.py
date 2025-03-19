@@ -64,7 +64,7 @@ def generate_launch_description():
           }
      ) 
     
-    delayed_controller_manager = TimerAction(period=8.0, actions=[real_bot_controller])
+    delayed_controller_manager = TimerAction(period=5.0, actions=[real_bot_controller])
 
     #added ROS2 control spawners 
     diff_drive_spawner = Node(
