@@ -72,7 +72,6 @@ def generate_launch_description():
         executable="spawner",
         arguments=["diff_cont"]
     )
-
     delayed_diff_drive_spawner = RegisterEventHandler(
         event_handler=OnProcessStart(
             target_action=real_bot_controller,

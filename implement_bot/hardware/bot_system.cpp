@@ -364,6 +364,10 @@ hardware_interface::return_type BotHardwareSystem::read(
   wheel_r_.pos = wheel_r_.calc_enc_angle();
   wheel_r_.vel = (wheel_r_.pos - pos_prev_r) / delta_seconds;
 
+  if(wheel_r_.pos != pos_prev_r || wheel_l.pos != pos_prev_l){
+    RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Left pos: %d, right pos: %d", wheel_l_.pos, wheel_r_.pos);
+  }
+
   // if(wheel_l_.enc >= 90000000 || wheel_r_.enc>= 90000000) comms_.reset_encoders(); //developmental feature
 
   comms_.read_imu_sensor( imu_.linear_acceleration_x, imu_.linear_acceleration_y, imu_.linear_acceleration_z, 
@@ -387,7 +391,9 @@ hardware_interface::return_type NewHardwareInterface::BotHardwareSystem::write(
 
   int motor_l_counts_per_loop = wheel_l_.cmd / wheel_l_.rads_per_count / cfg_.loop_rate;
   int motor_r_counts_per_loop = wheel_r_.cmd / wheel_r_.rads_per_count / cfg_.loop_rate;
+
   comms_.set_motor_values(motor_l_counts_per_loop, motor_r_counts_per_loop);
+
   if (motor_l_counts_per_loop != 0 || motor_r_counts_per_loop != 0){
     RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Lcmd: %f rads: %f rate: %f", wheel_l_.cmd, wheel_l_.rads_per_count, cfg_.loop_rate);
     RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Left wheel: %d Right wheel: %d", motor_l_counts_per_loop, motor_r_counts_per_loop);
