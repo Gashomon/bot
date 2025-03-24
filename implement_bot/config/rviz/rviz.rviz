@@ -24,7 +24,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: ""
+    SyncSource: LaserScan
   - Class: nav2_rviz_plugins/Navigation 2
     Name: Navigation 2
   - Class: nav2_rviz_plugins/Navigation 2
@@ -232,9 +232,9 @@ Visualization Manager:
       Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
-      Max Intensity: 247
+      Max Intensity: 255
       Min Color: 0; 0; 0
-      Min Intensity: 16
+      Min Intensity: 17
       Name: LaserScan
       Position Transformer: XYZ
       Selectable: true
@@ -510,25 +510,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 2.6163620948791504
+      Distance: 6.871577739715576
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.2717116177082062
-        Y: 0.19229112565517426
-        Z: -0.22758042812347412
+        X: -0.10989660024642944
+        Y: 0.19686394929885864
+        Z: -0.21398968994617462
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.9547963738441467
+      Pitch: 1.1402032375335693
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 4.621760845184326
+      Yaw: 4.821760654449463
     Saved: ~
 Window Geometry:
   Displays:

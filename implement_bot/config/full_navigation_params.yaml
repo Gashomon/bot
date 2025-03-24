@@ -3,14 +3,11 @@ amcl:
   ros__parameters:
     use_sim_time: False
     # trust scores on..
-    alpha1: 0.2 # rotation pose by rotating
-    alpha1: 0.2 # rotation pose by rotating
-    alpha2: 0.2 # rotation pose by forward/backward
-    alpha3: 0.5 # position by forward/backward 
-    alpha4: 0.5 # position by rotating
-    alpha5: 0.2 # omni model shit
-    alpha4: 0.5 # position by rotating
-    alpha5: 0.2 # omni model shit
+    alpha1: 1.0 # rotation pose by rotating
+    alpha2: 1.0 # rotation pose by forward/backward
+    alpha3: 1.0 # position by forward/backward 
+    alpha4: 1.0 # position by rotating
+    alpha5: 0.0 # omni model shit
     base_frame_id: "base_link" # default footprint
     beam_skip_distance: 0.5
     beam_skip_error_threshold: 0.9
@@ -153,7 +150,7 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
   ros__parameters:
     use_sim_time: False
     odom_topic: "/ekf/odom"
-    controller_frequency: 2.0 # speed of controller
+    controller_frequency: 2.0 # speed of controller updates
     # costmap_update_timeout: 0.5 # waiting time for costmaps. default 0.3. notdoc
     min_x_velocity_threshold: 0.0001       #if less than this value, read as zero 
     min_y_velocity_threshold: 0.5       #if less than this value, read as zero 
@@ -168,82 +165,64 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
     progress_checker:
       plugin: "nav2_controller::SimpleProgressChecker"
       required_movement_radius: 0.25 # need to atleast move in meters. default 0.5
-      movement_time_allowance: 5.0 # time to take most to move in seconds. default 10.0
-      required_movement_radius: 0.25 # need to atleast move in meters. default 0.5
-      movement_time_allowance: 5.0 # time to take most to move in seconds. default 10.0
+      movement_time_allowance: 15.0 # time to take most to move in seconds. default 10.0
     # Goal checker parameters
     simple_goal_checker:
       plugin: "nav2_controller::SimpleGoalChecker"
       stateful: True
       xy_goal_tolerance: 0.1 # error in meters on the actual goal
       yaw_goal_tolerance: 1.0 # error in radians on the actual goal
-      
-    # # pure pursuit
-    # FollowPath:  
-    #   plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
-    #   desired_linear_vel: 0.05
-    #   lookahead_dist: 1.0
-    #   min_lookahead_dist: 0.3
-    #   max_lookahead_dist: 0.9
-    #   lookahead_time: 1.0
-    #   rotate_to_heading_angular_vel: 1.0
-    #   transform_tolerance: 0.5
-    #   use_velocity_scaled_lookahead_dist: true
-    #   min_approach_linear_velocity: 0.15
-    #   approach_velocity_scaling_dist: 0.6
-    #   use_collision_detection: true
-    #   max_allowed_time_to_collision_up_to_carrot: 1.0
-    #   use_regulated_linear_velocity_scaling: true
-    #   use_fixed_curvature_lookahead: false
-    #   curvature_lookahead_dist: 0.5
-    #   use_cost_regulated_linear_velocity_scaling: true
-    #   regulated_linear_scaling_min_radius: 1.0
-    #   regulated_linear_scaling_min_speed: 0.15
-    #   use_rotate_to_heading: true
-    #   allow_reversing: false
-    #   rotate_to_heading_min_angle: 0.785
-    #   max_angular_accel: 3.2
-    #   max_robot_pose_search_dist: 5.0
-    #   use_cancel_deceleration: true # default false
-    #   cancel_deceleration: 3.2 
 
     # Rotate Shim Controller
     FollowPath:  
       plugin: "nav2_rotation_shim_controller::RotationShimController"
       # primary_controller: "reg_pure_pursuit"
       primary_controller: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
-      angular_dist_threshold: 0.785 # radians
-      forward_sampling_distance: 0.5 # meters
+      angular_dist_threshold: 0.785 # max radians from path to consider to turn
+      forward_sampling_distance: 0.5 # meters to decide path heading
       angular_disengage_threshold: 0.3925 # rad/s
-      rotate_to_heading_angular_vel: 2.0
+      rotate_to_heading_angular_vel: 1.0 # velocity to rotate to angular (rad/s)
       max_angular_accel: 3.0
       simulate_ahead_time: 1.0
-      rotate_to_goal_heading: false
+      rotate_to_goal_heading: true
       closed_loop: true # default true
 
-      primary_controller.desired_linear_vel: 0.35
-      primary_controller.lookahead_dist: 1.0
-      primary_controller.min_lookahead_dist: 0.3
-      primary_controller.max_lookahead_dist: 0.9
-      primary_controller.lookahead_time: 1.0
-      primary_controller.rotate_to_heading_angular_vel: 1.0
-      primary_controller.transform_tolerance: 0.5
+      # all of regulated pursuit stuff. Above are for rotation shim controller. try to both same for simplicity
+      primary_controller.desired_linear_vel: 0.8 # maintained vel
+
       primary_controller.use_velocity_scaled_lookahead_dist: true
-      primary_controller.min_approach_linear_velocity: 0.05
-      primary_controller.approach_velocity_scaling_dist: 0.6
+      # if false
+      primary_controller.lookahead_dist: 1.0
+      # if true
+      primary_controller.min_lookahead_dist: 0.3
+      primary_controller.max_lookahead_dist: 1.0
+      primary_controller.lookahead_time: 1.0
+
+      primary_controller.use_rotate_to_heading: true 
+      # if true, use this velocity/accel to rotate to heading and what radian difference to begin rotating
+      primary_controller.rotate_to_heading_angular_vel: 1.0
+      primary_controller.max_angular_accel: 3.2
+      primary_controller.rotate_to_heading_min_angle: 2.785
+
+      primary_controller.transform_tolerance: 0.5
+      
+      primary_controller.min_approach_linear_velocity: 0.6 # min vel to ensure progress
+      primary_controller.approach_velocity_scaling_dist: 1.0 # last distance to start slowing down Should be less than the half the costmap width.
+
       primary_controller.use_collision_detection: true
-      primary_controller.max_allowed_time_to_collision_up_to_carrot: 1.8
-      primary_controller.use_regulated_linear_velocity_scaling: true
+      primary_controller.max_allowed_time_to_collision_up_to_carrot: 1.8 #time to project velocity forward, check for collisions 
+      
       primary_controller.use_fixed_curvature_lookahead: false
       primary_controller.curvature_lookahead_dist: 0.25
-      primary_controller.use_cost_regulated_linear_velocity_scaling: true
-      primary_controller.regulated_linear_scaling_min_radius: 1.0
-      primary_controller.regulated_linear_scaling_min_speed: 0.3
-      primary_controller.use_rotate_to_heading: true
+
+      primary_controller.use_cost_regulated_linear_velocity_scaling: true # vel with objects
+      primary_controller.use_regulated_linear_velocity_scaling: true #vel in general
+      primary_controller.regulated_linear_scaling_min_radius: 0.2 # turning radius (m) to trigger. default 0.9 for smooth curve but controller already spins at place 
+      primary_controller.regulated_linear_scaling_min_speed: 0.6 # minimum speed to turn
+      
       primary_controller.allow_reversing: false
-      primary_controller.rotate_to_heading_min_angle: 0.785
-      primary_controller.max_angular_accel: 3.2
-      primary_controller.max_robot_pose_search_dist: 5.0
+      primary_controller.max_robot_pose_search_dist: 3.0 # This should be left as the default unless there are paths with loops and intersections that do not leave the local costmap.
+
       primary_controller.use_cancel_deceleration: true # default false
       primary_controller.cancel_deceleration: 3.2 
 
@@ -269,6 +248,7 @@ local_costmap:
         enabled: True
         observation_sources: scan
         max_obstacle_height: 5.0 #original 2.0
+        combination_method: 0
         scan:
           topic: /ldlidar_node/scan
           max_obstacle_height: 5.0 #original 2.0
@@ -312,6 +292,7 @@ global_costmap:
         enabled: True
         observation_sources: scan
         max_obstacle_height: 5.0 #original 2.0
+        combination_method: 0
         scan:
           topic: /ldlidar_node/scan
           max_obstacle_height: 5.0 #original 2.0
@@ -414,19 +395,13 @@ behavior_server: # lists all basic drive functions
       plugin: "nav2_behaviors/BackUp"
       acceleration_limit: 0.35
       deceleration_limit: -0.35
-      minimum_speed: 0.35
-      acceleration_limit: 0.35
-      deceleration_limit: -0.35
-      minimum_speed: 0.35
+      minimum_speed: 0.55
 
     drive_on_heading:
       plugin: "nav2_behaviors/DriveOnHeading"
       acceleration_limit: 0.15
       deceleration_limit: -0.15
-      minimum_speed: 0.25
-      acceleration_limit: 0.15
-      deceleration_limit: -0.15
-      minimum_speed: 0.25
+      minimum_speed: 0.55
 
     wait:
       plugin: "nav2_behaviors/Wait"
@@ -439,18 +414,13 @@ behavior_server: # lists all basic drive functions
     simulation_time_step: 1.0 # Time step for projections (s) (assistedteleop)
     # cmd_vel_teleop:           # Topic to listen for teleopmessages (assistedteleop)
 
-    max_rotational_vel: 2.0
-    min_rotational_vel: 1.2
-    rotational_acc_lim: 2.0
-    max_rotational_vel: 2.0
-    min_rotational_vel: 1.2
-    rotational_acc_lim: 2.0
+    max_rotational_vel: 5.0
+    min_rotational_vel: 0.6
+    rotational_acc_lim: 4.0
 
 waypoint_follower: # waypoint special configurations
   ros__parameters:
     use_sim_time: False
-    loop_rate: 1
-    stop_on_failure: True
     loop_rate: 1
     stop_on_failure: True
     waypoint_task_executor_plugin: "wait_at_waypoint"
@@ -464,12 +434,12 @@ velocity_smoother:  #additional velocity control
     use_sim_time: False
     smoothing_frequency: 10.0
     scale_velocities: False
-    feedback: "CLOSED_LOOP" # should be close
-    # feedback: "OPEN_LOOP"
-    max_velocity:  [0.5, 0.0, 2.5]
-    min_velocity: [-0.5, 0.0, -2.5]
-    max_accel: [2.5, 0.0, 3.2]
-    max_decel: [-2.5, 0.0, -3.2]
+    # feedback: "CLOSED_LOOP" # should be close
+    feedback: "OPEN_LOOP" # default
+    max_velocity:  [30.0, 0.0, 35.0]
+    min_velocity: [-30.0, 0.0, -35.0]
+    max_accel: [6.0, 0.0, 6.0]
+    max_decel: [-6.0, 0.0, -6.0]
     odom_topic: "/ekf/odom"
     odom_duration: 0.1
     deadband_velocity: [0.0, 0.0, 0.0]
@@ -491,22 +461,21 @@ collision_monitor:
     polygons: ["PolygonStop", "PolygonApproach"]
     PolygonStop:
       type: "polygon"
-      points: [0.4,0.4,0.4,-0.4,-0.4,-0.4,-0.4,0.4]
-      points: [0.4,0.4,0.4,-0.4,-0.4,-0.4,-0.4,0.4]
+      points: [0.4,0.3,0.4,-0.3,-0.4,-0.3,-0.4,0.3]
       action_type: "stop"
       min_points: 4  # max_points: 3 for Humble
       visualize: True
       polygon_pub_topic: "polygon_stop"
-    PolygonApproach:
+    PolygonApproach:  
       type: "polygon"
-      points: [0.8,0.8,0.8,-0.8,-0.8,-0.8,-0.8,0.8]
-      points: [0.8,0.8,0.8,-0.8,-0.8,-0.8,-0.8,0.8]
-      action_type: "approach"
+      points: [0.8,0.4,0.8,-0.4,-0.8,-0.4,-0.8,0.4]
+      action_type: "slowdown"
       min_points: 4  # max_points: 3 for Humble
-      time_before_collision: 0.8
-      simulation_time_step: 1.0
+      # time_before_collision: 0.8
+      # simulation_time_step: 2.0
+      slowdown_ratio: 0.8
       visualize: True
-      polygon_pub_topic: "polygon_approach"
+      polygon_pub_topic: "polygon_slowdown"
     observation_sources: ["scan"]
     scan:
       source_timeout: 0.2

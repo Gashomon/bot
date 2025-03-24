@@ -264,7 +264,7 @@ std::vector<hardware_interface::CommandInterface> BotHardwareSystem::export_comm
 }
 
 hardware_interface::CallbackReturn BotHardwareSystem::on_configure(
-  const rclcpp_lifecycle::State & /*previous_state*/)
+  const rclcpp_lifecycle::State & previous_state)
 {
   RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Configuring ...please wait...");
   if (comms_.connected())
@@ -282,7 +282,7 @@ hardware_interface::CallbackReturn BotHardwareSystem::on_configure(
 }
 
 hardware_interface::CallbackReturn BotHardwareSystem::on_cleanup(
-  const rclcpp_lifecycle::State & /*previous_state*/)
+  const rclcpp_lifecycle::State & previous_state)
 {
   RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Cleaning up ...please wait...");
   if (comms_.connected())
@@ -298,7 +298,7 @@ hardware_interface::CallbackReturn BotHardwareSystem::on_cleanup(
 
 
 hardware_interface::CallbackReturn BotHardwareSystem::on_activate(
-  const rclcpp_lifecycle::State & /*previous_state*/)
+  const rclcpp_lifecycle::State & previous_state)
 {
   RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Activating ...please wait...");
   if (!comms_.connected())
@@ -306,21 +306,31 @@ hardware_interface::CallbackReturn BotHardwareSystem::on_activate(
     RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "notconnected..");
     return hardware_interface::CallbackReturn::ERROR;
   }
-  comms_.send_empty_msg();
-  if (cfg_.pid_p > 0)
-  {
-    comms_.set_pid_values(cfg_.pid_p,cfg_.pid_d,cfg_.pid_i,cfg_.pid_o);
+
+  try{
+    RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Testing comms..");
+    comms_.send_empty_msg();
     RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Updating PID..");
+    if (cfg_.pid_p > 0)
+    {
+      comms_.set_pid_values(cfg_.pid_p,cfg_.pid_d,cfg_.pid_i,cfg_.pid_o);
+      RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "PID Updated..");
+    }
+    RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Resetting Encoders..");
+    comms_.reset_encoders();
+    RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Encoders resetted!");
+    RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Successfully activated!");
   }
-  comms_.reset_encoders();
-  RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Encoders resetted!");
-  RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Successfully activated!");
+  catch(...){
+     RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Something went Wrong!");
+  }
+  
 
   return hardware_interface::CallbackReturn::SUCCESS;
 }
 
 hardware_interface::CallbackReturn BotHardwareSystem::on_deactivate(
-  const rclcpp_lifecycle::State & /*previous_state*/)
+  const rclcpp_lifecycle::State & previous_state)
 {
   if (comms_.connected())
   {
@@ -335,7 +345,7 @@ hardware_interface::CallbackReturn BotHardwareSystem::on_deactivate(
 }
 
 hardware_interface::return_type BotHardwareSystem::read(
-  const rclcpp::Time & /*time*/, const rclcpp::Duration & period)
+  const rclcpp::Time & time, const rclcpp::Duration & period)
 {
   if (!comms_.connected())
   {
@@ -355,6 +365,7 @@ hardware_interface::return_type BotHardwareSystem::read(
   double pos_prev_l = wheel_l_.pos;
   double pos_prev_r = wheel_r_.pos;
   double delta_seconds = period.seconds();
+  // RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "seconds: %f", delta_seconds);
 
   pos_prev_l = wheel_l_.pos;
   wheel_l_.pos = wheel_l_.calc_enc_angle();
@@ -364,9 +375,10 @@ hardware_interface::return_type BotHardwareSystem::read(
   wheel_r_.pos = wheel_r_.calc_enc_angle();
   wheel_r_.vel = (wheel_r_.pos - pos_prev_r) / delta_seconds;
 
-  if(wheel_r_.pos != pos_prev_r || wheel_l.pos != pos_prev_l){
-    RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Left pos: %d, right pos: %d", wheel_l_.pos, wheel_r_.pos);
-  }
+  // if(wheel_r_.pos != 0.0 || wheel_l_.pos != 0.0){
+  //   RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Left pos: %f, right pos: %f", wheel_l_.pos, wheel_r_.pos);
+  //   RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "true L wheel: %f, true R wheel: %f", wheel_l_.vel, wheel_r_.vel);
+  // }
 
   // if(wheel_l_.enc >= 90000000 || wheel_r_.enc>= 90000000) comms_.reset_encoders(); //developmental feature
 
@@ -376,12 +388,21 @@ hardware_interface::return_type BotHardwareSystem::read(
   comms_.read_range_sensors(range_l_.range, range_r_.range);
 
   // RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Successfully reading!");
+  
+  int stopleft = -wheel_l_.vel/2;
+  int stopright = -wheel_r_.vel/2;
+  
+  if((wheel_l_.cmd == 0 && wheel_l_.vel != 0) || (wheel_r_.cmd == 0 && wheel_r_.vel != 0)) {
+    RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "true L wheel: %f, true R wheel: %f", wheel_l_.vel, wheel_r_.vel);
+    comms_.set_motor_values(stopleft, stopright); 
+    RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Braking Left: %d Right: %d", stopleft, stopright);
+  }
 
   return hardware_interface::return_type::OK;
 }
 
 hardware_interface::return_type NewHardwareInterface::BotHardwareSystem::write(
-  const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
+  const rclcpp::Time & time, const rclcpp::Duration & period)
 {
   if (!comms_.connected())
   {
@@ -389,14 +410,53 @@ hardware_interface::return_type NewHardwareInterface::BotHardwareSystem::write(
     return hardware_interface::return_type::ERROR;
   }
 
-  int motor_l_counts_per_loop = wheel_l_.cmd / wheel_l_.rads_per_count / cfg_.loop_rate;
-  int motor_r_counts_per_loop = wheel_r_.cmd / wheel_r_.rads_per_count / cfg_.loop_rate;
+  float left_desired_speed = wheel_l_.cmd;
+  float right_desired_speed = wheel_r_.cmd;
 
-  comms_.set_motor_values(motor_l_counts_per_loop, motor_r_counts_per_loop);
+  if (wheel_l_.cmd > 0 && wheel_l_.vel >= wheel_l_.cmd) left_desired_speed = 0.0;
+  else if (wheel_l_.cmd > 0 && wheel_l_.vel < wheel_l_.cmd) left_desired_speed = wheel_l_.cmd + (wheel_l_.cmd - wheel_l_.vel)/2;
+  else if (wheel_l_.cmd < 0 && wheel_l_.vel <= wheel_l_.cmd) left_desired_speed = 0.0;
+  else if (wheel_l_.cmd < 0 && wheel_l_.vel > wheel_l_.cmd) left_desired_speed = wheel_l_.cmd - (wheel_l_.cmd - wheel_l_.vel)/2;
+
+  if (wheel_r_.cmd > 0 && wheel_r_.vel >= wheel_r_.cmd) left_desired_speed = 0.0;
+  else if (wheel_r_.cmd > 0 && wheel_r_.vel < wheel_r_.cmd) left_desired_speed = wheel_r_.cmd + (wheel_r_.cmd - wheel_r_.vel)/2;
+  else if (wheel_r_.cmd < 0 && wheel_r_.vel <= wheel_r_.cmd) left_desired_speed = 0.0;
+  else if (wheel_r_.cmd < 0 && wheel_r_.vel > wheel_r_.cmd) left_desired_speed = wheel_r_.cmd - (wheel_r_.cmd - wheel_r_.vel)/2;
+  
+  // if (wheel_l_.cmd != 0 && wheel_l_.vel > wheel_l_.cmd) left_desired_speed = (wheel_l_.vel - wheel_l_.cmd)/2;
+  // if (wheel_r_.cmd != 0 && wheel_r_.vel > wheel_r_.cmd) right_desired_speed = (wheel_r_.vel - wheel_r_.cmd)/2;
+  // if (wheel_l_.cmd != 0 && wheel_l_.vel < wheel_l_.cmd) left_desired_speed = wheel_l_.cmd + (( wheel_l_.cmd - wheel_l_.vel)/2);
+  // if (wheel_r_.cmd != 0 && wheel_r_.vel < wheel_r_.cmd) right_desired_speed = wheel_r_.cmd + ((wheel_r_.cmd - wheel_r_.vel)/2);
+
+  if ((wheel_l_.cmd != wheel_r_.cmd) && (wheel_l_.cmd != -wheel_r_.cmd)){
+    if(wheel_l_.cmd < wheel_r_.cmd) left_desired_speed = 0;
+    if(wheel_r_.cmd < wheel_l_.cmd) right_desired_speed = 0;
+  }
+  
+  if(wheel_l_.vel == 0 && wheel_l_.cmd > 0) left_desired_speed = 15;
+  else if(wheel_l_.vel == 0 && wheel_l_.cmd < 0) left_desired_speed = -15;
+
+  if(wheel_r_.vel == 0 && wheel_r_.cmd > 0) right_desired_speed = 15;
+  else if(wheel_r_.vel == 0 && wheel_r_.cmd < 0) right_desired_speed = -15;
+
+  int motor_l_counts_per_loop = left_desired_speed / wheel_l_.rads_per_count / cfg_.loop_rate;
+  int motor_r_counts_per_loop = right_desired_speed / wheel_r_.rads_per_count / cfg_.loop_rate;
+  
+
+  comms_.set_motor_values(motor_l_counts_per_loop, motor_r_counts_per_loop); 
 
   if (motor_l_counts_per_loop != 0 || motor_r_counts_per_loop != 0){
     RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Lcmd: %f rads: %f rate: %f", wheel_l_.cmd, wheel_l_.rads_per_count, cfg_.loop_rate);
+    RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Rcmd: %f rads: %f rate: %f", wheel_r_.cmd, wheel_r_.rads_per_count, cfg_.loop_rate);
     RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Left wheel: %d Right wheel: %d", motor_l_counts_per_loop, motor_r_counts_per_loop);
+    RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "true L wheel: %f, true R wheel: %f", wheel_l_.vel, wheel_r_.vel);
+    RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Left pos: %f, right pos: %f", wheel_l_.pos, wheel_r_.pos);
+  }
+
+  if((motor_l_counts_per_loop == 0 && wheel_l_.cmd != 0) || (motor_r_counts_per_loop == 0 && wheel_r_.cmd != 0)){
+    RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Lcmd: %f rads: %f rate: %f", wheel_l_.cmd, wheel_l_.rads_per_count, cfg_.loop_rate);
+     RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Rcmd: %f rads: %f rate: %f", wheel_r_.cmd, wheel_r_.rads_per_count, cfg_.loop_rate);
+     RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "desired L wheel: %f, desired R wheel: %f", left_desired_speed, right_desired_speed);
   }
   // comms_.run_motor_pwm(20, 20);
   // RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Successfully writing!");

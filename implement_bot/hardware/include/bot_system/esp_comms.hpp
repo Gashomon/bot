@@ -59,17 +59,20 @@ public:
     serial_conn_.FlushIOBuffers();
   }
 
-
   std::string send_msg(const std::string &msg_to_send, bool print_output = false)
   {
+    // std::cout << " flushing " << std::endl;
     serial_conn_.FlushIOBuffers(); // Just in case
+    // std::cout << " writing " << std::endl;
     serial_conn_.Write(msg_to_send);
-    
+        
     std::string response = "";
     try
     {
       // Responses end with \r\n so we will read up to (and including) the \n.
+      // std::cout << " reading " << std::endl;
       serial_conn_.ReadLine(response, '\n', timeout_ms_);
+      // std::cout << " what's wrong " << std::endl;
     }
     catch (...)
     {
@@ -87,6 +90,10 @@ public:
       std::cout << "Sent: " << msg_to_send << std::endl;
       std::cout << " Recv: " << response << std::endl;
       }
+      // if(msg_to_send == "\r"){
+      //   std::cout << "Sent: " << msg_to_send << std::endl;
+      //   std::cout << " Recv: " << response << std::endl;
+      // }
     }
 
     return response;
@@ -94,6 +101,7 @@ public:
 
   void send_empty_msg()
   {
+    // std::cout << " Sending empty msg " << std::endl;
     std::string response = send_msg("\r");
   }
   
