@@ -171,7 +171,7 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
       plugin: "nav2_controller::SimpleGoalChecker"
       stateful: True
       xy_goal_tolerance: 0.1 # error in meters on the actual goal
-      yaw_goal_tolerance: 1.0 # error in radians on the actual goal
+      yaw_goal_tolerance: 0.785 # error in radians on the actual goal
 
     # Rotate Shim Controller
     FollowPath:  
@@ -188,7 +188,7 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
       closed_loop: true # default true
 
       # all of regulated pursuit stuff. Above are for rotation shim controller. try to both same for simplicity
-      primary_controller.desired_linear_vel: 0.8 # maintained vel
+      primary_controller.desired_linear_vel: 1.6 # maintained vel
 
       primary_controller.use_velocity_scaled_lookahead_dist: true
       # if false
@@ -200,9 +200,9 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
 
       primary_controller.use_rotate_to_heading: true 
       # if true, use this velocity/accel to rotate to heading and what radian difference to begin rotating
-      primary_controller.rotate_to_heading_angular_vel: 1.0
+      primary_controller.rotate_to_heading_angular_vel: 1.6
       primary_controller.max_angular_accel: 3.2
-      primary_controller.rotate_to_heading_min_angle: 2.785
+      primary_controller.rotate_to_heading_min_angle: 1.785
 
       primary_controller.transform_tolerance: 0.5
       
@@ -218,7 +218,7 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
       primary_controller.use_cost_regulated_linear_velocity_scaling: true # vel with objects
       primary_controller.use_regulated_linear_velocity_scaling: true #vel in general
       primary_controller.regulated_linear_scaling_min_radius: 0.2 # turning radius (m) to trigger. default 0.9 for smooth curve but controller already spins at place 
-      primary_controller.regulated_linear_scaling_min_speed: 0.6 # minimum speed to turn
+      primary_controller.regulated_linear_scaling_min_speed: 1.0 # minimum speed to turn
       
       primary_controller.allow_reversing: false
       primary_controller.max_robot_pose_search_dist: 3.0 # This should be left as the default unless there are paths with loops and intersections that do not leave the local costmap.
