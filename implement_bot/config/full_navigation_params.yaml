@@ -171,7 +171,7 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
       plugin: "nav2_controller::SimpleGoalChecker"
       stateful: True
       xy_goal_tolerance: 0.1 # error in meters on the actual goal
-      yaw_goal_tolerance: 0.785 # error in radians on the actual goal
+      yaw_goal_tolerance: 1.0 # error in radians on the actual goal
 
     # Rotate Shim Controller
     FollowPath:  
@@ -180,15 +180,15 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
       primary_controller: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
       angular_dist_threshold: 0.785 # max radians from path to consider to turn
       forward_sampling_distance: 0.5 # meters to decide path heading
-      angular_disengage_threshold: 0.3925 # rad/s
-      rotate_to_heading_angular_vel: 1.0 # velocity to rotate to angular (rad/s)
+      angular_disengage_threshold: 0.3925 # rad/s. jazzy stuff. not used
+      rotate_to_heading_angular_vel: 2.5 # velocity to rotate to angular (rad/s)
       max_angular_accel: 3.0
       simulate_ahead_time: 1.0
       rotate_to_goal_heading: true
       closed_loop: true # default true
 
       # all of regulated pursuit stuff. Above are for rotation shim controller. try to both same for simplicity
-      primary_controller.desired_linear_vel: 1.6 # maintained vel
+      primary_controller.desired_linear_vel: 2.0 # maintained vel
 
       primary_controller.use_velocity_scaled_lookahead_dist: true
       # if false
@@ -200,14 +200,14 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
 
       primary_controller.use_rotate_to_heading: true 
       # if true, use this velocity/accel to rotate to heading and what radian difference to begin rotating
-      primary_controller.rotate_to_heading_angular_vel: 1.6
-      primary_controller.max_angular_accel: 3.2
+      primary_controller.rotate_to_heading_angular_vel: 2.5
+      primary_controller.max_angular_accel: 3.0
       primary_controller.rotate_to_heading_min_angle: 1.785
 
       primary_controller.transform_tolerance: 0.5
       
       primary_controller.min_approach_linear_velocity: 0.6 # min vel to ensure progress
-      primary_controller.approach_velocity_scaling_dist: 1.0 # last distance to start slowing down Should be less than the half the costmap width.
+      primary_controller.approach_velocity_scaling_dist: 0.5 # last distance to start slowing down Should be less than the half the costmap width.
 
       primary_controller.use_collision_detection: true
       primary_controller.max_allowed_time_to_collision_up_to_carrot: 1.8 #time to project velocity forward, check for collisions 
@@ -218,13 +218,13 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
       primary_controller.use_cost_regulated_linear_velocity_scaling: true # vel with objects
       primary_controller.use_regulated_linear_velocity_scaling: true #vel in general
       primary_controller.regulated_linear_scaling_min_radius: 0.2 # turning radius (m) to trigger. default 0.9 for smooth curve but controller already spins at place 
-      primary_controller.regulated_linear_scaling_min_speed: 1.0 # minimum speed to turn
+      primary_controller.regulated_linear_scaling_min_speed: 1.5 # minimum speed to turn
       
       primary_controller.allow_reversing: false
       primary_controller.max_robot_pose_search_dist: 3.0 # This should be left as the default unless there are paths with loops and intersections that do not leave the local costmap.
 
       primary_controller.use_cancel_deceleration: true # default false
-      primary_controller.cancel_deceleration: 3.2 
+      primary_controller.cancel_deceleration: 1.0 
 
 local_costmap:
   local_costmap:
