@@ -461,20 +461,50 @@ collision_monitor:
     polygons: ["PolygonStop", "PolygonApproach"]
     PolygonStop:
       type: "polygon"
-      points: [0.4,0.3,0.4,-0.3,-0.4,-0.3,-0.4,0.3]
+      points: [0.6,0.4,0.6,-0.4,-0.6,-0.4,-0.6,0.4]
       action_type: "stop"
       min_points: 4  # max_points: 3 for Humble
       visualize: True
       polygon_pub_topic: "polygon_stop"
     PolygonApproach:  
       type: "polygon"
-      points: [0.8,0.4,0.8,-0.4,-0.8,-0.4,-0.8,0.4]
+      points: [0.8,0.5,0.8,-0.5,-0.8,-0.5,-0.8,0.5]
       action_type: "slowdown"
       min_points: 4  # max_points: 3 for Humble
       # time_before_collision: 0.8
       # simulation_time_step: 2.0
       slowdown_ratio: 0.8
       visualize: True
+      polygon_pub_topic: "polygon_slowdown"
+    observation_sources: ["scan"]
+    scan:
+      source_timeout: 0.2
+      type: "scan"
+      topic: "/ldlidar_node/scan"
+      enabled: True
+
+collision_detector:
+  ros__parameters:
+    frequency: 2.0
+    base_frame_id: "base_link"
+    odom_frame_id: "odom"
+    transform_tolerance: 0.5
+    source_timeout: 5.0
+    base_shift_correction: True
+    polygons: ["PolygonStop", "PolygonApproach"]
+    PolygonStop:
+      type: "polygon"
+      points: [0.4,0.3,0.4,-0.3,-0.4,-0.3,-0.4,0.3]
+      action_type: "none"
+      min_points: 4  # max_points: 3 for Humble
+      visualize: False
+      polygon_pub_topic: "polygon_stop"
+    PolygonApproach:  
+      type: "polygon"
+      points: [0.8,0.4,0.8,-0.4,-0.8,-0.4,-0.8,0.4]
+      action_type: "none"
+      min_points: 4  # max_points: 3 for Humble
+      visualize: False
       polygon_pub_topic: "polygon_slowdown"
     observation_sources: ["scan"]
     scan:

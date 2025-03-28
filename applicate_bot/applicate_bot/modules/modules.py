@@ -44,7 +44,6 @@ class Modules():
         self.max_weight_counter = 30
         self.timer = time.perf_counter()
         self.loadstate = "light"
-
         self.doorpin = setdoor
 
         self.soundlibpath = soundpath
@@ -140,13 +139,14 @@ class Modules():
         while True:
             perifs.playfor(situation)
         pass
-            
+
+    # v v v IMPORTANT STUFF v v v
     def getLoad(self):
         if not self.LOADENABLE:
             return 0
             
         readings = self.curr_weight
-        conversionFormula = (readings / 200 ) - 1900 #enter the conversion rate
+        conversionFormula = (readings / 200 ) - 4000 #enter the conversion rate
         return conversionFormula
         
     def updateWeight(self):
@@ -165,6 +165,8 @@ class Modules():
         # self.hx711._save_last_raw_data(self.hx711, self.hx711.backup_gain, self.curr_weight)
         
         return 
+    # ^ ^ ^ IMPORTANT STUFF ^ ^ ^
+
 
     def toggleKeyboard(self):
 

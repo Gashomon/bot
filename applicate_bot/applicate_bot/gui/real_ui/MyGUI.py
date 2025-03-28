@@ -2,6 +2,8 @@ import sys
 from PySide6 import QtWidgets
 from PySide6.QtWidgets import QMainWindow, QApplication
 from PySide6.QtUiTools import QUiLoader
+from PySide6.QtCore import Qt
+
 
 from applicate_bot.gui.real_ui.main import Ui_MainWindow as mainUi
 from applicate_bot.gui.real_ui.control import Ui_MainWindow as ctrlUi
@@ -43,9 +45,13 @@ class ControlUI(QMainWindow, ctrlUi):
         self.stackedWidget.hide()
 
     def resetControl(self):
-        self.label_sender.setText("")
-        self.label_receiver.setText("")
-        self.comboBox_6.setCurrentIndex(0)
+        # self.label_sender.setText("")
+        # self.label_receiver.setText("")
+        # self.comboBox_6.setCurrentIndex(0)
+
+        # add others
+        self.receiver_name.clear()
+        self.sender_name.clear()
 
     def fetch(self):
         if(self.stackedWidget.isHidden() or not self.label.text() == "Fetch Mode"):
@@ -179,8 +185,9 @@ class GUI():
     widget.addWidget(password)
     widget.addWidget(confirm)
 
-    widget.setFixedHeight(540)
-    widget.setFixedWidth(960)
+    widget.setFixedHeight(600)
+    widget.setFixedWidth(1030)
+    widget.setWindowFlag(Qt.FramelessWindowHint)
     
 def main():
     GUI.widget.show()

@@ -9,6 +9,8 @@ from applicate_bot.gui.gui import UserInterface as UI
 from applicate_bot.comms.command_server import ServerSub as Server
 from applicate_bot.comms.logger import DataLogger as Logger 
 
+from applicate_bot.comms import notification as notify 
+
 import rclpy
 from rclpy.node import Node
 from rclpy.duration import Duration
@@ -214,8 +216,8 @@ class Bot(Node):
         self.ui.goto("control") 
         
         t = Transaction()
-        self.ui.control.receiver_name.clear()
-        self.ui.control.sender_name.clear()
+        # self.ui.control.receiver_name.clear()
+        # self.ui.control.sender_name.clear()
         self.ui.control.pushButton_5.clicked.connect(
             lambda: self.ui.sendcmd(t))
         while t.dest1 is None or t.dest2 is None:
@@ -223,12 +225,32 @@ class Bot(Node):
         t.password = self.genpass()
 
         self.playfor('cmd_got')
+        self.passPass(t.password)
         self.run(t)
         
         self.ui.goto('main')
         self.run_updates()
         self.playfor('finish')
         return
+
+    def passPass(Self, password):
+        # passcode check
+        email = self.ui.getEmail()
+        notiti = notify.send_email(email, password)
+
+        q = ''
+        if notiti == "Success":
+            q = "Transaction code of "
+        else:
+
+        ex = [None]
+        q = "This transaction's passcode is: " + password + ".\nYes to go, no to abort"
+        self.ui.check(q, ex)
+        self.playfor('show_pass')
+        while ex[0] is not True:
+            self.run_updates()
+            if ex[0] is False:
+                return True
 
     def run(self, transaction):
         reset = None
@@ -250,16 +272,6 @@ class Bot(Node):
     def deliver(self, transaction):
         t = transaction
         
-        # passcode check
-        ex = [None]
-        q = "This transaction's passcode is: " + t.password + ".\nYes to go, no to abort"
-        self.ui.check(q, ex)
-        self.playfor('show_pass')
-        while ex[0] is not True:
-            self.run_updates()
-            if ex[0] is False:
-                return True
-
         self.ui.display(mainT ="Robot is Leaving in 5 seconds. Please step aside.")
         # self.run_updates()
         self.playfor('leaving')

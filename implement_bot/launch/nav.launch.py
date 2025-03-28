@@ -47,6 +47,7 @@ def generate_launch_description():
                        'behavior_server',
                        'velocity_smoother',
                        'collision_monitor',
+                    #    'collision_detector',
                        'bt_navigator',
                        'waypoint_follower'
                     ]
@@ -196,6 +197,16 @@ def generate_launch_description():
                 arguments=['--ros-args', '--log-level', log_level],
                 remappings=remappings +
                         [('cmd_vel_smoothed', 'cmd_vel_nvs'), ('cmd_vel', 'cmd_vel_nav')]),
+            # Node(
+            #     package='nav2_collision_monitor',
+            #     executable='collision_detector',
+            #     name='collision_detector',
+            #     output='screen',
+            #     respawn=use_respawn,
+            #     respawn_delay=2.0,
+            #     parameters=[configured_params],
+            #     arguments=['--ros-args', '--log-level', log_level]),
+
             Node(
                 package='nav2_lifecycle_manager',
                 executable='lifecycle_manager',

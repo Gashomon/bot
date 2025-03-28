@@ -59,8 +59,16 @@ class BasicNavigator(Node):
         self.result_future = None
         self.feedback = None
         self.status = None
+        self.collision_state = None
 
         amcl_pose_qos = QoSProfile(
+            durability=QoSDurabilityPolicy.TRANSIENT_LOCAL,
+            reliability=QoSReliabilityPolicy.RELIABLE,
+            history=QoSHistoryPolicy.KEEP_LAST,
+            depth=1,
+        )
+
+        collision_detector_qos = QoSProfile(
             durability=QoSDurabilityPolicy.TRANSIENT_LOCAL,
             reliability=QoSReliabilityPolicy.RELIABLE,
             history=QoSHistoryPolicy.KEEP_LAST,
@@ -98,6 +106,14 @@ class BasicNavigator(Node):
             self._amclPoseCallback,
             amcl_pose_qos,
         )
+
+        self.collision_detection_sub = self.create_subscription(
+            (message type),
+            'collision_monitor_state',
+            self._collisionCallback,
+            collision_detector_qos
+        )
+
         self.initial_pose_pub = self.create_publisher(
             PoseWithCovarianceStamped, 'initialpose', 10
         )
@@ -490,9 +506,7 @@ class BasicNavigator(Node):
         else:
             return rtn.path
 
-    def _smoothPathImpl(
-        self, path, smoother_id='', max_duration=2.0, check_for_collision=False
-    ):
+    def _smoothPathImpl(self, path, smoother_id='', max_duration=2.0, check_for_collision=False):
         """
         Send a `SmoothPath` action request.
 
@@ -523,9 +537,7 @@ class BasicNavigator(Node):
 
         return self.result_future.result().result
 
-    def smoothPath(
-        self, path, smoother_id='', max_duration=2.0, check_for_collision=False
-    ):
+    def smoothPath(self, path, smoother_id='', max_duration=2.0, check_for_collision=False):
         """Send a `SmoothPath` action request."""
         rtn = self._smoothPathImpl(path, smoother_id, max_duration, check_for_collision)
 
@@ -594,6 +606,10 @@ class BasicNavigator(Node):
         future = self.get_costmap_local_srv.call_async(req)
         rclpy.spin_until_future_complete(self, future)
         return future.result().map
+
+    def getCollisionState(self):
+        # more codes maybe
+        return self.collision_state
 
     def lifecycleStartup(self):
         """Startup nav2 lifecycle system."""
@@ -672,6 +688,11 @@ class BasicNavigator(Node):
         self.debug('Received action feedback message')
         self.feedback = msg.feedback
         return
+    
+    def _collisionCallback(self, msg):
+        self.debug('Received collision update')
+        self.collision_state = msg
+        return
 
     def _setInitialPose(self):
         msg = PoseWithCovarianceStamped()
@@ -681,7 +702,7 @@ class BasicNavigator(Node):
         self.info('Publishing Initial Pose')
         self.initial_pose_pub.publish(msg)
         return
-
+    
     def info(self, msg):
         self.get_logger().info(msg)
         return

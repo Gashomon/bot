@@ -149,6 +149,17 @@ class UserInterface(MyGUI.GUI):
         self.app.processEvents()
         pass
 
+    def resetInputs(self):
+        self.control.resetControl()
+        self.password.reset()
+
+    def getEmail():
+        if self.control.__.isChecked():
+            return self.control.___.text() #receiver tb
+        else:
+            return self.control.___.text() #email text box
+
+        
 if __name__ == "__main__":
     ui = UserInterface()
     ui.widget.show()

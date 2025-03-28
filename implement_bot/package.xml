@@ -13,22 +13,20 @@
   <exec_depend>applicate_bot</exec_depend>
 
   <!-- ROBOT -->
-  <exec_depend>robot_description</exec_depend>
-  <exec_depend>nav2_bringup</exec_depend>
-  <exec_depend>nav2_amcl</exec_depend>
-  <exec_depend>nav2_map_server</exec_depend>
-  <exec_depend>ros2_control</exec_depend>
+  <exec_depend>tf2</exec_depend>
+  <depend>tf2_ros</depend>
+  <depend>ros2_control</depend>
   <exec_depend>slam_toolbox</exec_depend>
   
   <!-- HARDWARE -->
-  <depend>hardware interface</depend>
+  <depend>hardware_interface</depend>
   <depend>rclcpp_lifecycle</depend>
   <depend>pluginlib</depend>
   <depend>libserial-dev</depend>
 
   <!-- SENSOR -->
   <exec_depend>imu_sensor_broadcaster</exec_depend>
-  <exec_depend>ldrobot-lidar-ros2</exec_depend>
+  <exec_depend>ldlidar_node</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
@@ -36,6 +34,28 @@
   <!-- SERVER -->
   <depend>rclcpp</depend>
   <depend>std_msgs</depend>
+
+
+  <!-- NAVIGATION -->
+  <depend>nav2_bringup</depend>
+  <depend>nav2_amcl</depend>
+  <depend>nav2_map_server</depend>
+
+  <!-- NAVIGATION COLLISION DETECTOR SPECIALS-->
+  <build_depend>nav2_common</build_depend>
+
+  <depend>geometry_msgs</depend>
+  <depend>nav2_util</depend>
+  <depend>nav2_costmap_2d</depend>
+  <depend>nav2_msgs</depend>
+  <!-- <depend>rclcpp</depend> -->
+  <depend>rclcpp_components</depend>
+  <!-- <depend>rclcpp_lifecycle</depend> -->
+  <depend>sensor_msgs</depend>
+  <!-- <depend>std_msgs</depend> -->
+  <!-- <depend>tf2</depend>
+  <depend>tf2_ros</depend> -->
+  <depend>visualization_msgs</depend>
 
   <export>
     <build_type>ament_cmake</build_type>

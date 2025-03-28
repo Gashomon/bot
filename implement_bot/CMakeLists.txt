@@ -30,6 +30,9 @@ find_package(robot_state_publisher REQUIRED)
 find_package(nav2_bringup REQUIRED)
 find_package(nav2_amcl REQUIRED)
 find_package(nav2_map_server REQUIRED)
+find_package(nav2_costmap_2d REQUIRED)
+find_package(nav2_msgs REQUIRED)
+find_package(nav2_util REQUIRED)
 find_package(slam_toolbox REQUIRED)
 
 # HARDWARE dependencies
@@ -134,6 +137,17 @@ ament_target_dependencies(server rclcpp std_msgs)
 install(TARGETS
   server
   DESTINATION lib/${PROJECT_NAME})
+
+
+# Self compiled collision detector
+# add_executable(collision_detector src/collision_detector_node.cpp)
+# ament_target_dependencies(collision_detector  
+#   nav2_costmap_2d
+#   nav2_msgs
+#   nav2_util
+#   rclcpp
+#   rclcpp_lifecycle
+#   rclcpp_components)
 
 # SETTING EXECUTABLES
 
