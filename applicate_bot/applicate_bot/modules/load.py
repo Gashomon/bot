@@ -55,6 +55,10 @@ def addLoadRead(hx, load_arr):
     return 
 
 # not used
+
+def filter(hx, datalist):
+    return hx.outliers_filter(datalist)
+
 def getLoadinGrams(hx):
     readings = readLoadSensor(hx)
     conversionFormula = readings / 200 #enter the conversion rate

@@ -134,7 +134,7 @@ class Modules():
         
         # Apply calibration to the weight reading
         readings = self.curr_weight
-        conversionFormula = (readings / 200)  # Enter your conversion formula here
+        conversionFormula = ((8.668880909258 * (10**-3)) * readings) - 3892.51 # Enter your conversion formula here
         return conversionFormula
     
     # v v v IMPORTANT STUFF v v v
@@ -147,7 +147,9 @@ class Modules():
         return readings
     
     def calcWeight(self, val):
-        conversionFormula = (val / 200)  # Enter your conversion formula here
+
+        conversionFormula = ((8.668880909258 * (10**-3)) * val) - 3892.51  # Enter your conversion formula here
+
         return conversionFormula
         
     def updateWeight(self):
@@ -160,9 +162,10 @@ class Modules():
             print("error reading, stopping..")
             return
 
-        if len(self.weightlist) >= self.max_weight_counter:
+        if len(self.weightlist) > self.max_weight_counter or (time.perf_counter()-self.timer > 1000.0  and len(self.weightlist) > 2):
             # Calculate the mean of the weight readings
-            self.curr_weight = statistics.mean(self.weightlist)
+            self.modlist = load.filter(self.hx711, self.weightlist)
+            self.curr_weight = statistics.mean(self.modlist)
             self.hx711._save_last_raw_data(self.backup_channel, self.backup_gain, self.weightlist)
             self.timer = time.perf_counter()
             self.weightlist.clear()

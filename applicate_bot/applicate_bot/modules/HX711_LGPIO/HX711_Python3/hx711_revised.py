@@ -660,7 +660,6 @@ class HX711:
         else:
             return True
 
-
     def outliers_filter(self, data_list, stdev_thresh = 1.0):
         """
         It filters out outliers from the provided list of int.

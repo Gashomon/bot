@@ -56,8 +56,8 @@ class Bot(Node):
         
         # audio folders. starting from home/pi
         path_of_audios = '/home/pi/bot/src/bot/applicate_bot/applicate_bot/modules/real_fx/'
-        self.modules = Modules(setlock= -1, setloadin= -1, setloadout = -1, setdoor= -1, soundenable=True, soundpath=path_of_audios)
-        # self.modules = Modules(setlock= 25, setloadin= 27, setloadout = 22, setdoor= -1, soundenable=True, soundpath=path_of_audios)
+        # self.modules = Modules(setlock= -1, setloadin= -1, setloadout = -1, setdoor= -1, soundenable=True, soundpath=path_of_audios)
+        self.modules = Modules(setlock= 25, setloadin= 27, setloadout = 22, setdoor= -1, soundenable=True, soundpath=path_of_audios)
         
         print(f"enable modules are: lock({str(self.modules.LOCKENABLE)}), load({str(self.modules.LOADENABLE)})")
         
@@ -105,9 +105,9 @@ class Bot(Node):
         self.ui.app.processEvents()
 
         if events.count("load"):
-            # print("loadup")
+            print("loadup")
             self.updateWeight()
-            # print(self.modules.curr_weight)
+            print("lol")
             if not self.loadislighterthan(5000) and self.ui.runEnabled():    
                 self.playfor('heavy')       
                 self.ui.disableRun()

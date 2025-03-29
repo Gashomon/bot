@@ -14,7 +14,8 @@ while(True):
         new_weight = modululu.calcWeight(got_weight)
         modululu.setload(got_weight)
         if(len(modululu.weightlist)==0):
-            print(f"Original weight(raw): {got_weight}, Calculated weight(kg): {new_weight} state: {modululu.loadstate}")
+            # print(f"Original weight(raw): {got_weight}, Calculated weight(grams): {new_weight} state: {modululu.loadstate}")
+            print(new_weight)
 
     except KeyboardInterrupt:
         print("whoops")

@@ -141,7 +141,7 @@ class Ui_MainWindow(object):
         self.comboBox_email_domain.setObjectName("comboBox_email_domain")
         self.comboBox_email_domain.setStyleSheet("background-color: #b8e994; font: 14px; border-radius: 5px; color: black;")
         self.comboBox_email_domain.addItem("@marsu.edu.ph")
-        self.comboBox_email_domain.addItem("@google.com")
+        self.comboBox_email_domain.addItem("@gmail.com")
         # self.comboBox_email_domain.setVisible(False)
 
         self.stackedWidget.addWidget(self.page1)
