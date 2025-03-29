@@ -433,11 +433,11 @@ hardware_interface::return_type NewHardwareInterface::BotHardwareSystem::write(
     if(wheel_r_.cmd < wheel_l_.cmd) right_desired_speed = 0;
   }
   
-  if(wheel_l_.vel == 0 && wheel_l_.cmd > 0) left_desired_speed = 15;
-  else if(wheel_l_.vel == 0 && wheel_l_.cmd < 0) left_desired_speed = -15;
+  if(wheel_l_.vel == 0 && wheel_l_.cmd > 0) left_desired_speed = 30;
+  else if(wheel_l_.vel == 0 && wheel_l_.cmd < 0) left_desired_speed = -30;
 
-  if(wheel_r_.vel == 0 && wheel_r_.cmd > 0) right_desired_speed = 15;
-  else if(wheel_r_.vel == 0 && wheel_r_.cmd < 0) right_desired_speed = -15;
+  if(wheel_r_.vel == 0 && wheel_r_.cmd > 0) right_desired_speed = 30;
+  else if(wheel_r_.vel == 0 && wheel_r_.cmd < 0) right_desired_speed = -30;
 
   int motor_l_counts_per_loop = left_desired_speed / wheel_l_.rads_per_count / cfg_.loop_rate;
   int motor_r_counts_per_loop = right_desired_speed / wheel_r_.rads_per_count / cfg_.loop_rate;
