@@ -63,7 +63,7 @@ class Bot(Node):
         
         self.navigator = Navigator()
         self.server = Server()
-        self.logger = Logger()
+        # self.logger = Logger()
         self.ui = UI()
 
         self.loadbot()

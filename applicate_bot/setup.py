@@ -24,6 +24,7 @@ setup(
     entry_points={
         'console_scripts': [
             'nav_key = applicate_bot.teleop.navving:main',
+            'nav_log = applicate_bot.teleop.navlog:main',
             'nav_run = applicate_bot.teleop.nav_func_manual:main',
             'nav_basic = applicate_bot.navigation.nav_func:main',
             'keyboard = applicate_bot.teleop.key_input:main',
