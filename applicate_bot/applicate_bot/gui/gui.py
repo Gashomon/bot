@@ -153,11 +153,18 @@ class UserInterface(MyGUI.GUI):
         self.control.resetControl()
         self.password.reset()
 
-    def getEmail():
-        if self.control.__.isChecked():
-            return self.control.___.text() #receiver tb
+    def getEmail(self):
+        return self.control.receiver_email.text() + self.control.comboBox_email_domain.currentText()
+        # if self.control.__.isChecked():
+        #     return self.control.___.text() #receiver tb
+        # else:
+        #     return self.control.___.text() #email text box
+    
+    def hasEmail(self):
+        if self.control.receiver_email.text() == "":
+            return False
         else:
-            return self.control.___.text() #email text box
+            return True
 
         
 if __name__ == "__main__":

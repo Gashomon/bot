@@ -38,11 +38,11 @@ class ControlUI(QMainWindow, ctrlUi):
         self.pushButton_3.clicked.connect(self.deliver)
         self.pushButton_4.clicked.connect(self.retrieve)
 
-        self.pushButton_2.hide()
-        self.pushButton_4.hide()
+        # self.pushButton_2.hide()
+        # self.pushButton_4.hide()
         # self.comboBox_6.hide()
         # self.label_4.hide()
-        self.stackedWidget.hide()
+        # self.stackedWidget.hide()
 
     def resetControl(self):
         # self.label_sender.setText("")
@@ -52,6 +52,7 @@ class ControlUI(QMainWindow, ctrlUi):
         # add others
         self.receiver_name.clear()
         self.sender_name.clear()
+        self.receiver_email.clear()
 
     def fetch(self):
         if(self.stackedWidget.isHidden() or not self.label.text() == "Fetch Mode"):

@@ -32,7 +32,6 @@ def addLoadRead(hx, load_arr):
     
     if newval > -1 and newval:
         load_arr.append(newval)
-
     
         if len(load_arr) > 2  and hx._data_filter:
             # print(f"t1 is {tmp1}")

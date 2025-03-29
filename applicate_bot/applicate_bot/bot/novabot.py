@@ -56,8 +56,8 @@ class Bot(Node):
         
         # audio folders. starting from home/pi
         path_of_audios = '/home/pi/bot/src/bot/applicate_bot/applicate_bot/modules/real_fx/'
-        # self.modules = Modules(setlock= -1, setloadin= -1, setloadout = -1, setdoor= -1, soundenable=True, soundpath=path_of_audios)
-        self.modules = Modules(setlock= 25, setloadin= 27, setloadout = 22, setdoor= -1, soundenable=True, soundpath=path_of_audios)
+        self.modules = Modules(setlock= -1, setloadin= -1, setloadout = -1, setdoor= -1, soundenable=True, soundpath=path_of_audios)
+        # self.modules = Modules(setlock= 25, setloadin= 27, setloadout = 22, setdoor= -1, soundenable=True, soundpath=path_of_audios)
         
         print(f"enable modules are: lock({str(self.modules.LOCKENABLE)}), load({str(self.modules.LOADENABLE)})")
         
@@ -138,7 +138,11 @@ class Bot(Node):
     
     def cmd_btn(self):
         print("starting")
-        self.waitforcmd()
+        try:
+            self.waitforcmd()
+        except Exception as e:
+            self.ui.widget.hide()
+            print(f"wrong wrong wrong wrong very wrong: {e}" )
         print("going back")
     
     # NAVIGATOR STUFF
@@ -214,46 +218,74 @@ class Bot(Node):
     # MAIN ROBOT CONTROLLING STUFF    
     def waitforcmd(self):
         self.ui.goto("control") 
+        reset = None
         
         t = Transaction()
-        # self.ui.control.receiver_name.clear()
-        # self.ui.control.sender_name.clear()
+        self.ui.resetInputs()
+
         self.ui.control.pushButton_5.clicked.connect(
             lambda: self.ui.sendcmd(t))
         while t.dest1 is None or t.dest2 is None:
+            print("waiting")
             self.run_updates("load","lock")
+       
         t.password = self.genpass()
-
         self.playfor('cmd_got')
-        self.passPass(t.password)
-        self.run(t)
+
+        reset = self.passPass(t.password)
+        if not reset:
+            reset = self.run(t)
         
         self.ui.goto('main')
         self.run_updates()
-        self.playfor('finish')
+        if not reset:
+            self.playfor('finish')
         return
 
-    def passPass(Self, password):
+    def passPass(self, password):
+        print("notifying recv")
         # passcode check
-        email = self.ui.getEmail()
-        notiti = notify.send_email(email, password)
-
+        # self.ui.goto()
         q = ''
-        if notiti == "Success":
-            q = "Transaction code of "
+        bt1 = 'Proceed'
+        bt2 = 'Go back'
+        if not self.ui.hasEmail():
+            q = "No email has been set.\nProceed and Manually notify receiver?"
         else:
+            email = self.ui.getEmail()
+            notiti = notify.send_email(email, password)
+            
+            if notiti == "Success":
+                q = "Passcode successfully sent to\n" + email + "\nProceed?"
+            elif notiti == "nonet":
+                q = "Cannot connect to the internet. Unable to notify receiver.\nProceed and Manually notify receiver?"
+            elif notiti == "selferror":
+                q = "Something is wrong and it's not about you.. it's me.\nProceed and Manually notify receiver?"
+            elif notiti == "noemail":
+                q = "Email: " + email + " not found.\nRe-enter email or Proceed and Manually notify receiver?"
+            else:
+                q = "I don't know what happened but wanna proceed?"
 
         ex = [None]
-        q = "This transaction's passcode is: " + password + ".\nYes to go, no to abort"
-        self.ui.check(q, ex)
-        self.playfor('show_pass')
+        self.ui.check(q, ex, tx1=bt1, tx2=bt2)
         while ex[0] is not True:
             self.run_updates()
             if ex[0] is False:
                 return True
-
+        
+        if notiti != "Success":
+            ex = [None]
+            q = "This transaction's passcode is: " + password + ".\nSend it to Receiver. Yes to go, no to abort"
+            self.ui.check(q, ex)
+            self.playfor('show_pass')
+            while ex[0] is not True:
+                self.run_updates()
+                if ex[0] is False:
+                    return True
+                
     def run(self, transaction):
         reset = None
+
         self.log("robot_begin")
         if transaction.type == 1:
             reset = self.deliver(transaction)
@@ -265,9 +297,10 @@ class Bot(Node):
         print(reset)
         if reset:
             self.log("robot_cancel")
-            return
+            return True
         
         print("done")
+        return False
         
     def deliver(self, transaction):
         t = transaction

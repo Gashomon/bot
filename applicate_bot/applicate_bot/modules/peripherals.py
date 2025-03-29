@@ -1,7 +1,7 @@
 # import required module
 from playsound import playsound
 
-import pyautogui
+# import pyautogui
 
 soundlibpath = '/home/pi/bot/src/bot/applicate_bot/applicate_bot/modules/sounds/'
 audio1 = 'audio.mp3'
@@ -58,5 +58,6 @@ def playfor(soundlibpath, situation):
 # os.system("mpg123 " + file)
 
 def clickAt(x_coor,y_coor):
-    print(f"clicked at: {x_coor}, {y_coor}")
-    pyautogui.click(x=x_coor,y=y_coor)
+    # print(f"clicked at: {x_coor}, {y_coor}")
+    # pyautogui.click(x=x_coor,y=y_coor)
+    pass

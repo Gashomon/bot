@@ -30,7 +30,7 @@ try:
         # 0 = 210000 1 = 240000
 
         formula = (hx.get_raw_data_mean(readings=30) - 420000) / 60000
-        print("Raw Data: " + str(hx.get_last_raw_data()) + " kilograms")
+        print("Raw Data: " + str(formula) + " kilograms")
 
         # time.sleep(5)
 

@@ -140,14 +140,18 @@ install(TARGETS
 
 
 # Self compiled collision detector
-# add_executable(collision_detector src/collision_detector_node.cpp)
+# add_executable(collision_detector src/collision_monitor_node.cpp)
 # ament_target_dependencies(collision_detector  
-#   nav2_costmap_2d
-#   nav2_msgs
-#   nav2_util
-#   rclcpp
-#   rclcpp_lifecycle
-#   rclcpp_components)
+  nav2_costmap_2d
+  nav2_msgs
+  nav2_util
+  rclcpp
+  rclcpp_lifecycle
+  rclcpp_components)
+
+  install(TARGETS
+  collision_detector
+  DESTINATION lib/${PROJECT_NAME})
 
 # SETTING EXECUTABLES
 

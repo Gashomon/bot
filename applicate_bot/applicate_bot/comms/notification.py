@@ -37,10 +37,10 @@ def send_email(receiver_email, passcode):
             return "nonet"
         elif e == "(535, b'5.7.8 Sorry.')":
             # print("server error")
-            return "lol"
+            return "selferror"
         elif e == "(535, b'5.7.8 Username and Password not accepted. For more information, go to\n5.7.8  https://support.google.com/mail/?p=BadCredentials d9443c01a7336-2291f1f7dd8sm9884635ad.226 - gsmtp')":
             # print("login error")
-            return "lol2"
+            return "selferror"
         else:
             # cant find email. try checking if input is correct
             return "noemail"

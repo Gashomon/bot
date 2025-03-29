@@ -68,12 +68,12 @@ class BasicNavigator(Node):
             depth=1,
         )
 
-        collision_detector_qos = QoSProfile(
-            durability=QoSDurabilityPolicy.TRANSIENT_LOCAL,
-            reliability=QoSReliabilityPolicy.RELIABLE,
-            history=QoSHistoryPolicy.KEEP_LAST,
-            depth=1,
-        )
+        # collision_detector_qos = QoSProfile(
+        #     durability=QoSDurabilityPolicy.TRANSIENT_LOCAL,
+        #     reliability=QoSReliabilityPolicy.RELIABLE,
+        #     history=QoSHistoryPolicy.KEEP_LAST,
+        #     depth=1,
+        # )
 
         self.initial_pose_received = False
         self.nav_through_poses_client = ActionClient(
@@ -107,12 +107,12 @@ class BasicNavigator(Node):
             amcl_pose_qos,
         )
 
-        self.collision_detection_sub = self.create_subscription(
-            (message type),
-            'collision_monitor_state',
-            self._collisionCallback,
-            collision_detector_qos
-        )
+        # self.collision_detection_sub = self.create_subscription(
+        #     (message type),
+        #     'collision_monitor_state',
+        #     self._collisionCallback,
+        #     collision_detector_qos
+        # )
 
         self.initial_pose_pub = self.create_publisher(
             PoseWithCovarianceStamped, 'initialpose', 10

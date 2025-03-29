@@ -61,32 +61,32 @@ class Ui_MainWindow(object):
         self.label_sender.setGeometry(QtCore.QRect(775, 70, 120, 30)) 
         self.label_sender.setText("Sender's Name:")
         self.label_sender.setStyleSheet("font-size: 14px; color: #4b6584;")
-        self.label_sender.setVisible(False)
+        # self.label_sender.setVisible(False)
 
         self.sender_name = QtWidgets.QLineEdit(self.centralwidget)
         self.sender_name.setGeometry(QtCore.QRect(690, 100, 250, 30))  
         self.sender_name.setPlaceholderText("Enter Sender's Name")
         self.sender_name.setAlignment(QtCore.Qt.AlignCenter)
-        self.sender_name.setVisible(False)
+        # self.sender_name.setVisible(False)
         
         self.label_receiver = QtWidgets.QLabel(self.centralwidget)
         self.label_receiver.setGeometry(QtCore.QRect(775, 140, 250, 30))  
         self.label_receiver.setText("Receiver's Name:")
         self.label_receiver.setStyleSheet("font-size: 14px; color: #4b6584;")
-        self.label_receiver.setVisible(False)
+        # self.label_receiver.setVisible(False)
 
         self.receiver_name = QtWidgets.QLineEdit(self.centralwidget)
         self.receiver_name.setGeometry(QtCore.QRect(690, 170, 250, 30))  
         self.receiver_name.setPlaceholderText("Enter Receiver's Name")
         self.receiver_name.setAlignment(QtCore.Qt.AlignCenter)
-        self.receiver_name.setVisible(False)
+        # self.receiver_name.setVisible(False)
 
         self.weight_frame = QtWidgets.QFrame(self.centralwidget)
-        self.weight_frame.setGeometry(QtCore.QRect(710, 280, 200, 40))  
+        self.weight_frame.setGeometry(QtCore.QRect(710, 340, 200, 40))  
         self.weight_frame.setStyleSheet("background-color: white; border-radius: 10px;")  
 
         self.weight_status_label = QtWidgets.QLabel(self.centralwidget)
-        self.weight_status_label.setGeometry(QtCore.QRect(710, 280, 200, 40))  
+        self.weight_status_label.setGeometry(QtCore.QRect(710, 340, 200, 40))  
         self.weight_status_label.setAlignment(QtCore.Qt.AlignCenter)
         self.weight_status_label.setStyleSheet("background-color: white; border-radius: 10px;")  
 
@@ -116,14 +116,33 @@ class Ui_MainWindow(object):
         self.comboBox_6.setObjectName("comboBox_6")
         self.comboBox_6.setStyleSheet("background-color: #b8e994; font: 14px; border-radius: 5px; color: black;")
         self.comboBox_6.addItem("")
-        self.comboBox_6.addItem("")
 
         self.pushButton_5 = QtWidgets.QPushButton(self.page1)
         self.pushButton_5.setGeometry(QtCore.QRect(40, 230, 130, 50))
         self.pushButton_5.setObjectName("pushButton_5")
         self.pushButton_5.setStyleSheet("background-color: #3867d6; color: white; font: 15px; border-radius: 10px;")
 
-        
+        # Creating textbox for receiver's email
+        self.label_receiver_email = QtWidgets.QLabel(self.centralwidget)
+        self.label_receiver_email.setGeometry(QtCore.QRect(775, 210, 250, 30))  
+        self.label_receiver_email.setText("Receiver's Email:")
+        self.label_receiver_email.setStyleSheet("font-size: 14px; color: #4b6584;")
+        # self.label_receiver_email.setVisible(False)
+
+        self.receiver_email = QtWidgets.QLineEdit(self.centralwidget)
+        self.receiver_email.setGeometry(QtCore.QRect(690, 240, 250, 30))  
+        self.receiver_email.setPlaceholderText("Receiver's Email")
+        self.receiver_email.setAlignment(QtCore.Qt.AlignCenter)
+        # self.receiver_email.setVisible(False)
+
+        # Adding the combo box for email domain
+        self.comboBox_email_domain = QtWidgets.QComboBox(self.centralwidget)
+        self.comboBox_email_domain.setGeometry(QtCore.QRect(690, 280, 250, 30))
+        self.comboBox_email_domain.setObjectName("comboBox_email_domain")
+        self.comboBox_email_domain.setStyleSheet("background-color: #b8e994; font: 14px; border-radius: 5px; color: black;")
+        self.comboBox_email_domain.addItem("@marsu.edu.ph")
+        self.comboBox_email_domain.addItem("@google.com")
+        # self.comboBox_email_domain.setVisible(False)
 
         self.stackedWidget.addWidget(self.page1)
 
