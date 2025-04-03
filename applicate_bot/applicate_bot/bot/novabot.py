@@ -26,7 +26,7 @@ longsituationslist = {}
 destinationlist = {
     'Initial': (0.0, 0.0, 0.0),
     'Home': (0.0, 0.0, 0.0),
-    'Dean': (5.0, 0.0, 0.0), 
+    'Dean': (4.0, 0.0, 0.0), 
     'CE'  : (0.0, 0.0, 0.0),
     'EE' : (0.0, 0.0, 0.0),
     'CpE'  : (0.0, 0.0, 0.0),
@@ -249,6 +249,7 @@ class Bot(Node):
         q = ''
         bt1 = 'Proceed'
         bt2 = 'Go back'
+        notiti = "skipped"
         if not self.ui.hasEmail():
             q = "No email has been set.\nProceed and Manually notify receiver?"
         else:

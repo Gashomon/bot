@@ -170,7 +170,7 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
     simple_goal_checker:
       plugin: "nav2_controller::SimpleGoalChecker"
       stateful: True
-      xy_goal_tolerance: 0.1 # error in meters on the actual goal
+      xy_goal_tolerance: 0.25 # error in meters on the actual goal
       yaw_goal_tolerance: 1.0 # error in radians on the actual goal
 
     # Rotate Shim Controller
@@ -184,11 +184,11 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
       rotate_to_heading_angular_vel: 2.5 # velocity to rotate to angular (rad/s)
       max_angular_accel: 3.0
       simulate_ahead_time: 1.0
-      rotate_to_goal_heading: true
+      rotate_to_goal_heading: false
       closed_loop: true # default true
 
       # all of regulated pursuit stuff. Above are for rotation shim controller. try to both same for simplicity
-      primary_controller.desired_linear_vel: 2.0 # maintained vel
+      primary_controller.desired_linear_vel: 2.5 # max vel to use
 
       primary_controller.use_velocity_scaled_lookahead_dist: true
       # if false
@@ -217,7 +217,7 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
 
       primary_controller.use_cost_regulated_linear_velocity_scaling: true # vel with objects
       primary_controller.use_regulated_linear_velocity_scaling: true #vel in general
-      primary_controller.regulated_linear_scaling_min_radius: 0.2 # turning radius (m) to trigger. default 0.9 for smooth curve but controller already spins at place 
+      primary_controller.regulated_linear_scaling_min_radius: 0.5 # turning radius (m) to trigger. default 0.9 for smooth curve but controller already spins at place 
       primary_controller.regulated_linear_scaling_min_speed: 1.5 # minimum speed to turn
       
       primary_controller.allow_reversing: false
@@ -241,8 +241,8 @@ local_costmap:
       # origin_x: -1.97
       # origin_y: -4.24
       map_vis_z: 0.0
-      # plugins: ["obstacle_layer","range_layer", "inflation_layer", ]
-      plugins: ["obstacle_layer", "inflation_layer"]
+      plugins: ["obstacle_layer","range_layer", "inflation_layer", ]
+      # plugins: ["obstacle_layer", "inflation_layer"]
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: True
@@ -262,12 +262,12 @@ local_costmap:
           obstacle_min_range: 0.0
       range_layer:
         plugin: "nav2_costmap_2d::RangeSensorLayer"
-        topics: ["/left_range_broad/range","/right_range_broad/range"]
+        topics: ["/range_broad/range"]
         phi: 1.2
         clear_threshold: 0.8
         clear_on_max_reading: False
         mark_thresold:  0.2
-        input_sensor_type: 'ALL'
+        input_sensor_type: 'VARIABLE'
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 7.0

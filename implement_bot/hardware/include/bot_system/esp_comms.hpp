@@ -144,7 +144,7 @@ public:
     // std::cout << "encs:" << response;
   }
 
-    void read_range_sensors(double &sensor_1, double &sensor_2)
+  void read_range_sensors(double &sensor_1, double &sensor_2)
   {
     std::string response = send_msg("l\r");
 
@@ -157,7 +157,13 @@ public:
     sensor_2 = std::atof(token_2.c_str());
   }
 
-    void read_imu_sensor(double &vel_x, double &vel_y, double &vel_z, double &ang_x, double &ang_y, double &ang_z)
+  void read_range_sensor(double &sensor)
+  {
+    std::string response = send_msg("l\r");
+    sensor = std::atof(response.c_str()) * 0.01; //if received from sensor is in cm. need meters.
+  }
+
+  void read_imu_sensor(double &vel_x, double &vel_y, double &vel_z, double &ang_x, double &ang_y, double &ang_z)
   {
     std::string response = send_msg("i\r");
 

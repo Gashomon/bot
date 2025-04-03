@@ -105,22 +105,35 @@ def generate_launch_description():
         )
     )
 
-    left_range_spawner = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=["left_range_broad"]
-    )
+    # left_range_spawner = Node(
+    #     package="controller_manager",
+    #     executable="spawner",
+    #     arguments=["left_range_broad"]
+    # )
 
-    right_range_spawner = Node(
+    # right_range_spawner = Node(
+    #     package="controller_manager",
+    #     executable="spawner",
+    #     arguments=["right_range_broad"]
+    # )
+
+    # delayed_range_broad_spawner = RegisterEventHandler(
+    #     event_handler=OnProcessStart(
+    #         target_action=real_bot_controller,
+    #         on_start=[right_range_spawner, left_range_spawner],
+    #     )
+    # )
+
+    range_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["right_range_broad"]
+        arguments=["range_broad"]
     )
 
     delayed_range_broad_spawner = RegisterEventHandler(
         event_handler=OnProcessStart(
             target_action=real_bot_controller,
-            on_start=[right_range_spawner, left_range_spawner],
+            on_start=[range_spawner],
         )
     )
     

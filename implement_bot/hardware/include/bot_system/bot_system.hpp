@@ -54,9 +54,10 @@ namespace NewHardwareInterface
       int pid_i = 0;
       int pid_o = 0;
 
-      std::string left_range_name = "";
-      std::string right_range_name = "";
+      // std::string left_range_name = "";
+      // std::string right_range_name = "";
 
+      std::string range_name = "";
       std::string imu_name = "";
     };
 
@@ -103,8 +104,9 @@ namespace NewHardwareInterface
       Config cfg_;
       Wheel wheel_l_;
       Wheel wheel_r_;
-      RangeSensor range_l_;
-      RangeSensor range_r_;
+      // RangeSensor range_l_;
+      // RangeSensor range_r_;
+      RangeSensor range_;
       Imusensor imu_;
   };
 

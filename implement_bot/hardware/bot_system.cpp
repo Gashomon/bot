@@ -43,11 +43,12 @@ hardware_interface::CallbackReturn BotHardwareSystem::on_init(
   cfg_.timeout_ms = std::stoi(info_.hardware_parameters["timeout_ms"]);
   cfg_.enc_counts_per_rev = std::stoi(info_.hardware_parameters["enc_counts_per_rev"]);
   
-  cfg_.left_range_name = info_.hardware_parameters["left_range_name"];
-  cfg_.right_range_name = info_.hardware_parameters["right_range_name"];
+  // cfg_.left_range_name = info_.hardware_parameters["left_range_name"];
+  // cfg_.right_range_name = info_.hardware_parameters["right_range_name"];
   // cfg_.min_range = std::stof(info_.hardware_parameters["minimum_range"]);
   // cfg_.max_range = std::stof(info_.hardware_parameters["maximum_range"]);
 
+  cfg_.range_name = info_.hardware_parameters["range_name"];
   cfg_.imu_name = info_.hardware_parameters["imu_name"];
 
   if (info_.hardware_parameters.count("pid_p") > 0)
@@ -64,8 +65,9 @@ hardware_interface::CallbackReturn BotHardwareSystem::on_init(
   
   wheel_l_.setup(cfg_.left_wheel_name, cfg_.enc_counts_per_rev);
   wheel_r_.setup(cfg_.right_wheel_name, cfg_.enc_counts_per_rev);
-  range_l_.setup(cfg_.left_range_name);
-  range_r_.setup(cfg_.right_range_name);
+  // range_l_.setup(cfg_.left_range_name);
+  // range_r_.setup(cfg_.right_range_name);
+  range_.setup(cfg_.range_name);
   imu_.setup(cfg_.imu_name);
   
   for (const hardware_interface::ComponentInfo & joint : info_.joints)
@@ -120,7 +122,8 @@ hardware_interface::CallbackReturn BotHardwareSystem::on_init(
   for(const hardware_interface::ComponentInfo & sensor : info_.sensors)
   {
     RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"),"this is sensor '%s'", sensor.name.c_str());
-    if(sensor.name.c_str() == cfg_.left_range_name || sensor.name.c_str() == cfg_.right_range_name)
+    // if(sensor.name.c_str() == cfg_.left_range_name || sensor.name.c_str() == cfg_.right_range_name)
+    if(sensor.name.c_str() == cfg_.range_name)
     {
       if (sensor.command_interfaces.size() != 0)
       {
@@ -204,11 +207,14 @@ std::vector<hardware_interface::StateInterface> BotHardwareSystem::export_state_
   state_interfaces.emplace_back(hardware_interface::StateInterface(
     wheel_r_.name, hardware_interface::HW_IF_VELOCITY, &wheel_r_.vel));
 
-  state_interfaces.emplace_back(hardware_interface::StateInterface(
-    range_l_.name, "range", &range_l_.range));
+  // state_interfaces.emplace_back(hardware_interface::StateInterface(
+  //   range_l_.name, "range", &range_l_.range));
+
+  // state_interfaces.emplace_back(hardware_interface::StateInterface(
+  //   range_r_.name, "range", &range_r_.range));
 
   state_interfaces.emplace_back(hardware_interface::StateInterface(
-    range_r_.name, "range", &range_r_.range));
+    range_.name, "range", &range_.range));
 
   state_interfaces.emplace_back(hardware_interface::StateInterface(
     imu_.name, "orientation.x", &imu_.position_x));
@@ -385,16 +391,24 @@ hardware_interface::return_type BotHardwareSystem::read(
   comms_.read_imu_sensor( imu_.linear_acceleration_x, imu_.linear_acceleration_y, imu_.linear_acceleration_z, 
                           imu_.angular_velocity_x, imu_.angular_velocity_y, imu_.angular_velocity_z);
   // RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "x: %f, z: %f", imu_.linear_acceleration_x, imu_.angular_velocity_z);
-  comms_.read_range_sensors(range_l_.range, range_r_.range);
+  // comms_.read_range_sensors(range_l_.range, range_r_.range);
+  comms_.read_range_sensor(range_.range);
 
   // RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Successfully reading!");
   
   int stopleft = -wheel_l_.vel/2;
   int stopright = -wheel_r_.vel/2;
   
-  if((wheel_l_.cmd == 0 && wheel_l_.vel != 0) || (wheel_r_.cmd == 0 && wheel_r_.vel != 0)) {
+  if((wheel_l_.cmd == 0 && wheel_l_.vel != 0)) {
+    RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Lcmd: %f rads: %f rate: %f", wheel_l_.cmd, wheel_l_.rads_per_count, cfg_.loop_rate);
     RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "true L wheel: %f, true R wheel: %f", wheel_l_.vel, wheel_r_.vel);
-    comms_.set_motor_values(stopleft, stopright); 
+    comms_.set_motor_values(stopleft, 0.0); 
+    RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Braking Left: %d Right: %d", stopleft, stopright);
+  }
+  if((wheel_r_.cmd == 0 && wheel_r_.vel != 0)) {
+    RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "true L wheel: %f, true R wheel: %f", wheel_l_.vel, wheel_r_.vel);
+    RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Rcmd: %f rads: %f rate: %f", wheel_r_.cmd, wheel_r_.rads_per_count, cfg_.loop_rate);    
+    comms_.set_motor_values(0.0, stopright); 
     RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Braking Left: %d Right: %d", stopleft, stopright);
   }
 
@@ -413,15 +427,15 @@ hardware_interface::return_type NewHardwareInterface::BotHardwareSystem::write(
   float left_desired_speed = wheel_l_.cmd;
   float right_desired_speed = wheel_r_.cmd;
 
-  if (wheel_l_.cmd > 0 && wheel_l_.vel >= wheel_l_.cmd) left_desired_speed = 0.0;
+  if (wheel_l_.cmd > 0 && wheel_l_.vel > wheel_l_.cmd) left_desired_speed = 0.0; 
   else if (wheel_l_.cmd > 0 && wheel_l_.vel < wheel_l_.cmd) left_desired_speed = wheel_l_.cmd + (wheel_l_.cmd - wheel_l_.vel)/2;
-  else if (wheel_l_.cmd < 0 && wheel_l_.vel <= wheel_l_.cmd) left_desired_speed = 0.0;
-  else if (wheel_l_.cmd < 0 && wheel_l_.vel > wheel_l_.cmd) left_desired_speed = wheel_l_.cmd - (wheel_l_.cmd - wheel_l_.vel)/2;
+  else if (wheel_l_.cmd < 0 && wheel_l_.vel < wheel_l_.cmd) left_desired_speed = 0.0;
+  else if (wheel_l_.cmd < 0 && wheel_l_.vel > wheel_l_.cmd) left_desired_speed = wheel_l_.cmd + (wheel_l_.cmd - wheel_l_.vel)/2;
 
-  if (wheel_r_.cmd > 0 && wheel_r_.vel >= wheel_r_.cmd) left_desired_speed = 0.0;
-  else if (wheel_r_.cmd > 0 && wheel_r_.vel < wheel_r_.cmd) left_desired_speed = wheel_r_.cmd + (wheel_r_.cmd - wheel_r_.vel)/2;
-  else if (wheel_r_.cmd < 0 && wheel_r_.vel <= wheel_r_.cmd) left_desired_speed = 0.0;
-  else if (wheel_r_.cmd < 0 && wheel_r_.vel > wheel_r_.cmd) left_desired_speed = wheel_r_.cmd - (wheel_r_.cmd - wheel_r_.vel)/2;
+  if (wheel_r_.cmd > 0 && wheel_r_.vel >= wheel_r_.cmd) right_desired_speed = 0.0;
+  else if (wheel_r_.cmd > 0 && wheel_r_.vel < wheel_r_.cmd) right_desired_speed = wheel_r_.cmd + (wheel_r_.cmd - wheel_r_.vel)/2;
+  else if (wheel_r_.cmd < 0 && wheel_r_.vel < wheel_r_.cmd) right_desired_speed = 0.0;
+  else if (wheel_r_.cmd < 0 && wheel_r_.vel > wheel_r_.cmd) right_desired_speed = wheel_r_.cmd + (wheel_r_.cmd - wheel_r_.vel)/2;
   
   // if (wheel_l_.cmd != 0 && wheel_l_.vel > wheel_l_.cmd) left_desired_speed = (wheel_l_.vel - wheel_l_.cmd)/2;
   // if (wheel_r_.cmd != 0 && wheel_r_.vel > wheel_r_.cmd) right_desired_speed = (wheel_r_.vel - wheel_r_.cmd)/2;
@@ -439,10 +453,21 @@ hardware_interface::return_type NewHardwareInterface::BotHardwareSystem::write(
   if(wheel_r_.vel == 0 && wheel_r_.cmd > 0) right_desired_speed = 30;
   else if(wheel_r_.vel == 0 && wheel_r_.cmd < 0) right_desired_speed = -30;
 
-  int motor_l_counts_per_loop = left_desired_speed / wheel_l_.rads_per_count / cfg_.loop_rate;
-  int motor_r_counts_per_loop = right_desired_speed / wheel_r_.rads_per_count / cfg_.loop_rate;
-  
+  // still useless code
+  if ((wheel_l_.cmd == -wheel_r_.cmd)){
+    if(wheel_l_.cmd < wheel_r_.cmd){
+      left_desired_speed = -60;
+      right_desired_speed = 60;
+    } 
+    if(wheel_r_.cmd < wheel_l_.cmd){
+      left_desired_speed = 60;
+      right_desired_speed = -60;
+    } 
+  }
 
+  int motor_l_counts_per_loop = (left_desired_speed / wheel_l_.rads_per_count) / cfg_.loop_rate;
+  int motor_r_counts_per_loop = (right_desired_speed / wheel_r_.rads_per_count) / cfg_.loop_rate;
+  
   comms_.set_motor_values(motor_l_counts_per_loop, motor_r_counts_per_loop); 
 
   if (motor_l_counts_per_loop != 0 || motor_r_counts_per_loop != 0){
