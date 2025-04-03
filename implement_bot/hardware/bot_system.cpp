@@ -270,7 +270,7 @@ std::vector<hardware_interface::CommandInterface> BotHardwareSystem::export_comm
 }
 
 hardware_interface::CallbackReturn BotHardwareSystem::on_configure(
-  const rclcpp_lifecycle::State & previous_state)
+  const rclcpp_lifecycle::State & /*previous_state*/)
 {
   RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Configuring ...please wait...");
   if (comms_.connected())
@@ -288,7 +288,7 @@ hardware_interface::CallbackReturn BotHardwareSystem::on_configure(
 }
 
 hardware_interface::CallbackReturn BotHardwareSystem::on_cleanup(
-  const rclcpp_lifecycle::State & previous_state)
+  const rclcpp_lifecycle::State & /*previous_state*/)
 {
   RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Cleaning up ...please wait...");
   if (comms_.connected())
@@ -304,7 +304,7 @@ hardware_interface::CallbackReturn BotHardwareSystem::on_cleanup(
 
 
 hardware_interface::CallbackReturn BotHardwareSystem::on_activate(
-  const rclcpp_lifecycle::State & previous_state)
+  const rclcpp_lifecycle::State & /*previous_state*/)
 {
   RCLCPP_INFO(rclcpp::get_logger("BotHardwareSystem"), "Activating ...please wait...");
   if (!comms_.connected())
@@ -336,7 +336,7 @@ hardware_interface::CallbackReturn BotHardwareSystem::on_activate(
 }
 
 hardware_interface::CallbackReturn BotHardwareSystem::on_deactivate(
-  const rclcpp_lifecycle::State & previous_state)
+  const rclcpp_lifecycle::State & /*previous_state*/)
 {
   if (comms_.connected())
   {
@@ -351,7 +351,7 @@ hardware_interface::CallbackReturn BotHardwareSystem::on_deactivate(
 }
 
 hardware_interface::return_type BotHardwareSystem::read(
-  const rclcpp::Time & time, const rclcpp::Duration & period)
+  const rclcpp::Time & /*time*/, const rclcpp::Duration & period)
 {
   if (!comms_.connected())
   {
@@ -416,7 +416,7 @@ hardware_interface::return_type BotHardwareSystem::read(
 }
 
 hardware_interface::return_type NewHardwareInterface::BotHardwareSystem::write(
-  const rclcpp::Time & time, const rclcpp::Duration & period)
+  const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
 {
   if (!comms_.connected())
   {
@@ -427,14 +427,16 @@ hardware_interface::return_type NewHardwareInterface::BotHardwareSystem::write(
   float left_desired_speed = wheel_l_.cmd;
   float right_desired_speed = wheel_r_.cmd;
 
-  if (wheel_l_.cmd > 0 && wheel_l_.vel > wheel_l_.cmd) left_desired_speed = 0.0; 
-  else if (wheel_l_.cmd > 0 && wheel_l_.vel < wheel_l_.cmd) left_desired_speed = wheel_l_.cmd + (wheel_l_.cmd - wheel_l_.vel)/2;
+       if (wheel_l_.cmd > 0 && wheel_l_.vel > wheel_l_.cmd) left_desired_speed = 0.0; 
   else if (wheel_l_.cmd < 0 && wheel_l_.vel < wheel_l_.cmd) left_desired_speed = 0.0;
+
+  else if (wheel_l_.cmd > 0 && wheel_l_.vel < wheel_l_.cmd) left_desired_speed = wheel_l_.cmd + (wheel_l_.cmd - wheel_l_.vel)/2;
   else if (wheel_l_.cmd < 0 && wheel_l_.vel > wheel_l_.cmd) left_desired_speed = wheel_l_.cmd + (wheel_l_.cmd - wheel_l_.vel)/2;
 
-  if (wheel_r_.cmd > 0 && wheel_r_.vel >= wheel_r_.cmd) right_desired_speed = 0.0;
-  else if (wheel_r_.cmd > 0 && wheel_r_.vel < wheel_r_.cmd) right_desired_speed = wheel_r_.cmd + (wheel_r_.cmd - wheel_r_.vel)/2;
+       if (wheel_r_.cmd > 0 && wheel_r_.vel > wheel_r_.cmd) right_desired_speed = 0.0;
   else if (wheel_r_.cmd < 0 && wheel_r_.vel < wheel_r_.cmd) right_desired_speed = 0.0;
+  
+  else if (wheel_r_.cmd > 0 && wheel_r_.vel < wheel_r_.cmd) right_desired_speed = wheel_r_.cmd + (wheel_r_.cmd - wheel_r_.vel)/2;
   else if (wheel_r_.cmd < 0 && wheel_r_.vel > wheel_r_.cmd) right_desired_speed = wheel_r_.cmd + (wheel_r_.cmd - wheel_r_.vel)/2;
   
   // if (wheel_l_.cmd != 0 && wheel_l_.vel > wheel_l_.cmd) left_desired_speed = (wheel_l_.vel - wheel_l_.cmd)/2;
@@ -445,25 +447,27 @@ hardware_interface::return_type NewHardwareInterface::BotHardwareSystem::write(
   if ((wheel_l_.cmd != wheel_r_.cmd) && (wheel_l_.cmd != -wheel_r_.cmd)){
     if(wheel_l_.cmd < wheel_r_.cmd) left_desired_speed = 0;
     if(wheel_r_.cmd < wheel_l_.cmd) right_desired_speed = 0;
-  }
-  
+  } 
+
   if(wheel_l_.vel == 0 && wheel_l_.cmd > 0) left_desired_speed = 30;
   else if(wheel_l_.vel == 0 && wheel_l_.cmd < 0) left_desired_speed = -30;
 
   if(wheel_r_.vel == 0 && wheel_r_.cmd > 0) right_desired_speed = 30;
   else if(wheel_r_.vel == 0 && wheel_r_.cmd < 0) right_desired_speed = -30;
 
-  // still useless code
-  if ((wheel_l_.cmd == -wheel_r_.cmd)){
-    if(wheel_l_.cmd < wheel_r_.cmd){
-      left_desired_speed = -60;
-      right_desired_speed = 60;
-    } 
-    if(wheel_r_.cmd < wheel_l_.cmd){
-      left_desired_speed = 60;
-      right_desired_speed = -60;
-    } 
-  }
+   
+
+  // // useless code
+  // if ((wheel_l_.cmd == -wheel_r_.cmd)){
+  //   if(wheel_l_.cmd < wheel_r_.cmd){
+  //     left_desired_speed = -60;
+  //     right_desired_speed = 60;
+  //   } 
+  //   if(wheel_r_.cmd < wheel_l_.cmd){
+  //     left_desired_speed = 60;
+  //     right_desired_speed = -60;
+  //   } 
+  // }
 
   int motor_l_counts_per_loop = (left_desired_speed / wheel_l_.rads_per_count) / cfg_.loop_rate;
   int motor_r_counts_per_loop = (right_desired_speed / wheel_r_.rads_per_count) / cfg_.loop_rate;

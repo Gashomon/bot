@@ -34,9 +34,9 @@ class ControlUI(QMainWindow, ctrlUi):
         super(ControlUI,self).__init__()
         self.setupUi(self)
 
-        self.pushButton_2.clicked.connect(self.fetch)
-        self.pushButton_3.clicked.connect(self.deliver)
-        self.pushButton_4.clicked.connect(self.retrieve)
+        # self.pushButton_2.clicked.connect(self.fetch)
+        # self.pushButton_3.clicked.connect(self.deliver)
+        # self.pushButton_4.clicked.connect(self.retrieve)
 
         # self.pushButton_2.hide()
         # self.pushButton_4.hide()

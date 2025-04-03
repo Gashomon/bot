@@ -24,7 +24,7 @@ longsituationslist = {}
 destinationlist = {
     'Initial': (0.0, 0.0, 0.0),
     'Home': (0.0, 0.0, 0.0),
-    'Dean': (5.0, 0.0, 0.0), 
+    'Dean': (3.0, 0.0, 0.0), 
     'CE'  : (0.0, 0.0, 0.0),
     'EE' : (0.0, 0.0, 0.0),
     'CpE'  : (0.0, 0.0, 0.0),
@@ -91,6 +91,7 @@ class Bot(Node):
         self.ui.main.introduceButton.clicked.connect(self.playIntro)
         self.ui.control.pushButton_6.clicked.connect(self.lockoff)
         self.ui.control.pushButton_7.clicked.connect(self.modules.toggleKeyboard)
+        self.ui.control.pushButton_3.clicked.connect(self.goback)
 
         # self.run_updates()
             
@@ -138,7 +139,11 @@ class Bot(Node):
         print("starting")
         self.waitforcmd()
         print("going back")
-    
+
+    def goback(self):
+        self.ui.control.resetControl()
+        self.ui.goto('main')
+
     # NAVIGATOR STUFF
     def create_pose_stamped(self, position_x, position_y, orientation_z):
         q_x, q_y, q_z, q_w = tf_transformations.quaternion_from_euler(0.0, 0.0, orientation_z)
@@ -232,7 +237,7 @@ class Bot(Node):
 
     def run(self, transaction):
         reset = None
-        self.log("robot_begin")
+        # self.log("robot_begin")
         if transaction.type == 1:
             reset = self.deliver(transaction)
         # if transaction.type == 2:
@@ -242,7 +247,7 @@ class Bot(Node):
         
         print(reset)
         if reset:
-            self.log("robot_cancel")
+            # self.log("robot_cancel")
             return
         
         print("done")
@@ -268,6 +273,9 @@ class Bot(Node):
         #turn off screen
         self.ui.display("travelling")
         self.run_updates()
+
+        starting_pose = self.create_pose_stamped(0.0, 0.0, 0.0)
+        self.navigator.setInitialPose(starting_pose)
 
         tp = destinationlist.get(t.dest2)
         pose = self.create_pose_stamped(tp[0], tp[1], tp[2])
@@ -332,25 +340,27 @@ class Bot(Node):
                 ex = [None]
                 self.ui.check(q, ex, 'leave', 'unlock')
                 # self.run_updates('lock')
-            
-        self.ui.display(mainT ="Robot is Leaving in 5 seconds. Please step aside.")
+
+        # No more Leaving
+
+        # self.ui.display(mainT ="Robot is Leaving in 5 seconds. Please step aside.")
         # self.run_updates()
-        self.playfor('leaving')
-        time.sleep(5)
+        # self.playfor('leaving')
+        # time.sleep(5)
         
         #turn off screen
-        self.ui.display("travelling")
-        self.run_updates()
+        # self.ui.display("travelling")
+        # self.run_updates()
 
-        tp = destinationlist.get("Home")
-        pose = self.create_pose_stamped(tp[0], tp[1], tp[2])
-        self.goPose(pose)
+        # tp = destinationlist.get("Home")
+        # pose = self.create_pose_stamped(tp[0], tp[1], tp[2])
+        # self.goPose(pose)
 
-        while not self.navigator.isTaskComplete():
-            self.run_updates('noui')
+        # while not self.navigator.isTaskComplete():
+        #     self.run_updates('noui')
 
         # self.playfor('nothing') 
-        self.log("robot_home")
+        # self.log("robot_home")
 
         return False
 
