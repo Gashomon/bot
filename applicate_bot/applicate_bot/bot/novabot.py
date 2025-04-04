@@ -79,6 +79,8 @@ class Bot(Node):
 
         print('initial lock on')
         self.modules.setlock('on')
+        self.modules.midweight = 3000
+        self.modules.heavyweight = 5000
 
         # Set initial pose
         # initial_pose = self.create_pose_stamped(0.0, 0.0, 0.0)
@@ -109,7 +111,7 @@ class Bot(Node):
             # print("loadup")
             self.updateWeight()
             # print("lol")
-            if not self.loadislighterthan(5000) and self.ui.runEnabled():    
+            if self.modules.loadstate=='HEAVY' and self.ui.runEnabled():    
                 self.playfor('heavy')       
                 self.ui.disableRun()
 
@@ -173,7 +175,7 @@ class Bot(Node):
             i = i + 1
             feedback = self.navigator.getFeedback()
             if feedback and i % 10 == 0:
-                self.get_logger().info('Navigation Feedback: %s' % feedback)
+                # self.get_logger().info('Navigation Feedback: %s' % feedback)
                 self.get_logger().info('Estimated time of arrival: '+ '{0:.0f}'.format(Duration.from_msg(feedback.estimated_time_remaining).nanoseconds/ 1e9)+ ' seconds.\n')
         result = self.navigator.getResult()
         self.get_logger().info('Navigation Result: %s' % result)

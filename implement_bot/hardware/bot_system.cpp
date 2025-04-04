@@ -455,8 +455,6 @@ hardware_interface::return_type NewHardwareInterface::BotHardwareSystem::write(
   if(wheel_r_.vel == 0 && wheel_r_.cmd > 0) right_desired_speed = 30;
   else if(wheel_r_.vel == 0 && wheel_r_.cmd < 0) right_desired_speed = -30;
 
-   
-
   // // useless code
   // if ((wheel_l_.cmd == -wheel_r_.cmd)){
   //   if(wheel_l_.cmd < wheel_r_.cmd){

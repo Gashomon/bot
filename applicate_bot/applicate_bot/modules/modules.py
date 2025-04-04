@@ -44,6 +44,9 @@ class Modules():
         self.max_weight_counter = 30
         self.timer = time.perf_counter()
         self.loadstate = "light"
+        self.midweight = 3000
+        self.heavyweight = 5000
+
         self.doorpin = setdoor
 
         self.soundlibpath = soundpath
@@ -77,9 +80,9 @@ class Modules():
             self.SOUNDENABLE = False
 
     def setload(self, value):
-        if value > 3000:
+        if value > self.heavyweight:
             self.loadstate = 'heavy'
-        elif value > 2500:
+        elif value > self.midweight:
             self.loadstate = 'normal'
         else:
             self.loadstate = 'light'
