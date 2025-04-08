@@ -110,6 +110,7 @@ public:
     std::stringstream ss;
     ss << "m " << val_1 << " " << val_2 << "\r";
     send_msg(ss.str());
+    std::cout << ss.str();
   }
 
   void run_motor_pwm(int val_1, int val_2)
@@ -160,7 +161,13 @@ public:
   void read_range_sensor(double &sensor)
   {
     std::string response = send_msg("l\r");
-    sensor = std::atof(response.c_str()) * 0.01; //if received from sensor is in cm. need meters.
+
+    std::string delimiter = " ";
+    size_t del_pos = response.find(delimiter);
+    std::string token_1 = response.substr(0, del_pos);
+    std::string token_2 = response.substr(del_pos + delimiter.length());
+
+    sensor = std::atof(token_1.c_str());
   }
 
   void read_imu_sensor(double &vel_x, double &vel_y, double &vel_z, double &ang_x, double &ang_y, double &ang_z)

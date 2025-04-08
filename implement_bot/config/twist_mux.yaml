@@ -8,7 +8,7 @@ twist_mux:
         priority: 20
       basic:
         topic: cmd_vel
-        timeout: 0.10
+        timeout: 0.1
         priority: 10
       joystick:
         topic: cmd_vel_joy

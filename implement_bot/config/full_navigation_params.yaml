@@ -63,8 +63,7 @@ bt_navigator: # Main Navigator. Compiles everything else. Lists all major naviga
     # odom_topic: "/diff_cont/odom"
     odom_topic: "/ekf/odom"
     bt_loop_duration: 100 # ms for bt to think . default 10
-    filter_duration: 0.3 # smoothed vel time
-    filter_duration: 0.3 # smoothed vel time
+    filter_duration: 0.0 # smoothed vel time
     default_server_timeout: 100 # ms to wait for a server response. default 20. overwritten if specified in server
     wait_for_service_timeout: 1000 # ms to wait for a service response. default 1000. overwritten if specified in service
     action_server_result_timeout: 900 # seconds to wait for action server to finish. default 900. overwritten if specified in server
@@ -150,12 +149,11 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
   ros__parameters:
     use_sim_time: False
     odom_topic: "/ekf/odom"
-    controller_frequency: 2.0 # speed of controller updates
+    controller_frequency: 5.0 # speed of controller updates
     # costmap_update_timeout: 0.5 # waiting time for costmaps. default 0.3. notdoc
-    min_x_velocity_threshold: 0.0001       #if less than this value, read as zero 
+    min_x_velocity_threshold: 0.04      #if less than this value, read as zero 
     min_y_velocity_threshold: 0.5       #if less than this value, read as zero 
-    min_theta_velocity_threshold: 0.0001   #if less than this value, read as zero 
-    failure_tolerance: 0.0      # give up param (seconds). positive: timeout, zero: disabled, -1: infinite
+    min_theta_velocity_threshold: 0.4   #if less than this value, read as zero 
     failure_tolerance: 0.0      # give up param (seconds). positive: timeout, zero: disabled, -1: infinite
     publish_zero_velocity: true
     progress_checker_plugin: "progress_checker"
@@ -164,52 +162,52 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
     # Progress checker parameters
     progress_checker:
       plugin: "nav2_controller::SimpleProgressChecker"
-      required_movement_radius: 0.25 # need to atleast move in meters. default 0.5
-      movement_time_allowance: 15.0 # time to take most to move in seconds. default 10.0
+      required_movement_radius: 0.1 # need to atleast move in meters. default 0.5
+      movement_time_allowance: 10.0 # time to take most to move in seconds. default 10.0
     # Goal checker parameters
     simple_goal_checker:
       plugin: "nav2_controller::SimpleGoalChecker"
       stateful: True
-      xy_goal_tolerance: 0.25 # error in meters on the actual goal
-      yaw_goal_tolerance: 0.785 # error in radians on the actual goal
+      xy_goal_tolerance: 0.25 # tolerated error in meters on the actual goal
+      yaw_goal_tolerance: 0.785 # tolerated error in radians on the actual goal
 
     # Rotate Shim Controller
     FollowPath:  
       plugin: "nav2_rotation_shim_controller::RotationShimController"
       # primary_controller: "reg_pure_pursuit"
       primary_controller: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
-      angular_dist_threshold: 0.785 # max radians from path to consider to turn
+      angular_dist_threshold: 1.785 # max radians from path to consider to turn
       forward_sampling_distance: 0.5 # meters to decide path heading
-      angular_disengage_threshold: 0.3925 # rad/s. jazzy stuff. not used
-      rotate_to_heading_angular_vel: 2.5 # velocity to rotate to angular (rad/s)
+      # angular_disengage_threshold: 0.3925 # rad/s. jazzy stuff. not used
+      rotate_to_heading_angular_vel: 2.0 # velocity to rotate to angular (rad/s) MAIN ROTATION
       max_angular_accel: 3.0
       simulate_ahead_time: 1.0
       rotate_to_goal_heading: false
       closed_loop: true # default true
 
       # all of regulated pursuit stuff. Above are for rotation shim controller. try to both same for simplicity
-      primary_controller.desired_linear_vel: 2.0 # max vel to use
+      primary_controller.desired_linear_vel: 1.0 # max vel to use
 
-      primary_controller.use_velocity_scaled_lookahead_dist: true
+      primary_controller.use_velocity_scaled_lookahead_dist: false
       # if false
       primary_controller.lookahead_dist: 1.0
       # if true
-      primary_controller.min_lookahead_dist: 0.3
-      primary_controller.max_lookahead_dist: 1.0
+      primary_controller.min_lookahead_dist: 0.5
+      primary_controller.max_lookahead_dist: 1.5
       primary_controller.lookahead_time: 1.0
 
       primary_controller.use_rotate_to_heading: true 
       # if true, use this velocity/accel to rotate to heading and what radian difference to begin rotating
-      primary_controller.rotate_to_heading_angular_vel: 2.5
+      primary_controller.rotate_to_heading_angular_vel: 2.0
       primary_controller.max_angular_accel: 3.0
       primary_controller.rotate_to_heading_min_angle: 1.785
 
-      primary_controller.transform_tolerance: 0.5
+      primary_controller.transform_tolerance: 0.1
       
-      primary_controller.min_approach_linear_velocity: 0.6 # min vel to ensure progress
-      primary_controller.approach_velocity_scaling_dist: 0.5 # last distance to start slowing down Should be less than the half the costmap width.
+      primary_controller.min_approach_linear_velocity: 1.2 # min vel to ensure progress
+      primary_controller.approach_velocity_scaling_dist: 0.3 # last distance to start slowing down Should be less than the half the costmap width.
 
-      primary_controller.use_collision_detection: true
+      primary_controller.use_collision_detection: false
       primary_controller.max_allowed_time_to_collision_up_to_carrot: 1.8 #time to project velocity forward, check for collisions 
       
       primary_controller.use_fixed_curvature_lookahead: false
@@ -217,8 +215,8 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
 
       primary_controller.use_cost_regulated_linear_velocity_scaling: true # vel with objects
       primary_controller.use_regulated_linear_velocity_scaling: true #vel in general
-      primary_controller.regulated_linear_scaling_min_radius: 0.5 # turning radius (m) to trigger. default 0.9 for smooth curve but controller already spins at place 
-      primary_controller.regulated_linear_scaling_min_speed: 2.5 # minimum speed to turn
+      primary_controller.regulated_linear_scaling_min_radius: 0.8 # turning radius (m) to trigger. default 0.9 for smooth curve but controller already spins at place 
+      primary_controller.regulated_linear_scaling_min_speed: 1.2 # minimum speed to turn
       
       primary_controller.allow_reversing: false
       primary_controller.max_robot_pose_search_dist: 3.0 # This should be left as the default unless there are paths with loops and intersections that do not leave the local costmap.
@@ -241,8 +239,8 @@ local_costmap:
       # origin_x: -1.97
       # origin_y: -4.24
       map_vis_z: 0.0
-      plugins: ["obstacle_layer","range_layer", "inflation_layer", ]
-      # plugins: ["obstacle_layer", "inflation_layer"]
+      # plugins: ["obstacle_layer", "inflation_layer", "range_layer" ]
+      plugins: ["obstacle_layer", "inflation_layer"]
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: True
@@ -324,18 +322,18 @@ map_server: # loads the map
     use_sim_time: False
     # Overridden in launch by the "map" launch configuration or provided default value.
     # To use in yaml, remove the default "map" value in the tb3_simulation_launch.py file & provide full path to map below.
-    # yaml_filename: "src/bot/implement_bot/maps/modded_actual.yaml"
-    yaml_filename: "src/bot/implement_bot/maps/fixed_map.yaml"
+    # yaml_filename: "bot/src/bot/implement_bot/maps/revised_actual.yaml"
+    yaml_filename: "bot/src/bot/implement_bot/maps/empty.yaml"
     topic_name: "map"
     frame_id: "map"
-
+  
 mask_server: # loads the map
   ros__parameters:
     use_sim_time: False
     # Overridden in launch by the "map" launch configuration or provided default value.
     # To use in yaml, remove the default "map" value in the tb3_simulation_launch.py file & provide full path to map below.
-    # yaml_filename: "src/bot/implement_bot/maps/modded_actual.yaml"
-    yaml_filename: "src/bot/implement_bot/maps/fixed_map.yaml"
+    # yaml_filename: "bot/src/bot/implement_bot/maps/masked_map.yaml"
+    yaml_filename: "bot/src/bot/implement_bot/maps/empty.yaml"
     topic_name: "/map_mask"
     frame_id: "map"
     
@@ -458,10 +456,12 @@ collision_monitor:
     stop_pub_timeout: 2.0
     enable_stamped_cmd_vel: True  # False for Jazzy or older
     use_realtime_priority: false
-    polygons: ["PolygonStop", "PolygonApproach"]
+    # polygons: ["PolygonStop", "PolygonApproach"]
+    polygons: ["PolygonStop"]
     PolygonStop:
       type: "polygon"
-      points: [0.8,0.5,0.8,-0.5,-0.8,-0.5,-0.8,0.5]
+      # points: [0.8,0.6,0.8,-0.6,-0.8,-0.6,-0.8,0.6]
+      points: [0.0,0.0,0.0,-0.0,-0.0,-0.0,-0.0,0.0]
       action_type: "stop"
       min_points: 4  # max_points: 3 for Humble
       visualize: True
