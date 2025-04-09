@@ -75,7 +75,7 @@ ekf_node:
       imu0_queue_size: 200
       # imu0_pose_rejection_threshold: 2.0                
       # imu0_twist_rejection_threshold: 0.000   
-      # imu0_linear_acceleration_rejection_threshold: 2.0  
+      # imu0_linear_acceleration_rejection_threshold: 0.6 
       # imu0_remove_gravitational_acceleration: false
 
       # use_control: true

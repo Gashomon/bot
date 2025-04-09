@@ -26,7 +26,7 @@ longsituationslist = {}
 destinationlist = {
     'Initial': (0.0, 0.0, 0.0),
     'Home': (0.0, 0.0, 0.0),
-    'Dean': (3.0, 0.0, 0.0), 
+    'Dean': (6.0, 0.0, 0.0), 
     'CE'  : (0.0, 0.0, 0.0),
     'EE' : (0.0, 0.0, 0.0),
     'CpE'  : (0.0, 0.0, 0.0),
@@ -151,6 +151,7 @@ class Bot(Node):
     def goback(self):
         self.ui.control.resetControl()
         self.ui.goto('main')
+   
     # NAVIGATOR STUFF
     def create_pose_stamped(self, position_x, position_y, orientation_z):
         q_x, q_y, q_z, q_w = tf_transformations.quaternion_from_euler(0.0, 0.0, orientation_z)
@@ -168,15 +169,15 @@ class Bot(Node):
 
     def goPose(self, goal_pose):
         self.navigator.clearAllCostmaps()
-        time.sleep(1)
+        # time.sleep(1)
         self.navigator.goToPose(goal_pose)
-        i = 0
+        # i = 0
         while not self.navigator.isTaskComplete():
-            i = i + 1
+            # i = i + 1
             feedback = self.navigator.getFeedback()
-            if feedback and i % 10 == 0:
+            # if feedback and i % 10 == 0:
                 # self.get_logger().info('Navigation Feedback: %s' % feedback)
-                self.get_logger().info('Estimated time of arrival: '+ '{0:.0f}'.format(Duration.from_msg(feedback.estimated_time_remaining).nanoseconds/ 1e9)+ ' seconds.\n')
+                # self.get_logger().info('Estimated time of arrival: '+ '{0:.0f}'.format(Duration.from_msg(feedback.estimated_time_remaining).nanoseconds/ 1e9)+ ' seconds.\n')
         result = self.navigator.getResult()
         self.get_logger().info('Navigation Result: %s' % result)
 
@@ -259,17 +260,20 @@ class Bot(Node):
         if not self.ui.hasEmail():
             q = "No email has been set.\nProceed and Manually notify receiver?"
         else:
-            email = self.ui.getEmail()
-            notiti = notify.send_email(email, password)
+            try:
+                email = self.ui.getEmail()
+                notiti = notify.send_email(email, password)
+            except Exception as e:
+                notiti = "error"
             
             if notiti == "Success":
                 q = "Passcode successfully sent to\n" + email + "\nProceed?"
             elif notiti == "nonet":
-                q = "Cannot connect to the internet. Unable to notify receiver.\nProceed and Manually notify receiver?"
+                q = "Cannot connect to the internet. \nUnable to notify receiver.\nProceed and Manually notify receiver?"
             elif notiti == "selferror":
-                q = "Something is wrong and it's not about you.. it's me.\nProceed and Manually notify receiver?"
+                q = "Something is wrong and it's not about you.. \nit's me.\nProceed and Manually notify receiver?"
             elif notiti == "noemail":
-                q = "Email: " + email + " not found.\nRe-enter email or Proceed and Manually notify receiver?"
+                q = "Email: " + email + " \nnot found. Re-enter email or \nProceed and Manually notify receiver?"
             else:
                 q = "I don't know what happened but wanna proceed?"
 
@@ -328,8 +332,8 @@ class Bot(Node):
         pose = self.create_pose_stamped(tp[0], tp[1], tp[2])
         self.goPose(pose)
 
-        while not self.navigator.isTaskComplete():
-            self.run_updates("noui")
+        # while not self.navigator.isTaskComplete():
+        #     self.run_updates("noui")
 
         #turn on screen
 
@@ -385,7 +389,7 @@ class Bot(Node):
             if ex[0] is False:
                 self.lockoff()
                 ex = [None]
-                self.ui.check(q, ex, 'leave', 'unlock')
+                self.ui.check(q, ex, 'End', 'Unlock')
                 # self.run_updates('lock')
             
         # self.ui.display(mainT ="Robot is Leaving in 5 seconds. Please step aside.")

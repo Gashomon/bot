@@ -98,7 +98,7 @@ def generate_launch_description():
 
     # not working argument
     declare_use_composition_cmd = DeclareLaunchArgument(
-        'use_composition', default_value='False',
+        'use_composition', default_value='True',
         description='Use composed bringup if True')
 
     declare_container_name_cmd = DeclareLaunchArgument(
@@ -294,7 +294,7 @@ def generate_launch_description():
                         parameters=[{'use_sim_time': use_sim_time,
                                     'autostart': autostart,
                                     'node_names': lifecycle_nodes},
-                                    # {'bond_timeout': 0.0}
+                                    {'bond_timeout': 0.0}
                                     ]), 
                 ]
             )
@@ -320,7 +320,7 @@ def generate_launch_description():
     ld.add_action(declare_use_respawn_cmd)
     ld.add_action(declare_log_level_cmd)
     # Add the actions to launch all of the navigation nodes
-    ld.add_action(load_nodes)
-    # ld.add_action(load_composable_nodes)
+    # ld.add_action(load_nodes)
+    ld.add_action(load_composable_nodes)
 
     return ld

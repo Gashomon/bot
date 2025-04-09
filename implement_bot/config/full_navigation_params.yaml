@@ -2,11 +2,18 @@
 amcl:
   ros__parameters:
     use_sim_time: False
-    # trust scores on..
-    alpha1: 1.0 # rotation pose by rotating
-    alpha2: 1.0 # rotation pose by forward/backward
-    alpha3: 1.0 # position by forward/backward 
-    alpha4: 1.0 # position by rotating
+    # trust scores. lower means more amcl
+    # FREE
+    # alpha1: 0.9 # rotation pose by rotating
+    # alpha2: 0.9 # rotation pose by forward/backward
+    # alpha3: 0.9 # position by forward/backward 
+    # alpha4: 0.9 # position by rotating
+    # alpha5: 0.0 # omni model shit
+    # WITH MAP
+    alpha1: 0.6 # rotation pose by rotating
+    alpha2: 0.4 # rotation pose by forward/backward
+    alpha3: 0.8 # position by forward/backward 
+    alpha4: 0.8 # position by rotating
     alpha5: 0.0 # omni model shit
     base_frame_id: "base_link" # default footprint
     beam_skip_distance: 0.5
@@ -16,7 +23,7 @@ amcl:
     global_frame_id: "map"
     lambda_short: 0.1 # tolerance to shorter objects
     laser_likelihood_max_dist: 5.0 #obstacle detection range
-    laser_max_range: 10.0 # max distance to consider to map
+    laser_max_range: 12.0 # max distance to consider to map
     laser_min_range: -1.0
     laser_model_type: "likelihood_field"
     max_beams: 50 # number of beams to use. default 60
@@ -63,11 +70,9 @@ bt_navigator: # Main Navigator. Compiles everything else. Lists all major naviga
     # odom_topic: "/diff_cont/odom"
     odom_topic: "/ekf/odom"
     bt_loop_duration: 100 # ms for bt to think . default 10
-    filter_duration: 0.0 # smoothed vel time
+    filter_duration: 0.5 # smoothed vel time
     default_server_timeout: 100 # ms to wait for a server response. default 20. overwritten if specified in server
     wait_for_service_timeout: 1000 # ms to wait for a service response. default 1000. overwritten if specified in service
-    action_server_result_timeout: 900 # seconds to wait for action server to finish. default 900. overwritten if specified in server
-    transform tolerance: 0.1 # how long until transforms are invalid. default 0.1
     action_server_result_timeout: 900 # seconds to wait for action server to finish. default 900. overwritten if specified in server
     transform tolerance: 0.1 # how long until transforms are invalid. default 0.1
     # 'default_nav_through_poses_bt_xml' and 'default_nav_to_pose_bt_xml' are use defaults:
@@ -151,9 +156,9 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
     odom_topic: "/ekf/odom"
     controller_frequency: 5.0 # speed of controller updates
     # costmap_update_timeout: 0.5 # waiting time for costmaps. default 0.3. notdoc
-    min_x_velocity_threshold: 0.04      #if less than this value, read as zero 
+    min_x_velocity_threshold: 0.01      #if less than this value, read as zero 
     min_y_velocity_threshold: 0.5       #if less than this value, read as zero 
-    min_theta_velocity_threshold: 0.4   #if less than this value, read as zero 
+    min_theta_velocity_threshold: 0.01   #if less than this value, read as zero 
     failure_tolerance: 0.0      # give up param (seconds). positive: timeout, zero: disabled, -1: infinite
     publish_zero_velocity: true
     progress_checker_plugin: "progress_checker"
@@ -168,7 +173,7 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
     simple_goal_checker:
       plugin: "nav2_controller::SimpleGoalChecker"
       stateful: True
-      xy_goal_tolerance: 0.25 # tolerated error in meters on the actual goal
+      xy_goal_tolerance: 0.1 # tolerated error in meters on the actual goal
       yaw_goal_tolerance: 0.785 # tolerated error in radians on the actual goal
 
     # Rotate Shim Controller
@@ -176,13 +181,13 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
       plugin: "nav2_rotation_shim_controller::RotationShimController"
       # primary_controller: "reg_pure_pursuit"
       primary_controller: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
-      angular_dist_threshold: 1.785 # max radians from path to consider to turn
+      angular_dist_threshold: 0.785 # max radians from path to consider to turn
       forward_sampling_distance: 0.5 # meters to decide path heading
       # angular_disengage_threshold: 0.3925 # rad/s. jazzy stuff. not used
-      rotate_to_heading_angular_vel: 2.0 # velocity to rotate to angular (rad/s) MAIN ROTATION
+      rotate_to_heading_angular_vel: 3.0 # velocity to rotate to angular (rad/s) MAIN ROTATION
       max_angular_accel: 3.0
       simulate_ahead_time: 1.0
-      rotate_to_goal_heading: false
+      rotate_to_goal_heading: true
       closed_loop: true # default true
 
       # all of regulated pursuit stuff. Above are for rotation shim controller. try to both same for simplicity
@@ -193,35 +198,35 @@ controller_server: # Current Progress Checker / Path Follower / Costmap Publishe
       primary_controller.lookahead_dist: 1.0
       # if true
       primary_controller.min_lookahead_dist: 0.5
-      primary_controller.max_lookahead_dist: 1.5
+      primary_controller.max_lookahead_dist: 0.9
       primary_controller.lookahead_time: 1.0
 
       primary_controller.use_rotate_to_heading: true 
       # if true, use this velocity/accel to rotate to heading and what radian difference to begin rotating
       primary_controller.rotate_to_heading_angular_vel: 2.0
       primary_controller.max_angular_accel: 3.0
-      primary_controller.rotate_to_heading_min_angle: 1.785
+      primary_controller.rotate_to_heading_min_angle: 3.0
 
       primary_controller.transform_tolerance: 0.1
       
-      primary_controller.min_approach_linear_velocity: 1.2 # min vel to ensure progress
+      primary_controller.min_approach_linear_velocity: 1.0 # min vel to ensure progress
       primary_controller.approach_velocity_scaling_dist: 0.3 # last distance to start slowing down Should be less than the half the costmap width.
 
       primary_controller.use_collision_detection: false
-      primary_controller.max_allowed_time_to_collision_up_to_carrot: 1.8 #time to project velocity forward, check for collisions 
+      primary_controller.max_allowed_time_to_collision_up_to_carrot: 1.0 #time to project velocity forward, check for collisions 
       
       primary_controller.use_fixed_curvature_lookahead: false
-      primary_controller.curvature_lookahead_dist: 0.25
+      primary_controller.curvature_lookahead_dist: 0.3
 
-      primary_controller.use_cost_regulated_linear_velocity_scaling: true # vel with objects
-      primary_controller.use_regulated_linear_velocity_scaling: true #vel in general
-      primary_controller.regulated_linear_scaling_min_radius: 0.8 # turning radius (m) to trigger. default 0.9 for smooth curve but controller already spins at place 
+      primary_controller.use_cost_regulated_linear_velocity_scaling: false # vel with objects
+      primary_controller.use_regulated_linear_velocity_scaling: false #vel in general
+      primary_controller.regulated_linear_scaling_min_radius: 1.0 # turning radius (m) to trigger. default 0.9 for smooth curve but controller already spins at place 
       primary_controller.regulated_linear_scaling_min_speed: 1.2 # minimum speed to turn
       
       primary_controller.allow_reversing: false
       primary_controller.max_robot_pose_search_dist: 3.0 # This should be left as the default unless there are paths with loops and intersections that do not leave the local costmap.
 
-      primary_controller.use_cancel_deceleration: true # default false
+      primary_controller.use_cancel_deceleration: false # default false
       primary_controller.cancel_deceleration: 1.0 
 
 local_costmap:
@@ -261,9 +266,9 @@ local_costmap:
       range_layer:
         plugin: "nav2_costmap_2d::RangeSensorLayer"
         topics: ["/range_broad/range"]
-        phi: 1.2
+        phi: 1.0
         clear_threshold: 0.8
-        clear_on_max_reading: False
+        clear_on_max_reading: True
         mark_thresold:  0.2
         input_sensor_type: 'VARIABLE'
       inflation_layer:
@@ -436,8 +441,8 @@ velocity_smoother:  #additional velocity control
     feedback: "OPEN_LOOP" # default
     max_velocity:  [30.0, 0.0, 35.0]
     min_velocity: [-30.0, 0.0, -35.0]
-    max_accel: [6.0, 0.0, 6.0]
-    max_decel: [-6.0, 0.0, -6.0]
+    max_accel: [3.0, 0.0, 3.0]
+    max_decel: [-3.0, 0.0, -3.0]
     odom_topic: "/ekf/odom"
     odom_duration: 0.1
     deadband_velocity: [0.0, 0.0, 0.0]
@@ -459,9 +464,9 @@ collision_monitor:
     # polygons: ["PolygonStop", "PolygonApproach"]
     polygons: ["PolygonStop"]
     PolygonStop:
-      type: "polygon"
-      # points: [0.8,0.6,0.8,-0.6,-0.8,-0.6,-0.8,0.6]
-      points: [0.0,0.0,0.0,-0.0,-0.0,-0.0,-0.0,0.0]
+      type: "polygon" 
+      points: [0.6,0.3,0.6,-0.3,-0.6,-0.3,-0.6,0.3]
+      # points: [0.0,0.0,0.0,-0.0,-0.0,-0.0,-0.0,0.0]
       action_type: "stop"
       min_points: 4  # max_points: 3 for Humble
       visualize: True

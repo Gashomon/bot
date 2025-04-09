@@ -237,6 +237,6 @@ def generate_launch_description():
 
     # Add the actions to launch all of the localiztion nodes
     ld.add_action(load_nodes)
-    ld.add_action(load_composable_nodes)
+    # ld.add_action(load_composable_nodes)
 
     return ld

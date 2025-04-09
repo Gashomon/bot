@@ -106,6 +106,6 @@ range_broad:
     frame_id: range_link
     radiation_type: 0
     field_of_view: 0.1 #0.52 #default
-    min_range: 0.0 #default
-    max_range: 170.0 #default
+    min_range: 0.0 # just fine. common error too close 0.8, disregardable
+    max_range: 170.0 # change to needed value on the spot
 

@@ -202,6 +202,7 @@ class Modules():
         print("Calibration complete.")
 
     def toggleKeyboard(self):
+        perifs.clickAt(835,10)
         pass
 
     def closegpio(self):

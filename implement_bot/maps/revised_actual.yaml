@@ -1,7 +1,7 @@
 image: revised_actual.pgm
 mode: trinary
 resolution: 0.05
-origin: [-2.0, -1.0, 0.0]
+origin: [-1.0, 13.5, -1.5708]
 negate: 0
 occupied_thresh: 0.65
 free_thresh: 0.25

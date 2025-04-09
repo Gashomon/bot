@@ -165,7 +165,7 @@ class Ui_MainWindow(object):
         self.label_2.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\"font-size:18pt;\">Command Window</span></p></body></html>"))
         self.pushButton_2.setText(_translate("MainWindow", "Fetch"))
         self.label_3.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\"font-size:12pt;\">Travel Mode:</span></p></body></html>"))
-        self.pushButton_3.setText(_translate("MainWindow", "Deliver"))
+        self.pushButton_3.setText(_translate("MainWindow", "Go Back"))
         self.pushButton_4.setText(_translate("MainWindow", "Retrieve"))
         self.pushButton_6.setText(_translate("MainWindow", "Unlock Door"))
         self.pushButton_7.setText(_translate("MainWindow", "Keyboard"))
